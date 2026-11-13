@@ -17,6 +17,7 @@ struct TripDetailView: View {
     /// What the map draws: road-matched if available.
     @State private var displayPoints: [TrackPoint] = []
     @State private var overlay: RouteOverlay?
+    @State private var pauses: [TripPause] = []
     @State private var speedSamples: [SpeedSample] = []
     @State private var gpxURL: URL?
     @State private var showFullMap = false
@@ -35,13 +36,33 @@ struct TripDetailView: View {
     @State private var playbackRate: Double = 60
 
     private var routeStart: Date { displayPoints.first?.timestamp ?? trip.startDate }
+    /// Replay time: driving only, pauses are skipped.
     private var routeDuration: TimeInterval {
-        max((displayPoints.last?.timestamp ?? trip.endDate).timeIntervalSince(routeStart), 1)
+        let total = (displayPoints.last?.timestamp ?? trip.endDate).timeIntervalSince(routeStart)
+        return max(total - pauses.reduce(0) { $0 + $1.duration }, 1)
+    }
+
+    /// The moment of the trip `offset` seconds of driving after the start.
+    private func replayTime(_ offset: TimeInterval) -> Date {
+        var time = routeStart.addingTimeInterval(offset)
+        for pause in pauses where pause.start < time {
+            time.addTimeInterval(pause.duration)
+        }
+        return time
+    }
+
+    /// The reverse of `replayTime`: a moment during a pause maps to the moment it began.
+    private func replayOffset(at time: Date) -> TimeInterval {
+        var offset = time.timeIntervalSince(routeStart)
+        for pause in pauses where pause.start < time {
+            offset -= min(time.timeIntervalSince(pause.start), pause.duration)
+        }
+        return min(max(offset, 0), routeDuration)
     }
 
     private var replayState: ReplayState? {
         guard let replayOffset else { return nil }
-        return ReplayState.at(routeStart.addingTimeInterval(replayOffset), in: displayPoints)
+        return ReplayState.at(replayTime(replayOffset), in: displayPoints)
     }
 
     var body: some View {
@@ -117,7 +138,7 @@ struct TripDetailView: View {
         .fullScreenCover(isPresented: $showFullMap) {
             ZStack(alignment: .topTrailing) {
                 if let overlay {
-                    RouteMap(overlay: overlay, colorBySpeed: colorBySpeed, replay: replayState, scope: fullMapScope)
+                    RouteMap(overlay: overlay, colorBySpeed: colorBySpeed, replay: replayState, pauses: pauses, scope: fullMapScope)
                         .ignoresSafeArea()
                 }
                 VStack(spacing: 10) {
@@ -149,6 +170,7 @@ struct TripDetailView: View {
         points = raw
         displayPoints = trip.displayPoints
         overlay = RouteOverlay(points: displayPoints)
+        pauses = trip.pauses.filter { $0.end != nil }.sorted { $0.start < $1.start }
         speedSamples = Self.samples(from: raw, factor: useMiles ? 2.236936 : 3.6)
         gpxURL = GPXExporter.export(title: trip.title, startDate: trip.startDate, points: raw)
     }
@@ -193,7 +215,7 @@ struct TripDetailView: View {
 
                 if let replayOffset {
                     VStack(alignment: .leading, spacing: 2) {
-                        Text(routeStart.addingTimeInterval(replayOffset).formatted(date: .omitted, time: .standard))
+                        Text(replayTime(replayOffset).formatted(date: .omitted, time: .standard))
                             .font(.subheadline.weight(.semibold))
                             .monospacedDigit()
                         Text(Format.speed(replayState?.speed ?? 0, miles: useMiles))
@@ -255,7 +277,7 @@ struct TripDetailView: View {
     private var mapCard: some View {
         ZStack(alignment: .topTrailing) {
             if let overlay {
-                RouteMap(overlay: overlay, colorBySpeed: colorBySpeed, replay: replayState, scope: cardMapScope)
+                RouteMap(overlay: overlay, colorBySpeed: colorBySpeed, replay: replayState, pauses: pauses, scope: cardMapScope)
             } else {
                 Rectangle().fill(.fill.tertiary).overlay(ProgressView())
             }
@@ -300,34 +322,42 @@ struct TripDetailView: View {
         let max = Format.speedParts(trip.maxSpeed, miles: useMiles)
         return LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
             card { StatView(title: "Distance", value: distance.value, unit: distance.unit, valueFont: .title) }
-            card { StatView(title: "Duration", value: Format.duration(trip.duration), valueFont: .title) }
+            card { StatView(title: pauses.isEmpty ? "Duration" : "Driving time", value: Format.duration(trip.duration), valueFont: .title) }
             card { StatView(title: "Avg speed", value: avg.value, unit: avg.unit, valueFont: .title) }
             card { StatView(title: "Max speed", value: max.value, unit: max.unit, valueFont: .title) }
             if let fuel = Costs.fuelCost(for: trip.distance, economy: fuelEconomy, price: fuelPrice) {
                 let liters = Costs.liters(for: trip.distance, economy: fuelEconomy)
                 let volume = useMiles ? liters / Costs.litersPerGallon : liters
-                card { StatView(title: "Fuel (est.)", value: Costs.money(fuel), valueFont: .title) }
+                card { StatView(title: "Cost", value: Costs.money(fuel), valueFont: .title, info: Self.fuelEstimateInfo) }
                 card {
                     StatView(
                         title: "Fuel used",
                         value: volume.formatted(.number.precision(.fractionLength(1))),
                         unit: Costs.volumeUnit(miles: useMiles),
-                        valueFont: .title
+                        valueFont: .title,
+                        info: Self.fuelEstimateInfo
                     )
                 }
             }
         }
     }
 
-    /// Quick category buttons and the trip's notes.
+    /// The trip's label and notes.
     private var labelsCard: some View {
         VStack(alignment: .leading, spacing: 12) {
-            // Icon beside the name when all three fit on one line, otherwise icon above it.
-            // Names never wrap mid-word.
-            ViewThatFits(in: .horizontal) {
-                categoryButtons(stacked: false)
-                categoryButtons(stacked: true)
+            HStack {
+                Text("Label").font(.subheadline.weight(.semibold))
+                Spacer()
+                if trip.label == nil {
+                    Text(String(localized: "category.none", defaultValue: "None", comment: "Trip type picker: no label"))
+                        .font(.subheadline).foregroundStyle(.secondary)
+                }
             }
+            LabelPicker(selectedKey: trip.categoryRaw) { label in
+                trip.label = label
+                try? context.save()
+            }
+            Divider()
             Button {
                 showEditor = true
             } label: {
@@ -346,52 +376,22 @@ struct TripDetailView: View {
         .background(.fill.quaternary, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
     }
 
-    private func categoryButtons(stacked: Bool) -> some View {
-        HStack(spacing: 8) {
-            ForEach(TripCategory.allCases) { category in
-                let selected = trip.category == category
-                Button {
-                    withAnimation(.snappy) {
-                        trip.category = selected ? nil : category
-                        try? context.save()
-                    }
-                } label: {
-                    Group {
-                        if stacked {
-                            VStack(spacing: 4) {
-                                Image(systemName: category.systemImage)
-                                Text(category.title).lineLimit(1).minimumScaleFactor(0.8)
-                            }
-                            .padding(.horizontal, 6)
-                            .padding(.vertical, 10)
-                        } else {
-                            Label(category.title, systemImage: category.systemImage)
-                                .lineLimit(1)
-                                .fixedSize()
-                                .padding(.horizontal, 12)
-                                .padding(.vertical, 8)
-                        }
-                    }
-                    .font(.subheadline.weight(.semibold))
-                    .frame(maxWidth: .infinity)
-                    .foregroundStyle(selected ? Color.white : Color.primary)
-                    .background(selected ? AnyShapeStyle(Color.accentColor) : AnyShapeStyle(.fill.tertiary),
-                                in: RoundedRectangle(cornerRadius: stacked ? 14 : 20, style: .continuous))
-                }
-                .buttonStyle(.plain)
-                .accessibilityAddTraits(selected ? .isSelected : [])
-            }
-        }
-    }
-
     private var timeline: some View {
         Button {
             showEditor = true
         } label: {
             HStack {
                 VStack(alignment: .leading, spacing: 0) {
-                    timelineRow(color: .green, time: trip.startDate, place: trip.startName ?? String(localized: "Start"), isFirst: true)
-                    timelineRow(color: .red, time: trip.endDate, place: trip.endName ?? String(localized: "End"), isFirst: false)
+                    timelineRow(color: .green, time: trip.startDate, place: trip.startName ?? String(localized: "Start"), isLast: false)
+                    ForEach(Array(pauses.enumerated()), id: \.offset) { _, pause in
+                        timelineRow(
+                            color: .orange,
+                            time: pause.start,
+                            place: String(localized: "Paused \(Format.duration(pause.duration))", comment: "Timeline row for a pause, e.g. Paused 14 min"),
+                            isLast: false
+                        )
+                    }
+                    timelineRow(color: .red, time: trip.endDate, place: trip.endName ?? String(localized: "End"), isLast: true)
                 }
                 Spacer()
                 Image(systemName: "pencil")
@@ -405,11 +405,11 @@ struct TripDetailView: View {
         .accessibilityHint("Rename the start and end places")
     }
 
-    private func timelineRow(color: Color, time: Date, place: String, isFirst: Bool) -> some View {
+    private func timelineRow(color: Color, time: Date, place: String, isLast: Bool) -> some View {
         HStack(alignment: .top, spacing: 12) {
             VStack(spacing: 0) {
                 Circle().fill(color).frame(width: 12, height: 12).padding(.top, 4)
-                if isFirst {
+                if !isLast {
                     Rectangle().fill(.secondary.opacity(0.4)).frame(width: 2, height: 30)
                 }
             }
@@ -439,12 +439,39 @@ struct TripDetailView: View {
         }
     }
 
+    /// The chart sample closest to `time` (samples are sorted by time).
+    private func speedSample(near time: Date) -> SpeedSample? {
+        guard !speedSamples.isEmpty else { return nil }
+        var lo = 0, hi = speedSamples.count - 1
+        while hi - lo > 1 {
+            let mid = (lo + hi) / 2
+            if speedSamples[mid].time <= time { lo = mid } else { hi = mid }
+        }
+        let a = speedSamples[lo], b = speedSamples[hi]
+        return abs(a.time.timeIntervalSince(time)) <= abs(b.time.timeIntervalSince(time)) ? a : b
+    }
+
     private var speedChart: some View {
         VStack(alignment: .leading, spacing: 10) {
-            HStack {
+            HStack(alignment: .firstTextBaseline) {
                 Text("Speed").font(.headline)
                 Spacer()
-                Text("Touch to scrub").font(.caption).foregroundStyle(.secondary)
+                if let replayOffset {
+                    // The speed where the finger (or the replay) is, right above the chart.
+                    let time = replayTime(replayOffset)
+                    let speed = speedSample(near: time)?.speed ?? (replayState?.speed ?? 0) * (useMiles ? 2.236936 : 3.6)
+                    HStack(alignment: .firstTextBaseline, spacing: 6) {
+                        Text(verbatim: "\(Int(speed.rounded())) \(useMiles ? "mph" : "km/h")")
+                            .font(.title3.weight(.bold))
+                            .contentTransition(.numericText(value: speed))
+                        Text(time.formatted(date: .omitted, time: .shortened))
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                    .monospacedDigit()
+                } else {
+                    Text("Touch to scrub").font(.caption).foregroundStyle(.secondary)
+                }
             }
             Chart {
                 ForEach(speedSamples) { sample in
@@ -458,24 +485,27 @@ struct TripDetailView: View {
                         .foregroundStyle(Color.accentColor)
                         .interpolationMethod(.monotone)
                 }
-                if let replayOffset, let state = replayState {
-                    let time = routeStart.addingTimeInterval(replayOffset)
+                if let replayOffset {
+                    let time = replayTime(replayOffset)
                     RuleMark(x: .value("Now", time))
                         .foregroundStyle(.secondary.opacity(0.6))
                         .lineStyle(StrokeStyle(lineWidth: 1, dash: [3, 3]))
-                    PointMark(x: .value("Now", time), y: .value("Speed", state.speed * (useMiles ? 2.236936 : 3.6)))
-                        .foregroundStyle(Color.accentColor)
-                        .symbolSize(80)
+                    // On the drawn line, so the dot and the number above match what the chart shows.
+                    if let sample = speedSample(near: time) {
+                        PointMark(x: .value("Now", sample.time), y: .value("Speed", sample.speed))
+                            .foregroundStyle(Color.accentColor)
+                            .symbolSize(80)
+                    }
                 }
             }
             .chartYAxisLabel(useMiles ? "mph" : "km/h")
             .chartXSelection(value: Binding<Date?>(
-                get: { replayOffset.map { routeStart.addingTimeInterval($0) } },
+                get: { replayOffset.map { replayTime($0) } },
                 set: { date in
                     // Ends of a selection gesture report nil; keep the car where it is.
                     guard let date else { return }
                     isPlaying = false
-                    replayOffset = min(max(date.timeIntervalSince(routeStart), 0), routeDuration)
+                    replayOffset = replayOffset(at: date)
                 }
             ))
             .frame(height: 180)
@@ -483,6 +513,8 @@ struct TripDetailView: View {
         .padding(16)
         .background(.fill.quaternary, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
     }
+
+    private static let fuelEstimateInfo: LocalizedStringKey = "An estimate from the trip's distance and the fuel price and average consumption in Settings › Fuel & Mileage. Real use depends on traffic, speed, hills, weather, load and the car's condition, and on what you actually paid at the pump."
 
     private func card<Content: View>(@ViewBuilder _ content: () -> Content) -> some View {
         content()

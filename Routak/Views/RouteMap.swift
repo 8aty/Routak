@@ -7,14 +7,17 @@ struct RouteMap: View {
     let overlay: RouteOverlay
     var colorBySpeed = true
     var replay: ReplayState?
+    /// Where the trip was paused, shown as markers.
+    var pauses: [TripPause] = []
     /// The map's control scope. The caller places `MapCompass(scope:)` itself, so the compass
     /// doesn't end up under its own buttons in the top corner.
     let scope: Namespace.ID
     @State private var position: MapCameraPosition
     @State private var cameraHeading: Double = 0
 
-    init(overlay: RouteOverlay, colorBySpeed: Bool = true, replay: ReplayState? = nil, scope: Namespace.ID) {
+    init(overlay: RouteOverlay, colorBySpeed: Bool = true, replay: ReplayState? = nil, pauses: [TripPause] = [], scope: Namespace.ID) {
         self.scope = scope
+        self.pauses = pauses
         self.overlay = overlay
         self.colorBySpeed = colorBySpeed
         self.replay = replay
@@ -29,16 +32,22 @@ struct RouteMap: View {
     var body: some View {
         Map(position: $position, scope: scope) {
             if overlay.full.pointCount > 1 {
+                // The outline and the colored line sit on different overlay levels. MapKit doesn't keep
+                // the order of overlays on one level when the content updates (every frame of a replay),
+                // which drew the white outline over the colors.
                 MapPolyline(overlay.full)
                     .stroke(.white.opacity(0.85), style: StrokeStyle(lineWidth: 9, lineCap: .round, lineJoin: .round))
+                    .mapOverlayLevel(level: .aboveRoads)
                 if colorBySpeed {
                     ForEach(overlay.speedSegments) { segment in
                         MapPolyline(segment.polyline)
                             .stroke(segment.color, style: StrokeStyle(lineWidth: 5.5, lineCap: .round, lineJoin: .round))
+                            .mapOverlayLevel(level: .aboveLabels)
                     }
                 } else {
                     MapPolyline(overlay.full)
                         .stroke(Color.accentColor, style: StrokeStyle(lineWidth: 5.5, lineCap: .round, lineJoin: .round))
+                        .mapOverlayLevel(level: .aboveLabels)
                 }
             }
             if let start = overlay.start {
@@ -49,6 +58,12 @@ struct RouteMap: View {
             if let end = overlay.end {
                 Annotation(String(localized: "End"), coordinate: end, anchor: .center) {
                     RouteEndpoint(color: .red, systemImage: "flag.checkered")
+                }
+            }
+            ForEach(Array(pauses.enumerated()), id: \.offset) { _, pause in
+                Annotation(Format.duration(pause.duration), coordinate: pause.coordinate, anchor: .center) {
+                    RouteEndpoint(color: .orange, systemImage: "pause.fill")
+                        .scaleEffect(0.85)
                 }
             }
             if let replay {

@@ -12,7 +12,7 @@ struct StartTripIntent: LiveActivityIntent {
     @MainActor
     func perform() async throws -> some IntentResult & ProvidesDialog {
         switch TripTracker.shared.startTripFromShortcut() {
-        case .started:
+        case .started, .resumed:
             return .result(dialog: "Recording your trip.")
         case .alreadyRecording:
             return .result(dialog: "A trip is already recording.")
@@ -66,6 +66,24 @@ struct RoutakShortcuts: AppShortcutsProvider {
             ],
             shortTitle: "End Trip",
             systemImageName: "stop.circle.fill"
+        )
+        AppShortcut(
+            intent: PauseTripIntent(),
+            phrases: [
+                "Pause my trip in \(.applicationName)",
+                "Pause recording in \(.applicationName)",
+            ],
+            shortTitle: "Pause Trip",
+            systemImageName: "pause.circle.fill"
+        )
+        AppShortcut(
+            intent: ResumeTripIntent(),
+            phrases: [
+                "Resume my trip in \(.applicationName)",
+                "Resume recording in \(.applicationName)",
+            ],
+            shortTitle: "Resume Trip",
+            systemImageName: "play.circle.fill"
         )
         AppShortcut(
             intent: WeekSummaryIntent(),

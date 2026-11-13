@@ -14,8 +14,8 @@ struct TripLiveActivity: Widget {
                     Label {
                         Text(content.distance).font(.title3.weight(.bold)).monospacedDigit()
                     } icon: {
-                        Image(systemName: content.isEnded ? "checkmark.circle.fill" : "car.fill")
-                            .foregroundStyle(content.isEnded ? Color.green : Color.routakAccent)
+                        Image(systemName: content.isEnded ? "checkmark.circle.fill" : content.symbol)
+                            .foregroundStyle(content.tint)
                     }
                     .padding(.leading, 6)
                 }
@@ -33,20 +33,23 @@ struct TripLiveActivity: Widget {
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
                         Spacer()
-                        if !content.isEnded { content.endButton }
+                        if !content.isEnded {
+                            content.pauseButton
+                            content.endButton
+                        }
                     }
                     .padding(.horizontal, 6)
                 }
             } compactLeading: {
-                Image(systemName: content.isEnded ? "checkmark" : "car.fill")
-                    .foregroundStyle(content.isEnded ? Color.green : Color.routakAccent)
+                Image(systemName: content.symbol)
+                    .foregroundStyle(content.tint)
             } compactTrailing: {
                 Text(content.distance)
                     .font(.footnote.weight(.semibold))
                     .monospacedDigit()
             } minimal: {
-                Image(systemName: content.isEnded ? "checkmark" : "car.fill")
-                    .foregroundStyle(content.isEnded ? Color.green : Color.routakAccent)
+                Image(systemName: content.symbol)
+                    .foregroundStyle(content.tint)
             }
             .keylineTint(Color.routakAccent)
         }

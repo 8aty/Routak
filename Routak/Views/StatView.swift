@@ -7,6 +7,9 @@ struct StatView: View {
     var unit: String = ""
     var alignment: HorizontalAlignment = .leading
     var valueFont: Font = .title2
+    /// Shows an ⓘ button next to the caption that explains the number (e.g. that it's an estimate).
+    var info: LocalizedStringKey?
+    @State private var showsInfo = false
 
     var body: some View {
         VStack(alignment: alignment, spacing: 2) {
@@ -21,10 +24,35 @@ struct StatView: View {
                         .foregroundStyle(.secondary)
                 }
             }
-            Text(title)
-                .font(.caption)
-                .foregroundStyle(.secondary)
-                .textCase(.uppercase)
+            HStack(spacing: 4) {
+                Text(title)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .textCase(.uppercase)
+                if let info {
+                    Button {
+                        showsInfo = true
+                    } label: {
+                        Image(systemName: "info.circle")
+                            .font(.caption.weight(.semibold))
+                            .foregroundStyle(.secondary)
+                            // A bigger target than the small icon.
+                            .padding(6)
+                            .contentShape(Rectangle())
+                            .padding(-6)
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityLabel("More info")
+                    .popover(isPresented: $showsInfo) {
+                        Text(info)
+                            .font(.subheadline)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .padding()
+                            .frame(width: 290)
+                            .presentationCompactAdaptation(.popover)
+                    }
+                }
+            }
         }
     }
 }

@@ -23,12 +23,113 @@
         }
       }
     },
+    "%lld trips, %@" : {
+      "comment" : "Trips in the mileage log and their distance",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%#@trips@, %2$@"
+          },
+          "substitutions" : {
+            "trips" : {
+              "argNum" : 1,
+              "formatSpecifier" : "lld",
+              "variations" : {
+                "plural" : {
+                  "few" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%arg jízdy"
+                    }
+                  },
+                  "many" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%arg jízdy"
+                    }
+                  },
+                  "one" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%arg jízda"
+                    }
+                  },
+                  "other" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%arg jízd"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld trips, %2$@"
+          }
+        }
+      }
+    },
+    "A paused trip resumes by itself when you drive off. If it stays paused this long, it's saved and ends where you paused." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pozastavená jízda pokračuje sama, jakmile se rozjedete. Pokud zůstane pozastavená takto dlouho, uloží se a skončí tam, kde jste ji pozastavili."
+          }
+        }
+      }
+    },
     "A trip is already recording." : {
       "localizations" : {
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Jízda se už nahrává."
+          }
+        }
+      }
+    },
+    "Add" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Přidat"
+          }
+        }
+      }
+    },
+    "After a trip ends, the Drive screen offers to continue it while you're still this close to where it ended. The time in between counts as a pause." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Po skončení jízdy nabídne obrazovka Jízda, že v ní můžete pokračovat, dokud jste takto blízko místa, kde skončila. Čas mezi tím se počítá jako pauza."
+          }
+        }
+      }
+    },
+    "An estimate from the trip's distance and the fuel price and average consumption in Settings › Fuel & Mileage. Real use depends on traffic, speed, hills, weather, load and the car's condition, and on what you actually paid at the pump." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Odhad podle délky jízdy, ceny paliva a průměrné spotřeby z Nastavení › Palivo a náhrady. Skutečná spotřeba závisí na provozu, rychlosti, kopcích, počasí, naložení a stavu auta, a cena na tom, kolik jste u pumpy opravdu zaplatili."
+          }
+        }
+      }
+    },
+    "Any label" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jakýkoli štítek"
           }
         }
       }
@@ -54,6 +155,16 @@
         }
       }
     },
+    "By label" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Podle štítku"
+          }
+        }
+      }
+    },
     "Checking…" : {
       "comment" : "iCloud account status",
       "localizations" : {
@@ -61,6 +172,56 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Zjišťuje se…"
+          }
+        }
+      }
+    },
+    "Close" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zavřít"
+          }
+        }
+      }
+    },
+    "Color" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Barva"
+          }
+        }
+      }
+    },
+    "Continue Last Trip" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pokračovat v poslední jízdě"
+          }
+        }
+      }
+    },
+    "Continue last trip" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pokračování poslední jízdy"
+          }
+        }
+      }
+    },
+    "Cost" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cena"
           }
         }
       }
@@ -76,6 +237,46 @@
         }
       }
     },
+    "Create labels with your own name, color and icon." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vytvořte si štítky s vlastním názvem, barvou a ikonou."
+          }
+        }
+      }
+    },
+    "Delete Label" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Smazat štítek"
+          }
+        }
+      }
+    },
+    "Delete this label?" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Smazat tento štítek?"
+          }
+        }
+      }
+    },
+    "Drive resumed" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jízda pokračuje"
+          }
+        }
+      }
+    },
     "Drives show up here automatically." : {
       "comment" : "Widget, before the first trip",
       "localizations" : {
@@ -83,6 +284,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Jízdy se tu objeví automaticky."
+          }
+        }
+      }
+    },
+    "Driving again within %lld minutes of where a trip ended, after a gas stop for example, continues the same trip. Snapping uses Apple Maps directions to line routes up with roads, which helps in tunnels and between tall buildings. GPS records less often on highways to save battery." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Když se do %lld minut znovu rozjedete z místa, kde jízda skončila (třeba po zastávce u benzinky), pokračuje stejná jízda. Přichycení k silnicím zarovná trasy podle navigace z aplikace Mapy, což pomáhá v tunelech a mezi vysokými budovami. Na dálnicích zaznamenává GPS polohu méně často, aby šetřila baterii."
           }
         }
       }
@@ -98,12 +309,52 @@
         }
       }
     },
+    "Driving time" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Čas jízdy"
+          }
+        }
+      }
+    },
+    "Edit Label" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Upravit štítek"
+          }
+        }
+      }
+    },
+    "End paused trip after" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ukončit pozastavenou jízdu po"
+          }
+        }
+      }
+    },
     "Ends and saves the trip being recorded." : {
       "localizations" : {
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ukončí a uloží právě nahrávanou jízdu."
+          }
+        }
+      }
+    },
+    "Ends in %@" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skončí za %@"
           }
         }
       }
@@ -115,6 +366,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sledujte silnici"
+          }
+        }
+      }
+    },
+    "Fixes" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opravy"
           }
         }
       }
@@ -140,12 +401,92 @@
         }
       }
     },
+    "Icon" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ikona"
+          }
+        }
+      }
+    },
     "In a moving car, Routak shows “Eyes on the road”. Passengers can close it with one tap." : {
       "localizations" : {
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "V jedoucím autě Routak ukáže „Sledujte silnici“. Spolujezdec to může zavřít jedním klepnutím."
+            "value" : "V jedoucím autě Rauťák ukáže „Sledujte silnici“. Spolujezdec to může zavřít jedním klepnutím."
+          }
+        }
+      }
+    },
+    "Join if driving again within" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spojit, když znovu vyjedete do"
+          }
+        }
+      }
+    },
+    "Joining trips" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spojování jízd"
+          }
+        }
+      }
+    },
+    "Keep Recording" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nahrávat dál"
+          }
+        }
+      }
+    },
+    "Label trips on their page or by touching and holding them in History. Labels show up in History filters, Stats and the mileage log." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Štítek přidáte na stránce jízdy nebo podržením jízdy v Historii. Štítky najdete ve filtrech Historie, ve Statistikách a v knize jízd."
+          }
+        }
+      }
+    },
+    "Label trips to log business miles" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Označte jízdy štítkem pro knihu jízd"
+          }
+        }
+      }
+    },
+    "Labels" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Štítky"
+          }
+        }
+      }
+    },
+    "Labels to include" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zahrnout štítky"
           }
         }
       }
@@ -161,6 +502,26 @@
         }
       }
     },
+    "More info" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Další informace"
+          }
+        }
+      }
+    },
+    "New Label" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nový štítek"
+          }
+        }
+      }
+    },
     "No trip is being recorded." : {
       "localizations" : {
         "cs" : {
@@ -171,12 +532,32 @@
         }
       }
     },
+    "No trip is paused." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Žádná jízda není pozastavená."
+          }
+        }
+      }
+    },
     "No trips yet this week." : {
       "localizations" : {
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tento týden zatím žádné jízdy."
+          }
+        }
+      }
+    },
+    "Not moving" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nehýbete se"
           }
         }
       }
@@ -197,7 +578,98 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nejdřív otevřete Routak a povolte přístup k poloze."
+            "value" : "Nejdřív otevřete Rauťák a povolte přístup k poloze."
+          }
+        }
+      }
+    },
+    "Pause" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pozastavit"
+          }
+        }
+      }
+    },
+    "Pause and continue" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pauza a pokračování"
+          }
+        }
+      }
+    },
+    "Pause at a stop and Routak carries on when you drive off. Ended a trip too soon? Continue it." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Na zastávce dejte pauzu a Rauťák pokračuje, až se rozjedete. Ukončili jste jízdu moc brzy? Navažte na ni."
+          }
+        }
+      }
+    },
+    "Pause Trip" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pozastavit jízdu"
+          }
+        }
+      }
+    },
+    "Pause, Continue & Joining" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pauza, pokračování a spojování"
+          }
+        }
+      }
+    },
+    "Paused" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pozastaveno"
+          }
+        }
+      }
+    },
+    "Paused %@" : {
+      "comment" : "Timeline row for a pause, e.g. Paused 14 min",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pauza %@"
+          }
+        }
+      }
+    },
+    "Paused too long, so the trip ended." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pauza byla příliš dlouhá, jízda skončila."
+          }
+        }
+      }
+    },
+    "Pauses the trip being recorded. It resumes by itself when you drive off." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pozastaví právě nahrávanou jízdu. Až se rozjedete, bude sama pokračovat."
           }
         }
       }
@@ -245,13 +717,53 @@
         }
       }
     },
+    "Resume" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pokračovat"
+          }
+        }
+      }
+    },
+    "Resume Trip" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pokračovat v jízdě"
+          }
+        }
+      }
+    },
+    "Resumes the paused trip." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pokračuje v pozastavené jízdě."
+          }
+        }
+      }
+    },
+    "Resumes when you drive off" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pokračuje, až se rozjedete"
+          }
+        }
+      }
+    },
     "Routak records this trip by itself." : {
       "comment" : "Under “Eyes on the road”. Keep it very short.",
       "localizations" : {
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Routak tuto jízdu zaznamená sám."
+            "value" : "Rauťák tuto jízdu zaznamená sám."
           }
         }
       }
@@ -261,7 +773,17 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Routak pracuje sám. Za jízdy se na něj nemusíte dívat."
+            "value" : "Rauťák pracuje sám. Za jízdy se na něj nemusíte dívat."
+          }
+        }
+      }
+    },
+    "Route colors no longer flicker during a replay, plus smaller fixes." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Barvy trasy už při přehrávání neblikají. K tomu drobné opravy."
           }
         }
       }
@@ -277,12 +799,42 @@
         }
       }
     },
+    "See roughly what each drive cost in fuel." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uvidíte, kolik vás každá jízda přibližně stála za palivo."
+          }
+        }
+      }
+    },
     "Show trip on Lock Screen" : {
       "localizations" : {
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Zobrazit jízdu na zamčené obrazovce"
+          }
+        }
+      }
+    },
+    "Smarter recording" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chytřejší záznam"
+          }
+        }
+      }
+    },
+    "Speed chart" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Graf rychlosti"
           }
         }
       }
@@ -308,6 +860,16 @@
         }
       }
     },
+    "Still driving?" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ještě jedete?"
+          }
+        }
+      }
+    },
     "Stopped · still recording" : {
       "comment" : "Live Activity status while stopped in traffic",
       "localizations" : {
@@ -329,6 +891,16 @@
         }
       }
     },
+    "Tap Resume when you drive off" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Až vyjedete, klepněte na Pokračovat"
+          }
+        }
+      }
+    },
     "Tells you how far you've driven this week." : {
       "localizations" : {
         "cs" : {
@@ -344,7 +916,47 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Chcete-li jízdu spouštět po připojení k CarPlay nebo k Bluetooth auta, vytvořte v aplikaci Zkratky automatizaci s akcí Spustit jízdu z Routaku."
+            "value" : "Chcete-li jízdu spouštět po připojení k CarPlay nebo k Bluetooth auta, vytvořte v aplikaci Zkratky automatizaci s akcí Spustit jízdu z Rauťáku."
+          }
+        }
+      }
+    },
+    "Touch the chart to see how fast you were going." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dotkněte se grafu a uvidíte, jak rychle jste jeli."
+          }
+        }
+      }
+    },
+    "Trip cost" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cena jízdy"
+          }
+        }
+      }
+    },
+    "Trip ends in 1 minute." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jízda skončí za minutu."
+          }
+        }
+      }
+    },
+    "Trip paused." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jízda pozastavena."
           }
         }
       }
@@ -369,6 +981,46 @@
         }
       }
     },
+    "Trips start where you parked, and trips you end yourself are always saved." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jízdy začínají tam, kde jste parkovali, a jízdy, které ukončíte sami, se vždy uloží."
+          }
+        }
+      }
+    },
+    "Trips with a checked label are listed. Label trips on their page or in History. Commuting usually isn't deductible." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zahrnuje jízdy se zaškrtnutým štítkem. Štítek přidáte na stránce jízdy nebo v Historii. Dojíždění do práce se obvykle odečíst nedá."
+          }
+        }
+      }
+    },
+    "Trips with labels" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jízdy se štítky"
+          }
+        }
+      }
+    },
+    "Trips with this label become unlabeled." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jízdy s tímto štítkem zůstanou bez štítku."
+          }
+        }
+      }
+    },
     "Unavailable" : {
       "comment" : "iCloud account status",
       "localizations" : {
@@ -376,6 +1028,140 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Nedostupné"
+          }
+        }
+      }
+    },
+    "Version %@" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verze %@"
+          }
+        }
+      }
+    },
+    "What's New" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Co je nového"
+          }
+        }
+      }
+    },
+    "whatsNew.fixed" : {
+      "comment" : "What's New section: bug fixes",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Fixed"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opraveno"
+          }
+        }
+      }
+    },
+    "whatsNew.improved" : {
+      "comment" : "What's New section: improvements",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Improved"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vylepšeno"
+          }
+        }
+      }
+    },
+    "whatsNew.new" : {
+      "comment" : "What's New section: new features",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "New"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nové"
+          }
+        }
+      }
+    },
+    "When a drive starts this soon after the last one, close to where it ended, both become one trip with a pause in between. Turn joining on or off on the Settings screen." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Když vyjedete takto brzy po předchozí jízdě a blízko místa, kde skončila, spojí se obě do jedné jízdy s pauzou. Spojování zapnete nebo vypnete na obrazovce Nastavení."
+          }
+        }
+      }
+    },
+    "When you start moving faster than about 23 km/h (15 mph), Routak begins recording. Shorter trips are discarded, unless you end them yourself. Manual trips are always saved. While your phone still senses it's in a car, red lights and traffic jams don't end the trip." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jakmile se rozjedete rychleji než zhruba 23 km/h, Rauťák začne zaznamenávat. Kratší jízdy se zahodí, pokud je neukončíte sami. Ručně spuštěné se uloží vždy. Dokud telefon poznává, že je v autě, červená na semaforu ani kolona jízdu neukončí."
+          }
+        }
+      }
+    },
+    "Within" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Časové okno"
+          }
+        }
+      }
+    },
+    "You stopped moving, so the trip ended." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Přestali jste se pohybovat, jízda skončila."
+          }
+        }
+      }
+    },
+    "Your own labels" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vlastní štítky"
+          }
+        }
+      }
+    },
+    "Your own labels for trips, like Work, Gym or School run." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vlastní štítky pro jízdy, třeba Práce, Posilovna nebo Cesta do školy."
           }
         }
       }
@@ -405,7 +1191,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Díky volbě „Vždy“ a Přesné poloze Routak rozpozná a zaznamená jízdy i při zavřené aplikaci."
+            "value" : "Díky volbě „Vždy“ a Přesné poloze Rauťák rozpozná a zaznamená jízdy i při zavřené aplikaci."
           }
         }
       }
@@ -708,78 +1494,6 @@
         }
       }
     },
-    "%lld work trips, %@" : {
-      "localizations" : {
-        "cs" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%#@trips@, %2$@"
-          },
-          "substitutions" : {
-            "trips" : {
-              "argNum" : 1,
-              "formatSpecifier" : "lld",
-              "variations" : {
-                "plural" : {
-                  "few" : {
-                    "stringUnit" : {
-                      "state" : "translated",
-                      "value" : "%arg služební jízdy"
-                    }
-                  },
-                  "many" : {
-                    "stringUnit" : {
-                      "state" : "translated",
-                      "value" : "%arg služební jízdy"
-                    }
-                  },
-                  "one" : {
-                    "stringUnit" : {
-                      "state" : "translated",
-                      "value" : "%arg služební jízda"
-                    }
-                  },
-                  "other" : {
-                    "stringUnit" : {
-                      "state" : "translated",
-                      "value" : "%arg služebních jízd"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%#@trips@, %2$@"
-          },
-          "substitutions" : {
-            "trips" : {
-              "argNum" : 1,
-              "formatSpecifier" : "lld",
-              "variations" : {
-                "plural" : {
-                  "one" : {
-                    "stringUnit" : {
-                      "state" : "translated",
-                      "value" : "%arg work trip"
-                    }
-                  },
-                  "other" : {
-                    "stringUnit" : {
-                      "state" : "translated",
-                      "value" : "%arg work trips"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "%lldh %lldm" : {
       "comment" : "Duration: hours and minutes",
       "localizations" : {
@@ -959,7 +1673,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Povolte přístup k poloze, aby Routak mohl zaznamenávat vaše jízdy."
+            "value" : "Povolte přístup k poloze, aby Rauťák mohl zaznamenávat vaše jízdy."
           }
         }
       }
@@ -1011,16 +1725,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Kdykoli"
-          }
-        }
-      }
-    },
-    "Any type" : {
-      "localizations" : {
-        "cs" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Jakýkoli typ"
           }
         }
       }
@@ -1108,16 +1812,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Podle dne v týdnu"
-          }
-        }
-      }
-    },
-    "By type" : {
-      "localizations" : {
-        "cs" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Podle typu"
           }
         }
       }
@@ -1747,16 +2441,6 @@
         }
       }
     },
-    "Driving again within 5 minutes of where a trip ended, after a gas stop for example, continues the same trip. Snapping uses Apple Maps directions to line routes up with roads, which helps in tunnels and between tall buildings. GPS records less often on highways to save battery." : {
-      "localizations" : {
-        "cs" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Když se do 5 minut znovu rozjedete z místa, kde jízda skončila (třeba po zastávce u benzinky), pokračuje stejná jízda. Přichycení k silnicím zarovná trasy podle navigace z aplikace Mapy, což pomáhá v tunelech a mezi vysokými budovami. Na dálnicích zaznamenává GPS polohu méně často, aby šetřila baterii."
-          }
-        }
-      }
-    },
     "Driving motion detected" : {
       "localizations" : {
         "cs" : {
@@ -2235,7 +2919,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Vytvořeno %@ v aplikaci Routak"
+            "value" : "Vytvořeno %@ v aplikaci Rauťák"
           }
         }
       }
@@ -2486,7 +3170,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Označení"
+            "value" : "Štítek"
           }
         }
       }
@@ -2496,27 +3180,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Označit jako"
-          }
-        }
-      }
-    },
-    "Label trips as Work in History or on a trip's page to include them. Commuting usually isn't deductible." : {
-      "localizations" : {
-        "cs" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Jízdy zahrnete tak, že je v Historii nebo na stránce jízdy označíte jako služební. Cesty do práce a z práce se za služební obvykle nepovažují."
-          }
-        }
-      }
-    },
-    "Label trips as Work to log business miles" : {
-      "localizations" : {
-        "cs" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Označte jízdy jako služební pro knihu jízd"
+            "value" : "Přidat štítek"
           }
         }
       }
@@ -2954,7 +3618,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bez označení"
+            "value" : "Bez štítku"
           }
         }
       }
@@ -3064,7 +3728,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Jen když je Routak otevřený"
+            "value" : "Jen když je Rauťák otevřený"
           }
         }
       }
@@ -3461,7 +4125,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Routak pozná, že vyjíždíte, jen když smí používat vaši polohu i při zavřené aplikaci."
+            "value" : "Rauťák pozná, že vyjíždíte, jen když smí používat vaši polohu i při zavřené aplikaci."
           }
         }
       }
@@ -3471,7 +4135,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Jízdy z Routaku"
+            "value" : "Jízdy z Rauťáku"
           }
         }
       }
@@ -3567,7 +4231,6 @@
       }
     },
     "Set Home and Work first" : {
-      "extractionState" : "stale",
       "localizations" : {
         "cs" : {
           "stringUnit" : {
@@ -4156,16 +4819,6 @@
         }
       }
     },
-    "Trip type" : {
-      "localizations" : {
-        "cs" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Typ jízdy"
-          }
-        }
-      }
-    },
     "Trips" : {
       "localizations" : {
         "cs" : {
@@ -4284,7 +4937,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bez označení"
+            "value" : "Bez štítku"
           }
         }
       }
@@ -4394,7 +5047,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Vítejte v Routaku"
+            "value" : "Vítejte v Rauťáku"
           }
         }
       }
@@ -4405,16 +5058,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Kdy jezdíte"
-          }
-        }
-      }
-    },
-    "When you start moving faster than about 23 km/h (15 mph), Routak begins recording. Shorter trips are discarded. Manual trips are always saved. While your phone still senses it's in a car, red lights and traffic jams don't end the trip." : {
-      "localizations" : {
-        "cs" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Jakmile se rozjedete rychleji než zhruba 23 km/h, Routak začne zaznamenávat. Kratší jízdy se zahodí, ručně spuštěné se uloží vždy. Dokud telefon poznává, že je v autě, červená na semaforu ani kolona jízdu neukončí."
           }
         }
       }
@@ -4456,26 +5099,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "V okruhu %lld m"
-          }
-        }
-      }
-    },
-    "Work and commute" : {
-      "localizations" : {
-        "cs" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Služební a dojíždění"
-          }
-        }
-      }
-    },
-    "Work trips" : {
-      "localizations" : {
-        "cs" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Služební jízdy"
           }
         }
       }

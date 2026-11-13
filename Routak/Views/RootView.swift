@@ -6,8 +6,10 @@ struct RootView: View {
     @Environment(\.scenePhase) private var scenePhase
     @Environment(\.modelContext) private var context
     @Environment(TripTracker.self) private var tracker
+    @Query(sort: [SortDescriptor(\TripLabel.sortOrder), SortDescriptor(\TripLabel.createdAt)]) private var labels: [TripLabel]
     @AppStorage(Prefs.hasOnboardedKey) private var hasOnboarded = false
     @State private var showWelcome = false
+    @State private var whatsNew: ReleaseNotes?
     @AppStorage(Prefs.drivingReminderKey) private var drivingReminder = true
     /// The trip (by start date) the road reminder was triggered for, and the one a passenger dismissed it for.
     @State private var remindedTrip: Date?
@@ -33,13 +35,33 @@ struct RootView: View {
             return
         }
         #endif
-        guard !hasOnboarded else { return }
+        #if DEBUG
+        // `-showWhatsNew YES` shows this version's What's New again.
+        if UserDefaults.standard.bool(forKey: "showWhatsNew") {
+            whatsNew = ReleaseNotes.current ?? ReleaseNotes.all.first
+            return
+        }
+        #endif
+        guard !hasOnboarded else {
+            showWhatsNewIfNeeded()
+            return
+        }
         if tracker.authorization != .notDetermined {
             // Someone who used Routak before the welcome screen existed.
             hasOnboarded = true
+            showWhatsNewIfNeeded()
         } else {
             showWelcome = true
+            // A fresh install has nothing to catch up on.
+            ReleaseNotes.markSeen()
         }
+    }
+
+    /// After an update, what's new in this version, once.
+    private func showWhatsNewIfNeeded() {
+        guard let notes = ReleaseNotes.unseen else { return }
+        whatsNew = notes
+        ReleaseNotes.markSeen()
     }
 
     /// Speed above which the car counts as moving for the reminder (~15 km/h).
@@ -92,13 +114,15 @@ struct RootView: View {
         .onChange(of: scenePhase, initial: true) { _, phase in
             if phase == .active {
                 TripMaintenance.run(context: context)
-                LiveActivityController.shared.appBecameActive(
-                    isRecording: tracker.mode == .recording, startDate: tracker.activeStartDate, distance: tracker.activeDistance
-                )
+                tracker.appBecameActive()
+                LiveActivityController.shared.appBecameActive()
                 WidgetSync.schedule()
             }
         }
         .onAppear(perform: decideWelcome)
+        .onAppear { LabelBook.prepare(context: context) }
+        // Also picks up labels added, reordered or deleted on another device through iCloud.
+        .onChange(of: labels) { _, labels in LabelBook.shared.update(labels) }
         .onChange(of: tracker.currentSpeed) { updateDrivingReminder() }
         .onChange(of: tracker.mode) { updateDrivingReminder() }
         .onChange(of: drivingReminder) { updateDrivingReminder() }
@@ -113,6 +137,9 @@ struct RootView: View {
             debugScreen = UserDefaults.standard.string(forKey: "debugScreen").flatMap(DebugScreen.init(rawValue:))
         }
         #endif
+        .sheet(item: $whatsNew) { notes in
+            WhatsNewView(notes: notes)
+        }
         .fullScreenCover(isPresented: $showWelcome) {
             WelcomeView {
                 hasOnboarded = true
@@ -120,7 +147,7 @@ struct RootView: View {
             }
         }
         // A light tap when a drive starts, a success buzz when it's saved (only felt with the app open).
-        .sensoryFeedback(trigger: tracker.mode == .recording) { wasRecording, isRecording in
+        .sensoryFeedback(trigger: tracker.hasOpenTrip) { wasRecording, isRecording in
             isRecording ? .start : (wasRecording ? .success : nil)
         }
     }
@@ -128,7 +155,7 @@ struct RootView: View {
 
 #if DEBUG
 enum DebugScreen: String, Identifiable {
-    case heatmap, commute, mileage, export, costs, fix, widgets
+    case heatmap, commute, mileage, export, costs, fix, widgets, labels, newLabel
     var id: String { rawValue }
 }
 
@@ -151,6 +178,8 @@ private struct DebugScreenView: View {
         case .export: ExportView()
         case .costs: CostSettingsView()
         case .widgets: WidgetGallery()
+        case .labels: LabelsView()
+        case .newLabel: LabelEditorView(label: nil)
         case .fix:
             if let trip = trips.first(where: { $0.title.localizedCaseInsensitiveContains(UserDefaults.standard.string(forKey: "openTrip") ?? "") }) ?? trips.first {
                 TripFixView(trip: trip) {}

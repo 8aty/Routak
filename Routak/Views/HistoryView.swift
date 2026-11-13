@@ -15,7 +15,7 @@ struct HistoryView: View {
     @State private var dateFilter: DateFilter = .all
     @State private var customRange = DateRangeDraft()
     @State private var showCustomRange = false
-    /// "" = any, "none" = unlabeled, otherwise a `TripCategory` raw value.
+    /// "" = any, "none" = unlabeled, otherwise a `TripLabel.key`.
     @State private var categoryFilter = ""
     @State private var placeFilter: UUID?
 
@@ -53,7 +53,7 @@ struct HistoryView: View {
             if let interval, !interval.contains(trip.startDate) { return false }
             switch categoryFilter {
             case "": break
-            case "none": if trip.category != nil { return false }
+            case "none": if trip.label != nil { return false }
             default: if trip.categoryRaw != categoryFilter { return false }
             }
             if let place {
@@ -72,7 +72,7 @@ struct HistoryView: View {
     private static func searchText(for trip: Trip) -> String {
         [
             trip.title, trip.startName ?? "", trip.endName ?? "", trip.notes,
-            trip.category?.title ?? "",
+            trip.label?.title ?? "",
             trip.startDate.formatted(.dateTime.weekday(.wide).month(.wide).day().year()),
         ].joined(separator: " ").lowercased()
     }
@@ -177,12 +177,13 @@ struct HistoryView: View {
                             }
                             .contextMenu {
                                 Menu {
-                                    ForEach(TripCategory.allCases) { category in
+                                    ForEach(LabelBook.shared.labels) { label in
+                                        let chosen = trip.categoryRaw == label.key
                                         Button {
-                                            trip.category = trip.category == category ? nil : category
+                                            trip.label = chosen ? nil : label
                                             try? context.save()
                                         } label: {
-                                            Label(category.title, systemImage: trip.category == category ? "checkmark" : category.systemImage)
+                                            Label(label.title, systemImage: chosen ? "checkmark" : label.symbol)
                                         }
                                     }
                                 } label: {
@@ -250,9 +251,9 @@ struct HistoryView: View {
             }
             .pickerStyle(.menu)
 
-            Picker("Type", selection: $categoryFilter) {
-                Text("Any type").tag("")
-                ForEach(TripCategory.allCases) { Label($0.title, systemImage: $0.systemImage).tag($0.rawValue) }
+            Picker("Label", selection: $categoryFilter) {
+                Text("Any label").tag("")
+                ForEach(LabelBook.shared.labels) { Label($0.title, systemImage: $0.symbol).tag($0.key) }
                 Text("Not labeled").tag("none")
             }
             .pickerStyle(.menu)
@@ -284,7 +285,7 @@ struct HistoryView: View {
                     chip(dateFilter == .custom ? customRangeTitle : dateFilter.title) { dateFilter = .all }
                 }
                 if !categoryFilter.isEmpty {
-                    chip(TripCategory(rawValue: categoryFilter)?.title ?? String(localized: "Not labeled")) { categoryFilter = "" }
+                    chip(LabelBook.shared.label(for: categoryFilter)?.title ?? String(localized: "Not labeled")) { categoryFilter = "" }
                 }
                 if let placeFilter, let place = places.first(where: { $0.id == placeFilter }) {
                     chip(place.name) { self.placeFilter = nil }
@@ -353,6 +354,8 @@ struct TripCard: View {
     let trip: Trip
     @Environment(\.colorScheme) private var colorScheme
     @AppStorage(Prefs.useMilesKey) private var useMiles = false
+    @AppStorage(Prefs.fuelEconomyKey) private var fuelEconomy = 8.0
+    @AppStorage(Prefs.fuelPriceKey) private var fuelPrice = 0.0
     @State private var image: UIImage?
     @State private var width: CGFloat = 0
 
@@ -371,12 +374,8 @@ struct TripCard: View {
                 } else {
                     ProgressView().frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
-                if let category = trip.category {
-                    Label(category.title, systemImage: category.systemImage)
-                        .font(.caption.weight(.bold))
-                        .padding(.horizontal, 10)
-                        .padding(.vertical, 5)
-                        .background(.regularMaterial, in: Capsule())
+                if let label = trip.label {
+                    LabelBadge(label: label)
                         .padding(10)
                 }
             }
@@ -403,10 +402,12 @@ struct TripCard: View {
                             .lineLimit(1)
                     }
                 }
-                HStack(spacing: 18) {
-                    MetricLabel(systemImage: "road.lanes", text: Format.distance(trip.distance, miles: useMiles))
-                    MetricLabel(systemImage: "clock", text: Format.duration(trip.duration))
-                    MetricLabel(systemImage: "speedometer", text: Format.speed(trip.averageSpeed, miles: useMiles))
+                // Fuel cost joins the row once a fuel price is set; on narrow screens average speed makes room.
+                let cost = Costs.fuelCost(for: trip.distance, economy: fuelEconomy, price: fuelPrice)
+                ViewThatFits(in: .horizontal) {
+                    metrics(cost: cost, showSpeed: true, spacing: 18)
+                    metrics(cost: cost, showSpeed: true, spacing: 12)
+                    metrics(cost: cost, showSpeed: false, spacing: 14)
                 }
             }
             .padding(14)
@@ -418,6 +419,21 @@ struct TripCard: View {
             RoundedRectangle(cornerRadius: 22, style: .continuous)
                 .strokeBorder(.separator.opacity(0.5), lineWidth: 0.5)
         }
+    }
+
+    private func metrics(cost: Double?, showSpeed: Bool, spacing: CGFloat) -> some View {
+        HStack(spacing: spacing) {
+            MetricLabel(systemImage: "road.lanes", text: Format.distance(trip.distance, miles: useMiles))
+            MetricLabel(systemImage: "clock", text: Format.duration(trip.duration))
+            if showSpeed {
+                MetricLabel(systemImage: "speedometer", text: Format.speed(trip.averageSpeed, miles: useMiles))
+            }
+            if let cost {
+                MetricLabel(systemImage: "fuelpump", text: Costs.money(cost))
+            }
+        }
+        .lineLimit(1)
+        .fixedSize()
     }
 
     private func loadSnapshot() async {

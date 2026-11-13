@@ -12,7 +12,7 @@ struct TripEditView: View {
 
     @State private var startName = ""
     @State private var endName = ""
-    @State private var category: TripCategory?
+    @State private var labelKey = ""
     @State private var notes = ""
     @State private var rememberStart: SavedPlace.Kind?
     @State private var rememberEnd: SavedPlace.Kind?
@@ -30,10 +30,10 @@ struct TripEditView: View {
                 )
 
                 Section("Label") {
-                    Picker("Trip type", selection: $category) {
-                        Text(String(localized: "category.none", defaultValue: "None", comment: "Trip type picker: no label")).tag(TripCategory?.none)
-                        ForEach(TripCategory.allCases) { category in
-                            Label(category.title, systemImage: category.systemImage).tag(Optional(category))
+                    Picker("Label", selection: $labelKey) {
+                        Text(String(localized: "category.none", defaultValue: "None", comment: "Trip type picker: no label")).tag("")
+                        ForEach(LabelBook.shared.labels) { label in
+                            Label(label.title, systemImage: label.symbol).tag(label.key)
                         }
                     }
                 }
@@ -56,7 +56,8 @@ struct TripEditView: View {
             .onAppear {
                 startName = trip.startName ?? ""
                 endName = trip.endName ?? ""
-                category = trip.category
+                // A label deleted elsewhere counts as none.
+                labelKey = trip.label?.key ?? ""
                 notes = trip.notes
             }
             .onChange(of: rememberStart) { _, kind in
@@ -107,7 +108,7 @@ struct TripEditView: View {
         let end = endName.trimmingCharacters(in: .whitespacesAndNewlines)
         trip.startName = start.isEmpty ? nil : start
         trip.endName = end.isEmpty ? nil : end
-        trip.category = category
+        trip.categoryRaw = labelKey
         trip.notes = notes.trimmingCharacters(in: .whitespacesAndNewlines)
 
         if let kind = rememberStart, let coordinate = trip.startCoordinate {

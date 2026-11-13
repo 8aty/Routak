@@ -251,6 +251,8 @@ struct TripFixView: View {
             let i = min(Int(splitAt), max(lastIndex - 2, 1))
             let second = Array(points[(i + 1)...lastIndex])
             let newTrip = Trip(startDate: second[0].timestamp, isManual: trip.isManual)
+            // Each half keeps the pauses that fall inside it (`apply` drops the rest).
+            newTrip.pauses = trip.pauses
             newTrip.apply(points: second)
             newTrip.isActive = false
             newTrip.categoryRaw = trip.categoryRaw

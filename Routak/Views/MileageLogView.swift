@@ -9,36 +9,29 @@ struct MileageLogView: View {
     @AppStorage(Prefs.useMilesKey) private var useMiles = false
     @AppStorage(Prefs.mileageRateKey) private var ratePerKm = 0.0
     @AppStorage("mileageLogRange") private var range: ReportRange = .thisMonth
-    @AppStorage("mileageLogInclude") private var include: Include = .work
+    @AppStorage(Prefs.mileageAllTripsKey) private var allTrips = false
+    @AppStorage(Prefs.mileageLabelsKey) private var labelKeysRaw = "work"
     @State private var customStart = Calendar.current.date(byAdding: .month, value: -1, to: .now) ?? .now
     @State private var customEnd = Date.now
     @State private var sharedFile: SharedFile?
     @State private var errorMessage: String?
 
-    enum Include: String, CaseIterable, Identifiable {
-        case work, workAndCommute, all
-        var id: String { rawValue }
-        var title: String {
-            switch self {
-            case .work: String(localized: "Work trips")
-            case .workAndCommute: String(localized: "Work and commute")
-            case .all: String(localized: "All trips")
-            }
-        }
+    private var labelKeys: Set<String> { Prefs.mileageLabelKeys(labelKeysRaw) }
 
-        func includes(_ trip: Trip) -> Bool {
-            switch self {
-            case .work: trip.category == .work
-            case .workAndCommute: trip.category == .work || trip.category == .commute
-            case .all: true
-            }
-        }
+    private func includes(_ trip: Trip) -> Bool {
+        allTrips || (!trip.categoryRaw.isEmpty && labelKeys.contains(trip.categoryRaw))
+    }
+
+    private func toggle(_ label: TripLabel) {
+        var keys = labelKeys
+        if keys.contains(label.key) { keys.remove(label.key) } else { keys.insert(label.key) }
+        labelKeysRaw = keys.sorted().joined(separator: ",")
     }
 
     private var log: MileageLog {
         let interval = range.interval(customStart: customStart, customEnd: customEnd)
         let selected = trips.filter { trip in
-            (interval?.contains(trip.startDate) ?? true) && include.includes(trip)
+            (interval?.contains(trip.startDate) ?? true) && includes(trip)
         }
         return MileageLog(
             entries: selected.map(MileageLog.entry(for:)),
@@ -67,8 +60,9 @@ struct MileageLogView: View {
                         DatePicker("From", selection: $customStart, in: ...Date.now, displayedComponents: .date)
                         DatePicker("To", selection: $customEnd, in: ...Date.now, displayedComponents: .date)
                     }
-                    Picker("Include", selection: $include) {
-                        ForEach(Include.allCases) { Text($0.title).tag($0) }
+                    Picker("Include", selection: $allTrips) {
+                        Text("Trips with labels").tag(false)
+                        Text("All trips").tag(true)
                     }
                     LabeledContent("Rate per \(Costs.distanceUnit(miles: useMiles))") {
                         TextField("0.00", value: rateBinding, format: .currency(code: Costs.currencyCode))
@@ -76,9 +70,32 @@ struct MileageLogView: View {
                             .multilineTextAlignment(.trailing)
                     }
                 } footer: {
-                    Text(include == .all
-                         ? "Every saved trip in the period is listed."
-                         : "Label trips as Work in History or on a trip's page to include them. Commuting usually isn't deductible.")
+                    if allTrips { Text("Every saved trip in the period is listed.") }
+                }
+
+                if !allTrips {
+                    Section {
+                        ForEach(LabelBook.shared.labels) { label in
+                            Button {
+                                toggle(label)
+                            } label: {
+                                HStack(spacing: 12) {
+                                    LabelIcon(label: label, size: 28)
+                                    Text(label.title).foregroundStyle(.primary)
+                                    Spacer()
+                                    if labelKeys.contains(label.key) {
+                                        Image(systemName: "checkmark").font(.body.weight(.semibold)).foregroundStyle(Color.accentColor)
+                                    }
+                                }
+                            }
+                            .tint(.primary)
+                            .accessibilityAddTraits(labelKeys.contains(label.key) ? .isSelected : [])
+                        }
+                    } header: {
+                        Text("Labels to include")
+                    } footer: {
+                        Text("Trips with a checked label are listed. Label trips on their page or in History. Commuting usually isn't deductible.")
+                    }
                 }
 
                 Section("Summary") {

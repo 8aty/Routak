@@ -126,12 +126,52 @@
         }
       }
     },
+    "No trip is paused." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Žádná jízda není pozastavená."
+          }
+        }
+      }
+    },
     "No trips yet" : {
       "localizations" : {
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Zatím žádné jízdy"
+          }
+        }
+      }
+    },
+    "Pause Trip" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pozastavit jízdu"
+          }
+        }
+      }
+    },
+    "Paused" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pozastaveno"
+          }
+        }
+      }
+    },
+    "Pauses the trip being recorded. It resumes by itself when you drive off." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pozastaví právě nahrávanou jízdu. Až se rozjedete, bude sama pokračovat."
           }
         }
       }
@@ -153,6 +193,36 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Nahrávání jízdy"
+          }
+        }
+      }
+    },
+    "Recording your trip." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jízda se nahrává."
+          }
+        }
+      }
+    },
+    "Resume Trip" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pokračovat v jízdě"
+          }
+        }
+      }
+    },
+    "Resumes the paused trip." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pokračuje v pozastavené jízdě."
           }
         }
       }
@@ -185,6 +255,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tento týden"
+          }
+        }
+      }
+    },
+    "Trip paused." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jízda pozastavena."
           }
         }
       }

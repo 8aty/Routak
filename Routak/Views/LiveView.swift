@@ -90,10 +90,13 @@ private struct LiveMap: View {
         Map(position: $position, scope: scope) {
             UserAnnotation()
             if route.count > 1 {
+                // Separate levels keep the outline under the line when the route updates.
                 MapPolyline(coordinates: route)
                     .stroke(.white.opacity(0.85), style: StrokeStyle(lineWidth: 9, lineCap: .round, lineJoin: .round))
+                    .mapOverlayLevel(level: .aboveRoads)
                 MapPolyline(coordinates: route)
                     .stroke(Color.accentColor, style: StrokeStyle(lineWidth: 5.5, lineCap: .round, lineJoin: .round))
+                    .mapOverlayLevel(level: .aboveLabels)
             }
             if let first = route.first {
                 Annotation(String(localized: "Start"), coordinate: first, anchor: .center) {
@@ -129,12 +132,25 @@ private struct LiveControlPanel: View {
             if tracker.mode == .recording {
                 recordingPanel
                     .transition(.blurReplace)
+            } else if tracker.mode == .paused {
+                pausedPanel
+                    .transition(.blurReplace)
             } else {
                 idlePanel
                     .transition(.blurReplace)
             }
         }
-        .animation(.snappy, value: tracker.mode == .recording)
+        .animation(.snappy, value: tracker.mode)
+        .animation(.snappy, value: tracker.continuableTrip == nil)
+        .animation(.snappy, value: tracker.stopCheckDeadline == nil)
+        // "Continue last trip" depends on time and place, so check again now and then.
+        .task(id: tracker.hasOpenTrip) {
+            guard !tracker.hasOpenTrip else { return }
+            while !Task.isCancelled {
+                try? await Task.sleep(for: .seconds(60))
+                tracker.refreshContinuableTrip()
+            }
+        }
     }
 
     private var recordingPanel: some View {
@@ -153,7 +169,7 @@ private struct LiveControlPanel: View {
                 TimelineView(.periodic(from: .now, by: 1)) { context in
                     StatView(
                         title: "Time",
-                        value: Format.clock(context.date.timeIntervalSince(tracker.activeStartDate ?? context.date)),
+                        value: Format.clock(context.date.timeIntervalSince(tracker.activeTimerStart ?? context.date)),
                         alignment: .center,
                         valueFont: .largeTitle
                     )
@@ -162,22 +178,104 @@ private struct LiveControlPanel: View {
                 let speed = Format.speedParts(tracker.currentSpeed, miles: useMiles)
                 StatView(title: "Speed", value: speed.value, unit: speed.unit, alignment: .trailing, valueFont: .largeTitle)
             }
-            Button(role: .destructive) {
-                tracker.stopTrip()
-            } label: {
-                Label("End Trip", systemImage: "stop.fill")
-                    .font(.headline)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 6)
+            if let deadline = tracker.stopCheckDeadline {
+                stopCheckRow(deadline: deadline)
             }
-            .buttonStyle(.borderedProminent)
-            .tint(.red)
+            HStack(spacing: 10) {
+                Button {
+                    tracker.pauseTrip()
+                } label: {
+                    Label("Pause", systemImage: "pause.fill")
+                        .font(.headline)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 6)
+                }
+                .buttonStyle(.bordered)
+                .tint(.orange)
+                .disabled(!tracker.canPause)
+                endTripButton
+            }
+        }
+        .padding(18)
+        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 26, style: .continuous))
+    }
+
+    private var endTripButton: some View {
+        Button(role: .destructive) {
+            tracker.stopTrip()
+        } label: {
+            Label("End Trip", systemImage: "stop.fill")
+                .font(.headline)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 6)
+        }
+        .buttonStyle(.borderedProminent)
+        .tint(.red)
+    }
+
+    /// A manual trip that stopped moving: it ends soon unless you keep it going.
+    private func stopCheckRow(deadline: Date) -> some View {
+        HStack(spacing: 10) {
+            Image(systemName: "hourglass")
+                .foregroundStyle(.orange)
+            VStack(alignment: .leading, spacing: 1) {
+                Text("Still driving?").font(.subheadline.weight(.semibold))
+                Text("Ends in \(Text(timerInterval: Date.now...max(deadline, .now), countsDown: true))")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .monospacedDigit()
+            }
+            Spacer()
+            Button("Keep Recording") { tracker.keepRecording() }
+                .buttonStyle(.bordered)
+                .controlSize(.small)
+        }
+        .padding(10)
+        .background(.orange.opacity(0.12), in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+    }
+
+    private var pausedPanel: some View {
+        VStack(spacing: 14) {
+            HStack(spacing: 8) {
+                PausedBadge(since: tracker.pausedSince ?? .now)
+                Spacer()
+                Text(tracker.hasAlwaysPermission ? "Resumes when you drive off" : "Tap Resume when you drive off")
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
+            }
+            HStack(alignment: .top) {
+                let distance = Format.distanceParts(tracker.activeDistance, miles: useMiles)
+                StatView(title: "Distance", value: distance.value, unit: distance.unit, valueFont: .largeTitle)
+                Spacer()
+                StatView(
+                    title: "Driving",
+                    value: Format.clock((tracker.pausedSince ?? .now).timeIntervalSince(tracker.activeTimerStart ?? .now)),
+                    alignment: .trailing,
+                    valueFont: .largeTitle
+                )
+            }
+            HStack(spacing: 10) {
+                Button {
+                    tracker.resumeTrip()
+                } label: {
+                    Label("Resume", systemImage: "play.fill")
+                        .font(.headline)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 6)
+                }
+                .buttonStyle(.borderedProminent)
+                .tint(.green)
+                endTripButton
+            }
         }
         .padding(18)
         .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 26, style: .continuous))
     }
 
     private var recordingNote: LocalizedStringKey {
+        if tracker.stopCheckDeadline != nil { return "Not moving" }
         if tracker.isManualTrip { return "Manual trip" }
         if tracker.isHeldInTraffic { return "Stopped in traffic · still recording" }
         if tracker.isContinuedTrip { return "Continuing last trip" }
@@ -207,6 +305,19 @@ private struct LiveControlPanel: View {
                     }
                 }
             }
+            if let trip = tracker.continuableTrip {
+                Button {
+                    tracker.continueTrip(trip)
+                } label: {
+                    Label("Continue Last Trip", systemImage: "arrow.uturn.forward")
+                        .font(.headline)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 6)
+                }
+                .buttonStyle(.bordered)
+                .disabled(!tracker.canStartManualTrip)
+                .transition(.blurReplace)
+            }
             Button {
                 tracker.startManualTrip()
             } label: {
@@ -220,6 +331,28 @@ private struct LiveControlPanel: View {
         }
         .padding(18)
         .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 26, style: .continuous))
+    }
+}
+
+/// "Paused · 12:34" label; the time counts up.
+private struct PausedBadge: View {
+    let since: Date
+
+    var body: some View {
+        HStack(spacing: 6) {
+            Image(systemName: "pause.fill")
+                .font(.system(size: 9))
+            Text("Paused")
+                .font(.footnote.weight(.bold))
+                .textCase(.uppercase)
+            Text(timerInterval: since...Date.distantFuture, countsDown: false)
+                .font(.footnote.weight(.semibold))
+                .monospacedDigit()
+        }
+        .foregroundStyle(.orange)
+        .padding(.horizontal, 10)
+        .padding(.vertical, 5)
+        .background(.orange.opacity(0.14), in: Capsule())
     }
 }
 
@@ -255,7 +388,7 @@ private struct DetectionStatusRow: View {
         case .off: "pause.fill"
         case .lowBattery: "battery.0percent"
         case .probing: "location.magnifyingglass"
-        case .idle, .recording: "car.side.fill"
+        case .idle, .recording, .paused: "car.side.fill"
         }
     }
 
@@ -264,7 +397,7 @@ private struct DetectionStatusRow: View {
         case .off: .gray
         case .lowBattery: .red
         case .probing: .orange
-        case .idle, .recording: .green
+        case .idle, .recording, .paused: .green
         }
     }
 
@@ -273,7 +406,7 @@ private struct DetectionStatusRow: View {
         case .off: "Auto-detect is off"
         case .lowBattery: "Paused: battery low"
         case .probing: "Checking if you're driving…"
-        case .idle, .recording: "Watching for drives"
+        case .idle, .recording, .paused: "Watching for drives"
         }
     }
 
@@ -285,7 +418,7 @@ private struct DetectionStatusRow: View {
             String(localized: "GPS is off until you charge your phone")
         case .probing:
             tracker.statusDetail
-        case .idle, .recording:
+        case .idle, .recording, .paused:
             tracker.hasAlwaysPermission
                 ? String(localized: "Drives over \(Format.distance(minTripDistance, miles: useMiles)) save automatically")
                 : String(localized: "Only while Routak is open")

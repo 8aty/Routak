@@ -2,26 +2,35 @@ import CoreLocation
 import Foundation
 import SwiftData
 
-/// What a trip was for. Stored as a raw string so new kinds can be added later.
-enum TripCategory: String, CaseIterable, Identifiable, Codable {
-    case commute, work, personal
+/// A break in a trip: a pause, or a short stop that joined two drives into one trip.
+struct TripPause: Codable, Hashable, Sendable {
+    var start: Date
+    /// Nil while the trip is paused right now.
+    var end: Date?
+    var latitude: Double
+    var longitude: Double
 
-    var id: String { rawValue }
-
-    var title: String {
-        switch self {
-        case .commute: String(localized: "category.commute", defaultValue: "Commute", comment: "Trip label: driving between home and work")
-        case .work: String(localized: "category.work", defaultValue: "Work", comment: "Trip label: a business trip")
-        case .personal: String(localized: "category.personal", defaultValue: "Personal", comment: "Trip label: a private trip")
-        }
+    init(start: Date, end: Date? = nil, coordinate: CLLocationCoordinate2D) {
+        self.start = start
+        self.end = end
+        self.latitude = coordinate.latitude
+        self.longitude = coordinate.longitude
     }
 
-    var systemImage: String {
-        switch self {
-        case .commute: "arrow.triangle.swap"
-        case .work: "briefcase.fill"
-        case .personal: "person.fill"
-        }
+    var coordinate: CLLocationCoordinate2D {
+        CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+    }
+
+    /// Zero while still paused.
+    var duration: TimeInterval { end.map { max(0, $0.timeIntervalSince(start)) } ?? 0 }
+
+    static func encode(_ pauses: [TripPause]) -> Data? {
+        pauses.isEmpty ? nil : try? JSONEncoder().encode(pauses)
+    }
+
+    static func decode(_ data: Data?) -> [TripPause] {
+        guard let data else { return [] }
+        return (try? JSONDecoder().decode([TripPause].self, from: data)) ?? []
     }
 }
 
@@ -48,7 +57,7 @@ final class Trip {
     var startLongitude: Double = 0
     var endLatitude: Double = 0
     var endLongitude: Double = 0
-    /// `TripCategory` raw value, empty when not labeled.
+    /// `TripLabel.key`, empty when not labeled.
     var categoryRaw: String = ""
     var notes: String = ""
     /// The route lined up with roads (same packing as `pointsData`), nil if not matched.
@@ -62,6 +71,13 @@ final class Trip {
     /// recorded on one device shows up on the others, and only its own device may resume or finish it.
     var deviceID: String = ""
 
+    // Added in 1.3
+    /// JSON list of `TripPause`, nil when the trip never paused.
+    /// Optional so existing stores migrate in place.
+    var pausesData: Data?
+    /// Total of the finished pauses, kept so lists don't have to decode `pausesData`.
+    var pausedSeconds: Double = 0
+
     init(startDate: Date, isManual: Bool) {
         self.id = UUID()
         self.deviceID = Prefs.deviceID
@@ -71,7 +87,19 @@ final class Trip {
         self.isActive = true
     }
 
-    var duration: TimeInterval { max(0, endDate.timeIntervalSince(startDate)) }
+    /// Time spent driving: from start to end, minus pauses.
+    var duration: TimeInterval { max(0, totalDuration - pausedSeconds) }
+
+    /// From start to end, pauses included.
+    var totalDuration: TimeInterval { max(0, endDate.timeIntervalSince(startDate)) }
+
+    var pauses: [TripPause] {
+        get { TripPause.decode(pausesData) }
+        set {
+            pausesData = TripPause.encode(newValue)
+            pausedSeconds = newValue.reduce(0) { $0 + $1.duration }
+        }
+    }
 
     var averageSpeed: Double { duration > 0 ? distance / duration : 0 }
 
@@ -86,9 +114,11 @@ final class Trip {
         return snapped.count >= 2 ? snapped : points
     }
 
-    var category: TripCategory? {
-        get { TripCategory(rawValue: categoryRaw) }
-        set { categoryRaw = newValue?.rawValue ?? "" }
+    /// The trip's label, nil when it has none (or its label was deleted).
+    @MainActor
+    var label: TripLabel? {
+        get { LabelBook.shared.label(for: categoryRaw) }
+        set { categoryRaw = newValue?.key ?? "" }
     }
 
     var hasEndpoints: Bool { startLatitude != 0 || startLongitude != 0 }
@@ -132,6 +162,13 @@ final class Trip {
             endLatitude = last.latitude
             endLongitude = last.longitude
         }
+        // Pauses outside the route (trimmed off, or still open) no longer belong to it.
+        if pausesData != nil {
+            pauses = pauses.filter { pause in
+                guard let end = pause.end else { return false }
+                return pause.start >= startDate && end <= endDate
+            }
+        }
         // The road-matched copy no longer fits the new route.
         snappedData = nil
         snapStateRaw = 0
@@ -165,7 +202,7 @@ enum Persistence {
     #endif
 
     @MainActor static let container: ModelContainer = {
-        let schema = Schema([Trip.self, SavedPlace.self])
+        let schema = Schema([Trip.self, SavedPlace.self, TripLabel.self])
         // Read directly: this can run before `Prefs.register()`.
         let wantsSync = supportsSync && (UserDefaults.standard.object(forKey: Prefs.iCloudSyncKey) as? Bool ?? true)
         syncSettingAtLaunch = wantsSync

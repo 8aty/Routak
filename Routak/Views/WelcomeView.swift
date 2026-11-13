@@ -38,11 +38,7 @@ struct WelcomeView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 28) {
                 VStack(alignment: .leading, spacing: 14) {
-                    Image(systemName: "point.topleft.down.to.point.bottomright.curvepath.fill")
-                        .font(.system(size: 34, weight: .semibold))
-                        .foregroundStyle(.white)
-                        .frame(width: 72, height: 72)
-                        .background(Color.accentColor.gradient, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+                    AppIconImage(size: 72)
                     Text("Welcome to Routak")
                         .font(.largeTitle.bold())
                     Text("Your drives, recorded automatically.")

@@ -20,7 +20,7 @@ struct MileageLog {
 
     @MainActor
     static func entry(for trip: Trip) -> Entry {
-        let purpose = [trip.category?.title, trip.notes.isEmpty ? nil : trip.notes]
+        let purpose = [trip.label?.title, trip.notes.isEmpty ? nil : trip.notes]
             .compactMap { $0 }
             .joined(separator: ": ")
         return Entry(

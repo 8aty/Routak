@@ -10,6 +10,10 @@ struct TripActivityAttributes: ActivityAttributes {
         var isStopped = false
         /// The trip has ended; the activity stays up briefly to show the result.
         var endDate: Date?
+        /// When the trip was paused; nil while recording.
+        var pausedSince: Date?
+        /// Seconds spent in earlier pauses, left out of the trip time.
+        var pausedTotal: Double?
     }
 
     var startDate: Date

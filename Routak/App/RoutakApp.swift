@@ -27,8 +27,18 @@ final class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCent
         TripTracker.shared.configure(container: Persistence.container)
         // The End Trip button on the Lock Screen and the Siri/Shortcuts action run here, in the app.
         TripIntentHandlers.endTrip = {
-            guard TripTracker.shared.mode == .recording else { return false }
+            guard TripTracker.shared.hasOpenTrip else { return false }
             TripTracker.shared.stopTrip()
+            return true
+        }
+        TripIntentHandlers.pauseTrip = {
+            guard TripTracker.shared.canPause else { return false }
+            TripTracker.shared.pauseTrip()
+            return true
+        }
+        TripIntentHandlers.resumeTrip = {
+            guard TripTracker.shared.mode == .paused else { return false }
+            TripTracker.shared.resumeTrip()
             return true
         }
         return true
@@ -39,5 +49,11 @@ final class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCent
         willPresent notification: UNNotification
     ) async -> UNNotificationPresentationOptions {
         [.banner, .list]
+    }
+
+    /// The buttons on "Still driving?".
+    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse) async {
+        let action = response.actionIdentifier
+        await MainActor.run { TripTracker.shared.handleStopCheckAction(action) }
     }
 }

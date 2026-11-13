@@ -37,11 +37,12 @@ The project builds with a free (personal) Apple developer team. iCloud sync is t
 ## Features
 
 - Automatic trip detection and recording, ending when you park (red lights and traffic jams don't end a trip)
+- Pause a trip at a stop (it resumes when you drive off), or continue one you ended too soon
 - Routes snapped to roads and colored by speed, with replay
-- Labels (Commute, Work, Personal), notes, search and filters
+- Your own labels (name, color and icon), notes, search and filters
 - Home and Work places name your trips automatically
 - Stats, a heatmap of where you drive, commute times
-- Mileage log (PDF/CSV), fuel cost estimates
+- Mileage log (PDF/CSV), fuel cost per trip
 - Export GPX, KML or CSV; import GPX
 - Lock Screen Live Activity, widgets, Shortcuts actions (e.g. start a trip when CarPlay or your car's Bluetooth connects)
 - "Eyes on the road" reminder while the car is moving

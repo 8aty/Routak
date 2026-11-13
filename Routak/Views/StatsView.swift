@@ -270,7 +270,7 @@ struct StatsView: View {
         var sums: [String: Bar] = [:]
         for trip in trips {
             let bucket = calendar.dateInterval(of: unit, for: trip.startDate)?.start ?? trip.startDate
-            let category = trip.category?.title ?? Self.unlabeledTitle
+            let category = trip.label?.title ?? Self.unlabeledTitle
             let key = "\(bucket.timeIntervalSinceReferenceDate)-\(category)"
             let value = (sums[key]?.value ?? 0) + trip.distance / perUnit
             sums[key] = Bar(date: bucket, category: category, value: value)
@@ -288,7 +288,7 @@ struct StatsView: View {
                     x: .value("Date", bar.date, unit: unit),
                     y: .value(Costs.distanceUnit(miles: useMiles), bar.value)
                 )
-                .foregroundStyle(by: .value("Type", bar.category))
+                .foregroundStyle(by: .value("Label", bar.category))
                 .cornerRadius(3)
             }
             .chartForegroundStyleScale(domain: legend.map(\.title), range: legend.map(\.color))
@@ -332,18 +332,18 @@ struct StatsView: View {
 
     static var unlabeledTitle: String { String(localized: "Unlabeled", comment: "Trips without a label such as Work") }
 
-    /// Chart colors for each label, in a fixed order.
+    /// Chart colors for each label, in the user's order. Names must be unique in a chart scale.
+    @MainActor
     static var categoryScale: [(title: String, color: Color)] {
-        TripCategory.allCases.map { ($0.title, color(for: $0)) } + [(unlabeledTitle, color(for: nil))]
+        var seen = Set<String>()
+        let labels = LabelBook.shared.labels.compactMap { label in
+            seen.insert(label.title).inserted ? (label.title, label.color) : nil
+        }
+        return labels + [(unlabeledTitle, color(for: nil))]
     }
 
-    static func color(for category: TripCategory?) -> Color {
-        switch category {
-        case .commute: .teal
-        case .work: .indigo
-        case .personal: .orange
-        case nil: Color.accentColor.opacity(0.55)
-        }
+    static func color(for label: TripLabel?) -> Color {
+        label?.color ?? Color.accentColor.opacity(0.55)
     }
 
     // MARK: Highlights
@@ -450,10 +450,10 @@ struct StatsView: View {
     }
 
     private func mileageDetail(_ trips: [Trip]) -> String {
-        let work = trips.filter { $0.category == .work }
-        guard !work.isEmpty else { return String(localized: "Label trips as Work to log business miles") }
-        let distance = work.reduce(0) { $0 + $1.distance }
-        return String(localized: "\(work.count) work trips, \(Format.distance(distance, miles: useMiles))")
+        let logged = trips.filter(Prefs.countsForMileage)
+        guard !logged.isEmpty else { return String(localized: "Label trips to log business miles") }
+        let distance = logged.reduce(0) { $0 + $1.distance }
+        return String(localized: "\(logged.count) trips, \(Format.distance(distance, miles: useMiles))", comment: "Trips in the mileage log and their distance")
     }
 
     private func linkRow(_ title: LocalizedStringKey, systemImage: String, tint: Color, detail: String) -> some View {
@@ -479,17 +479,18 @@ struct StatsView: View {
 
     private func categoryCard(_ trips: [Trip]) -> some View {
         let total = max(trips.reduce(0) { $0 + $1.distance }, 1)
-        let groups: [(category: TripCategory?, distance: Double, count: Int)] =
-            (TripCategory.allCases.map { Optional($0) } + [nil]).compactMap { category in
-                let list = trips.filter { $0.category == category }
-                guard !list.isEmpty else { return nil }
-                return (category, list.reduce(0) { $0 + $1.distance }, list.count)
+        let byKey = Dictionary(grouping: trips) { $0.label?.key ?? "" }
+        let groups: [(id: String, category: TripLabel?, distance: Double, count: Int)] =
+            (LabelBook.shared.labels.map { Optional($0) } + [nil]).compactMap { label in
+                let key = label?.key ?? ""
+                guard let list = byKey[key], !list.isEmpty else { return nil }
+                return (key, label, list.reduce(0) { $0 + $1.distance }, list.count)
             }
         return VStack(alignment: .leading, spacing: 12) {
-            Text("By type").font(.headline)
+            Text("By label").font(.headline)
             GeometryReader { geometry in
                 HStack(spacing: 2) {
-                    ForEach(groups, id: \.category) { group in
+                    ForEach(groups, id: \.id) { group in
                         Rectangle()
                             .fill(Self.color(for: group.category))
                             .frame(width: max(geometry.size.width * group.distance / total - 2, 2))
@@ -498,7 +499,7 @@ struct StatsView: View {
             }
             .frame(height: 12)
             .clipShape(Capsule())
-            ForEach(groups, id: \.category) { group in
+            ForEach(groups, id: \.id) { group in
                 HStack(spacing: 10) {
                     Circle().fill(Self.color(for: group.category)).frame(width: 10, height: 10)
                     Text(group.category?.title ?? Self.unlabeledTitle).font(.subheadline)

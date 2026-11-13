@@ -47,7 +47,7 @@ enum WidgetSync {
             snapshot.lastTrip = .init(title: last.title, distance: last.distance, duration: last.duration, endDate: last.endDate)
         }
         snapshot.useMiles = Prefs.useMiles
-        snapshot.isRecording = TripTracker.shared.mode == .recording
+        snapshot.isRecording = TripTracker.shared.hasOpenTrip
         snapshot.updated = .now
         snapshot.save()
         WidgetCenter.shared.reloadAllTimelines()

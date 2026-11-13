@@ -22,7 +22,7 @@ struct ExportTrip: Sendable {
         endDate = trip.endDate
         distance = trip.distance
         maxSpeed = trip.maxSpeed
-        category = trip.category?.title ?? ""
+        category = trip.label?.title ?? ""
         notes = trip.notes
         pointsData = trip.pointsData
     }
