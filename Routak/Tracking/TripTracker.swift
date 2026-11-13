@@ -13,15 +13,24 @@ import UserNotifications
 ///   a geofence around where you last parked (CLMonitor) and motion activity.
 ///   All of these can wake or relaunch the app in the background.
 /// - **Probing**: when one of those fires, GPS turns on for up to two minutes to check speed.
-/// - **Recording**: sustained driving speed starts a trip with full-accuracy GPS. The trip ends
-///   after you've been parked for a few minutes, and it is saved if it is long enough.
+/// - **Recording**: sustained driving speed starts a trip. GPS precision follows the driving:
+///   full precision in town, coarser on highways, full again while charging. The trip ends
+///   after you've been parked for a few minutes, unless the motion sensor says you're still
+///   in the car (a red light or a traffic jam).
+/// - **Low battery**: below 10% (and not charging) GPS stays off entirely until the phone recovers.
 @MainActor
 @Observable
 final class TripTracker: NSObject {
     static let shared = TripTracker()
 
     enum Mode: Equatable {
-        case off, idle, probing, recording
+        case off, idle, probing, recording, lowBattery
+    }
+
+    /// How much GPS precision a moving car needs.
+    enum Precision: Int, Comparable {
+        case highway, road, city
+        static func < (a: Precision, b: Precision) -> Bool { a.rawValue < b.rawValue }
     }
 
     // MARK: Observable state for the UI
@@ -35,6 +44,11 @@ final class TripTracker: NSObject {
     private(set) var currentSpeed: CLLocationSpeed = 0
     private(set) var isManualTrip = false
     private(set) var statusDetail = ""
+    /// True while stopped but still in the car, so the trip is kept open.
+    private(set) var isHeldInTraffic = false
+    /// True when the current trip continues one that ended a few minutes ago.
+    private(set) var isContinuedTrip = false
+    private(set) var precision: Precision = .city
 
     var hasAlwaysPermission: Bool { authorization == .authorizedAlways }
     var isAuthorized: Bool { authorization == .authorizedAlways || authorization == .authorizedWhenInUse }
@@ -53,12 +67,20 @@ final class TripTracker: NSObject {
     @ObservationIgnored private var probeBuffer: [CLLocation] = []
     @ObservationIgnored private var fastFixes = 0
     @ObservationIgnored private var isAutomotive = false
+    @ObservationIgnored private var isWalking = false
+    @ObservationIgnored private var walkingSince: Date?
+    @ObservationIgnored private var rejectedRun = 0
     @ObservationIgnored private var unflushedCount = 0
     @ObservationIgnored private var lastFlush = Date.distantPast
     @ObservationIgnored private var ticker: Timer?
     @ObservationIgnored private var monitor: CLMonitor?
     @ObservationIgnored private var pendingDeparture: CLLocationCoordinate2D?
     @ObservationIgnored private var configured = false
+    /// A drive that was too short to save. If driving resumes nearby within a few minutes it's joined back in.
+    @ObservationIgnored private var recentDiscard: (points: [TrackPoint], end: Date)?
+    /// Speed band we may switch to, and since when it has applied.
+    @ObservationIgnored private var precisionCandidate: (precision: Precision, since: Date)?
+    @ObservationIgnored private var isBatteryLow = false
 
     // MARK: Tuning
 
@@ -67,14 +89,14 @@ final class TripTracker: NSObject {
     /// Above this we still consider the car moving (~9 km/h). Below it we're parked or crawling.
     private let movingSpeed: CLLocationSpeed = 2.5
     private let probeDuration: TimeInterval = 120
-    private let maxRecordAccuracy: CLLocationAccuracy = 50
     private let maxProbeAccuracy: CLLocationAccuracy = 65
-    private let minPointSpacing: CLLocationDistance = 8
     /// Stop detection uses displacement, not reported speed, which can be noisy or stale while parked.
     private let stopRadius: CLLocationDistance = 60
     /// A probe must also cover this much ground before a drive starts.
     private let minProbeDisplacement: CLLocationDistance = 100
     private let departureRadius: CLLocationDistance = 150
+    /// Walking for this long after stopping means you've left the car.
+    private let walkAwayTime: TimeInterval = 60
     private static let departureID = "departure"
 
     private override init() {
@@ -99,6 +121,7 @@ final class TripTracker: NSObject {
         authorization = manager.authorizationStatus
         hasPreciseLocation = manager.accuracyAuthorization == .fullAccuracy
 
+        startBatteryMonitoring()
         startMotionUpdates()
         Task { await startMonitor() }
 
@@ -127,6 +150,7 @@ final class TripTracker: NSObject {
 
     /// Re-applies preferences (e.g. auto-detect toggled in Settings).
     func settingsChanged() {
+        updateBatteryState()
         guard mode != .recording else { return }
         applyIdleMode(near: nil)
     }
@@ -174,8 +198,10 @@ final class TripTracker: NSObject {
 
     // MARK: - Public trip controls
 
+    var canStartManualTrip: Bool { mode != .recording && !isBatteryLow }
+
     func startManualTrip() {
-        guard mode != .recording else { return }
+        guard canStartManualTrip else { return }
         if authorization == .notDetermined { manager.requestWhenInUseAuthorization() }
         startTrip(manual: true, seed: [])
     }
@@ -193,10 +219,18 @@ final class TripTracker: NSObject {
         probeDeadline = nil
         probeBuffer = []
         fastFixes = 0
+        isHeldInTraffic = false
 
         if Prefs.autoDetect && isAuthorized {
-            mode = .idle
-            statusDetail = hasAlwaysPermission ? "Watching for drives" : "Open the app to detect drives"
+            if isBatteryLow {
+                // No GPS at all. The cheap cell/Wi-Fi based signals stay on so the app still
+                // wakes up now and then and can resume once the phone is charged.
+                mode = .lowBattery
+                statusDetail = "Paused to save battery"
+            } else {
+                mode = .idle
+                statusDetail = hasAlwaysPermission ? "Watching for drives" : "Open the app to detect drives"
+            }
             manager.startMonitoringSignificantLocationChanges()
             manager.startMonitoringVisits()
             if let coordinate = (location ?? manager.location)?.coordinate {
@@ -212,7 +246,7 @@ final class TripTracker: NSObject {
     }
 
     private func beginProbe(reason: String) {
-        guard mode == .idle, Prefs.autoDetect else { return }
+        guard mode == .idle, Prefs.autoDetect, !isBatteryLow else { return }
         mode = .probing
         statusDetail = reason
         probeDeadline = Date().addingTimeInterval(probeDuration)
@@ -256,19 +290,40 @@ final class TripTracker: NSObject {
     private func startTrip(manual: Bool, seed: [CLLocation]) {
         guard let context else { return }
         let start = seed.first?.timestamp ?? Date()
-        let trip = Trip(startDate: start, isManual: manual)
-        context.insert(trip)
+        let startLocation = seed.first ?? manager.location
 
-        activeTrip = trip
-        activePoints = []
-        activeDistance = 0
-        activeStartDate = start
-        lastAcceptedLocation = nil
+        resetActiveState()
+        if !manual, Prefs.mergeTrips, let startLocation, let previous = recentTrip(near: startLocation) {
+            // Picked up again right where the last drive ended: a gas stop or a long light.
+            previous.isActive = true
+            activeTrip = previous
+            activePoints = previous.points
+            activeDistance = RouteStats(activePoints).distance
+            activeStartDate = previous.startDate
+            lastAcceptedLocation = activePoints.last?.location
+            isContinuedTrip = true
+            statusDetail = "Continuing your last trip"
+        } else {
+            let trip = Trip(startDate: start, isManual: manual)
+            context.insert(trip)
+            activeTrip = trip
+            activeStartDate = start
+            statusDetail = manual ? "Recording manual trip" : "Drive detected"
+            if !manual, Prefs.mergeTrips, let startLocation, let discard = recentDiscard,
+               start.timeIntervalSince(discard.end) <= Prefs.mergeGap,
+               let last = discard.points.last, last.location.distance(from: startLocation) <= Prefs.mergeRadius {
+                // A short hop that was thrown away, followed by more driving: keep it after all.
+                activePoints = discard.points
+                activeDistance = RouteStats(discard.points).distance
+                activeStartDate = discard.points.first?.timestamp ?? start
+                trip.startDate = activeStartDate ?? start
+                lastAcceptedLocation = last.location
+            }
+        }
+        recentDiscard = nil
         lastMovingDate = Date()
-        stopAnchor = nil
         isManualTrip = manual
         mode = .recording
-        statusDetail = manual ? "Recording manual trip" : "Drive detected"
         probeDeadline = nil
         probeBuffer = []
         disarmDeparture()
@@ -278,21 +333,52 @@ final class TripTracker: NSObject {
         flush(force: true)
     }
 
+    /// The last saved automatic trip, if it ended within a few minutes and near `location`.
+    private func recentTrip(near location: CLLocation) -> Trip? {
+        guard let context else { return nil }
+        var descriptor = FetchDescriptor<Trip>(
+            predicate: #Predicate { $0.isActive == false },
+            sortBy: [SortDescriptor(\.endDate, order: .reverse)]
+        )
+        descriptor.fetchLimit = 1
+        guard let trip = try? context.fetch(descriptor).first, !trip.isManual,
+              location.timestamp.timeIntervalSince(trip.endDate) <= Prefs.mergeGap,
+              location.timestamp >= trip.endDate.addingTimeInterval(-60),
+              let end = trip.endCoordinate,
+              CLLocation(latitude: end.latitude, longitude: end.longitude).distance(from: location) <= Prefs.mergeRadius
+        else { return nil }
+        return trip
+    }
+
     private func startRecordingUpdates() {
-        manager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
-        manager.distanceFilter = kCLDistanceFilterNone
+        precision = .city
+        precisionCandidate = nil
+        applyPrecision()
         manager.showsBackgroundLocationIndicator = true
         manager.startUpdatingLocation()
         startTicker()
     }
 
     private func record(_ location: CLLocation) {
-        guard location.horizontalAccuracy >= 0, location.horizontalAccuracy <= maxRecordAccuracy else { return }
+        let verdict = TrackCleaner.verdict(for: location, after: lastAcceptedLocation)
+        if verdict == .reject {
+            rejectedRun += 1
+            // Several "jumps" in a row that agree with each other: the previous fix was the bad one.
+            guard rejectedRun >= 3, location.horizontalAccuracy >= 0,
+                  location.horizontalAccuracy <= TrackCleaner.maxAccuracy,
+                  location.timestamp > (lastAcceptedLocation?.timestamp ?? .distantPast) else { return }
+            lastAcceptedLocation = nil
+        }
+        rejectedRun = 0
 
         if let anchor = stopAnchor {
             if location.distance(from: anchor) > stopRadius {
                 stopAnchor = location
                 lastMovingDate = max(lastMovingDate ?? location.timestamp, location.timestamp)
+                if isHeldInTraffic {
+                    isHeldInTraffic = false
+                    statusDetail = "Moving again"
+                }
             }
         } else {
             stopAnchor = location
@@ -300,13 +386,11 @@ final class TripTracker: NSObject {
         // Show 0 once we've been sitting still, even if the GPS still reports a speed.
         let stationaryFor = location.timestamp.timeIntervalSince(lastMovingDate ?? location.timestamp)
         currentSpeed = stationaryFor > 15 ? 0 : max(0, location.speed)
+        updatePrecision(speed: currentSpeed, at: location.timestamp)
 
+        guard verdict != .tooClose else { return }
         if let last = lastAcceptedLocation {
-            let delta = location.distance(from: last)
-            guard delta >= minPointSpacing else { return }
-            let elapsed = max(location.timestamp.timeIntervalSince(last.timestamp), 0.5)
-            guard delta / elapsed < 90 else { return } // reject GPS jumps (> 320 km/h)
-            activeDistance += delta
+            activeDistance += location.distance(from: last)
         }
         lastAcceptedLocation = location
         activePoints.append(TrackPoint(location))
@@ -316,12 +400,28 @@ final class TripTracker: NSObject {
 
     private func checkForStop(now: Date = Date()) {
         guard mode == .recording, !isManualTrip, let lastMovingDate else { return }
-        if now.timeIntervalSince(lastMovingDate) >= Prefs.stopTimeout {
+        let stoppedFor = now.timeIntervalSince(lastMovingDate)
+
+        // Stopped, then walked away from the car: no need to wait out the full timeout.
+        if let walkingSince, isWalking, stoppedFor >= walkAwayTime,
+           now.timeIntervalSince(walkingSince) >= walkAwayTime {
             finishTrip()
+            return
         }
+        guard stoppedFor >= Prefs.stopTimeout else { return }
+
+        // The motion sensor still says "in a car": a red light or a jam, not parked.
+        if isAutomotive, stoppedFor < Prefs.maxTrafficHold {
+            if !isHeldInTraffic {
+                isHeldInTraffic = true
+                statusDetail = "Stopped in traffic"
+            }
+            return
+        }
+        finishTrip()
     }
 
-    private func finishTrip() {
+    private func finishTrip(reason: String? = nil) {
         guard mode == .recording else { return }
         guard let trip = activeTrip, let context else {
             resetActiveState()
@@ -334,17 +434,22 @@ final class TripTracker: NSObject {
             // Drop the minutes spent parked at the end.
             points.removeAll { $0.timestamp > lastMovingDate.addingTimeInterval(20) }
         }
+        points = TrackCleaner.clean(points)
         let stats = RouteStats(points)
         let longEnough = stats.distance >= Prefs.minTripDistance && stats.duration >= 60
-        let keep = points.count >= 2 && (isManualTrip || longEnough)
+        // A continued trip was already saved once: never throw it away.
+        let keep = points.count >= 2 && (isManualTrip || isContinuedTrip || longEnough)
         let endLocation = lastAcceptedLocation
+        let wasManual = isManualTrip
 
         if keep {
+            let keptStart = trip.startName
             trip.apply(points: points)
             trip.isActive = false
             try? context.save()
-            nameAndAnnounce(trip, points: points)
+            nameAndAnnounce(trip, points: points, keepStartName: isContinuedTrip ? keptStart : nil, reason: reason)
         } else {
+            if !wasManual, points.count >= 2 { recentDiscard = (points, points.last!.timestamp) }
             context.delete(trip)
             try? context.save()
         }
@@ -359,9 +464,12 @@ final class TripTracker: NSObject {
         activeDistance = 0
         activeStartDate = nil
         isManualTrip = false
+        isContinuedTrip = false
+        isHeldInTraffic = false
         lastMovingDate = nil
         stopAnchor = nil
         lastAcceptedLocation = nil
+        rejectedRun = 0
         unflushedCount = 0
         currentSpeed = 0
     }
@@ -410,6 +518,94 @@ final class TripTracker: NSObject {
         }
     }
 
+    // MARK: - GPS precision (battery)
+
+    private func targetPrecision(for speed: CLLocationSpeed) -> Precision {
+        if speed >= 25 { return .highway }   // ~90 km/h
+        if speed >= 15 { return .road }      // ~54 km/h
+        return .city
+    }
+
+    /// Switches precision when the speed band has been stable for a while.
+    /// Slowing down switches quickly (turns and exits need detail); speeding up waits longer.
+    private func updatePrecision(speed: CLLocationSpeed, at time: Date) {
+        var target = targetPrecision(for: speed)
+        let device = UIDevice.current
+        if device.batteryState == .charging || device.batteryState == .full {
+            target = .city // plugged into the car: no reason to save power
+        } else if ProcessInfo.processInfo.isLowPowerModeEnabled {
+            target = min(target, .road)
+        }
+        guard target != precision else {
+            precisionCandidate = nil
+            return
+        }
+        if precisionCandidate?.precision != target {
+            precisionCandidate = (target, time)
+            return
+        }
+        let wait: TimeInterval = target > precision ? 5 : 30
+        if let candidate = precisionCandidate, time.timeIntervalSince(candidate.since) >= wait {
+            precision = target
+            precisionCandidate = nil
+            applyPrecision()
+        }
+    }
+
+    private func applyPrecision() {
+        switch precision {
+        case .city:
+            manager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
+            manager.distanceFilter = kCLDistanceFilterNone
+        case .road:
+            manager.desiredAccuracy = kCLLocationAccuracyBest
+            manager.distanceFilter = 20
+        case .highway:
+            manager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+            manager.distanceFilter = 50
+        }
+    }
+
+    // MARK: - Battery
+
+    private func startBatteryMonitoring() {
+        UIDevice.current.isBatteryMonitoringEnabled = true
+        let center = NotificationCenter.default
+        for name in [UIDevice.batteryLevelDidChangeNotification, UIDevice.batteryStateDidChangeNotification,
+                     Notification.Name.NSProcessInfoPowerStateDidChange] {
+            center.addObserver(forName: name, object: nil, queue: .main) { [weak self] _ in
+                MainActor.assumeIsolated { self?.updateBatteryState() }
+            }
+        }
+        updateBatteryState()
+    }
+
+    private func updateBatteryState() {
+        let device = UIDevice.current
+        let level = device.batteryLevel // -1 when unknown (simulator)
+        let pluggedIn = device.batteryState == .charging || device.batteryState == .full
+        let wasLow = isBatteryLow
+
+        if !Prefs.lowBatteryStop || pluggedIn || level < 0 {
+            isBatteryLow = false
+        } else if level <= Prefs.batteryStopLevel {
+            isBatteryLow = true
+        } else if level >= Prefs.batteryResumeLevel {
+            isBatteryLow = false
+        }
+        guard wasLow != isBatteryLow else { return }
+
+        if isBatteryLow {
+            if mode == .recording {
+                finishTrip(reason: "Recording stopped because the battery is low.")
+            } else {
+                applyIdleMode(near: nil)
+            }
+        } else if mode == .lowBattery {
+            applyIdleMode(near: nil)
+        }
+    }
+
     // MARK: - Timer
 
     private func startTicker() {
@@ -431,7 +627,7 @@ final class TripTracker: NSObject {
         case .recording:
             checkForStop()
             flush(force: false)
-        case .idle, .off:
+        case .idle, .off, .lowBattery:
             stopTicker()
         }
     }
@@ -448,9 +644,15 @@ final class TripTracker: NSObject {
 
     private func handleMotion(_ activity: CMMotionActivity) {
         isAutomotive = activity.automotive && activity.confidence != .low
+        let walking = (activity.walking || activity.running) && activity.confidence != .low && !activity.automotive
+        if walking, !isWalking { walkingSince = activity.startDate }
+        isWalking = walking
+        if !walking { walkingSince = nil }
+
         if isAutomotive, mode == .idle {
             beginProbe(reason: "Driving motion detected")
         }
+        if mode == .recording, isWalking { checkForStop() }
     }
 
     // MARK: - Departure geofence
@@ -492,6 +694,7 @@ final class TripTracker: NSObject {
     }
 
     private func handleDeparture() {
+        updateBatteryState()
         if mode == .idle { beginProbe(reason: "Left parking spot") }
     }
 
@@ -501,6 +704,10 @@ final class TripTracker: NSObject {
         for location in locations {
             switch mode {
             case .off:
+                return
+            case .lowBattery:
+                // Woken by a cheap location signal: check whether the battery has recovered.
+                updateBatteryState()
                 return
             case .idle:
                 // Significant-change or initial fix: something moved, check whether we're driving.
@@ -527,26 +734,35 @@ final class TripTracker: NSObject {
 
     // MARK: - After saving
 
-    private func nameAndAnnounce(_ trip: Trip, points: [TrackPoint]) {
-        guard let first = points.first, let last = points.last else { return }
+    private func nameAndAnnounce(_ trip: Trip, points: [TrackPoint], keepStartName: String?, reason: String?) {
+        guard let first = points.first, let last = points.last, let context else { return }
+        let places = PlaceBook.all(in: context)
         let task = UIApplication.shared.beginBackgroundTask(withName: "NameTrip")
         Task {
-            async let start = PlaceNamer.name(for: first.location)
-            async let end = PlaceNamer.name(for: last.location)
-            let (startName, endName) = await (start, end)
-            trip.startName = startName
-            trip.endName = endName
-            try? context?.save()
-            postSavedNotification(for: trip)
+            if let keepStartName {
+                trip.startName = keepStartName
+            } else {
+                trip.startName = await Self.placeName(for: first, places: places)
+            }
+            trip.endName = await Self.placeName(for: last, places: places)
+            try? context.save()
+            postSavedNotification(for: trip, reason: reason)
             UIApplication.shared.endBackgroundTask(task)
+            await TripMaintenance.snap(trip, context: context)
         }
     }
 
-    private func postSavedNotification(for trip: Trip) {
-        let miles = UserDefaults.standard.bool(forKey: Prefs.useMilesKey)
+    private static func placeName(for point: TrackPoint, places: [SavedPlace]) async -> String? {
+        if let place = PlaceBook.place(at: point.coordinate, in: places) { return place.name }
+        return await PlaceNamer.name(for: point.location)
+    }
+
+    private func postSavedNotification(for trip: Trip, reason: String?) {
         let content = UNMutableNotificationContent()
         content.title = "Trip saved"
-        content.body = "\(trip.title) · \(Format.distance(trip.distance, miles: miles)) · \(Format.duration(trip.duration))"
+        content.body = "\(trip.title) · \(Format.distance(trip.distance, miles: Prefs.useMiles)) · \(Format.duration(trip.duration))"
+        if let reason { content.body += "\n\(reason)" }
+        // Same identifier for a continued trip, so the notification is updated rather than duplicated.
         let request = UNNotificationRequest(identifier: trip.id.uuidString, content: content, trigger: nil)
         UNUserNotificationCenter.current().add(request)
     }
@@ -565,6 +781,7 @@ extension TripTracker: CLLocationManagerDelegate {
 
     nonisolated func locationManager(_ manager: CLLocationManager, didVisit visit: CLVisit) {
         MainActor.assumeIsolated {
+            self.updateBatteryState()
             if visit.departureDate != .distantFuture {
                 self.beginProbe(reason: "Left a place")
             } else if self.mode == .idle {

@@ -4,14 +4,95 @@ import SwiftUI
 struct HistoryView: View {
     @Query(filter: #Predicate<Trip> { $0.isActive == false }, sort: \Trip.startDate, order: .reverse)
     private var trips: [Trip]
+    @Query(sort: \SavedPlace.createdAt) private var places: [SavedPlace]
     @Environment(\.modelContext) private var context
     @AppStorage(Prefs.useMilesKey) private var useMiles = false
     @AppStorage(Prefs.minTripDistanceKey) private var minTripDistance = Prefs.defaultMinTripDistance
     @State private var path: [Trip] = []
 
-    private var sections: [(day: Date, trips: [Trip])] {
-        let grouped = Dictionary(grouping: trips) { Calendar.current.startOfDay(for: $0.startDate) }
-        return grouped.keys.sorted(by: >).map { ($0, grouped[$0] ?? []) }
+    // Search and filters
+    @State private var searchText = ""
+    @State private var dateFilter: DateFilter = .all
+    @State private var customRange = DateRangeDraft()
+    @State private var showCustomRange = false
+    /// "" = any, "none" = unlabeled, otherwise a `TripCategory` raw value.
+    @State private var categoryFilter = ""
+    @State private var placeFilter: UUID?
+
+    enum DateFilter: String, CaseIterable, Identifiable {
+        case all, week, month, last30, year, custom
+        var id: String { rawValue }
+        var title: String {
+            switch self {
+            case .all: "Any time"
+            case .week: "This week"
+            case .month: "This month"
+            case .last30: "Last 30 days"
+            case .year: "This year"
+            case .custom: "Custom range…"
+            }
+        }
+    }
+
+    struct DateRangeDraft: Equatable {
+        var start = Calendar.current.date(byAdding: .month, value: -1, to: .now) ?? .now
+        var end = Date.now
+    }
+
+    private var isFiltering: Bool {
+        !searchText.trimmingCharacters(in: .whitespaces).isEmpty || dateFilter != .all
+            || !categoryFilter.isEmpty || placeFilter != nil
+    }
+
+    private var filteredTrips: [Trip] {
+        guard isFiltering else { return trips }
+        let interval = dateInterval
+        let place = placeFilter.flatMap { id in places.first { $0.id == id } }
+        let tokens = searchText.lowercased().split(whereSeparator: \.isWhitespace).map(String.init)
+        return trips.filter { trip in
+            if let interval, !interval.contains(trip.startDate) { return false }
+            switch categoryFilter {
+            case "": break
+            case "none": if trip.category != nil { return false }
+            default: if trip.categoryRaw != categoryFilter { return false }
+            }
+            if let place {
+                let atStart = trip.startCoordinate.map(place.contains) ?? false
+                let atEnd = trip.endCoordinate.map(place.contains) ?? false
+                if !atStart && !atEnd { return false }
+            }
+            if !tokens.isEmpty {
+                let haystack = Self.searchText(for: trip)
+                return tokens.allSatisfy { haystack.contains($0) }
+            }
+            return true
+        }
+    }
+
+    private static func searchText(for trip: Trip) -> String {
+        [
+            trip.title, trip.startName ?? "", trip.endName ?? "", trip.notes,
+            trip.category?.title ?? "",
+            trip.startDate.formatted(.dateTime.weekday(.wide).month(.wide).day().year()),
+        ].joined(separator: " ").lowercased()
+    }
+
+    private var dateInterval: DateInterval? {
+        let calendar = Calendar.current
+        switch dateFilter {
+        case .all: return nil
+        case .week: return calendar.dateInterval(of: .weekOfYear, for: .now)
+        case .month: return calendar.dateInterval(of: .month, for: .now)
+        case .year: return calendar.dateInterval(of: .year, for: .now)
+        case .last30:
+            let start = calendar.date(byAdding: .day, value: -30, to: calendar.startOfDay(for: .now)) ?? .now
+            return DateInterval(start: start, end: .distantFuture)
+        case .custom:
+            let start = calendar.startOfDay(for: min(customRange.start, customRange.end))
+            let endDay = calendar.startOfDay(for: max(customRange.start, customRange.end))
+            let end = calendar.date(byAdding: .day, value: 1, to: endDay) ?? endDay
+            return DateInterval(start: start, end: end)
+        }
     }
 
     var body: some View {
@@ -28,14 +109,26 @@ struct HistoryView: View {
                 }
             }
             .navigationTitle("History")
+            .searchable(text: $searchText, prompt: "Places, notes, dates")
+            .toolbar {
+                if !trips.isEmpty {
+                    ToolbarItem(placement: .topBarTrailing) { filterMenu }
+                }
+            }
             .navigationDestination(for: Trip.self) { trip in
                 TripDetailView(trip: trip)
             }
+            .sheet(isPresented: $showCustomRange) { customRangeSheet }
             #if DEBUG
             .onAppear {
                 // `-openLatestTrip YES` launch argument jumps straight to the newest trip.
                 if UserDefaults.standard.bool(forKey: "openLatestTrip"), path.isEmpty, let first = trips.first {
                     path = [first]
+                }
+                // `-openTrip "Phar Lap"` opens the newest trip whose title contains the text.
+                if let match = UserDefaults.standard.string(forKey: "openTrip"), path.isEmpty,
+                   let trip = trips.first(where: { $0.title.localizedCaseInsensitiveContains(match) }) {
+                    path = [trip]
                 }
             }
             #endif
@@ -43,12 +136,30 @@ struct HistoryView: View {
     }
 
     private var list: some View {
-        List {
-            summary
+        let visible = filteredTrips
+        return List {
+            summary(for: visible)
                 .listRowSeparator(.hidden)
                 .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 8, trailing: 16))
 
-            ForEach(sections, id: \.day) { section in
+            if isFiltering {
+                activeFilters
+                    .listRowSeparator(.hidden)
+                    .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 4, trailing: 16))
+            }
+
+            if visible.isEmpty {
+                ContentUnavailableView {
+                    Label("No matching trips", systemImage: "magnifyingglass")
+                } description: {
+                    Text("Try a different search or clear the filters.")
+                } actions: {
+                    Button("Clear Filters") { clearFilters() }
+                }
+                .listRowSeparator(.hidden)
+            }
+
+            ForEach(sections(of: visible), id: \.day) { section in
                 Section {
                     ForEach(section.trips) { trip in
                         TripCard(trip: trip)
@@ -65,6 +176,18 @@ struct HistoryView: View {
                                 }
                             }
                             .contextMenu {
+                                Menu {
+                                    ForEach(TripCategory.allCases) { category in
+                                        Button {
+                                            trip.category = trip.category == category ? nil : category
+                                            try? context.save()
+                                        } label: {
+                                            Label(category.title, systemImage: trip.category == category ? "checkmark" : category.systemImage)
+                                        }
+                                    }
+                                } label: {
+                                    Label("Label as", systemImage: "tag")
+                                }
                                 Button(role: .destructive) {
                                     delete(trip)
                                 } label: {
@@ -83,13 +206,26 @@ struct HistoryView: View {
         .listStyle(.plain)
     }
 
-    private var summary: some View {
-        let monthStart = Calendar.current.dateInterval(of: .month, for: .now)?.start ?? .now
-        let monthTrips = trips.filter { $0.startDate >= monthStart }
-        let distance = Format.distanceParts(monthTrips.reduce(0) { $0 + $1.distance }, miles: useMiles)
-        let time = monthTrips.reduce(0) { $0 + $1.duration }
+    private func sections(of trips: [Trip]) -> [(day: Date, trips: [Trip])] {
+        let grouped = Dictionary(grouping: trips) { Calendar.current.startOfDay(for: $0.startDate) }
+        return grouped.keys.sorted(by: >).map { ($0, grouped[$0] ?? []) }
+    }
+
+    private func summary(for visible: [Trip]) -> some View {
+        let shown: [Trip]
+        let title: String
+        if isFiltering {
+            shown = visible
+            title = "Matching trips"
+        } else {
+            let monthStart = Calendar.current.dateInterval(of: .month, for: .now)?.start ?? .now
+            shown = trips.filter { $0.startDate >= monthStart }
+            title = "Trips this month"
+        }
+        let distance = Format.distanceParts(shown.reduce(0) { $0 + $1.distance }, miles: useMiles)
+        let time = shown.reduce(0) { $0 + $1.duration }
         return HStack {
-            StatView(title: "Trips this month", value: "\(monthTrips.count)")
+            StatView(title: title, value: "\(shown.count)")
             Spacer()
             StatView(title: "Distance", value: distance.value, unit: distance.unit)
             Spacer()
@@ -97,6 +233,111 @@ struct HistoryView: View {
         }
         .padding(16)
         .background(.fill.quaternary, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+    }
+
+    // MARK: Filters
+
+    private var filterMenu: some View {
+        Menu {
+            Picker("Date", selection: Binding(
+                get: { dateFilter },
+                set: { value in
+                    dateFilter = value
+                    if value == .custom { showCustomRange = true }
+                }
+            )) {
+                ForEach(DateFilter.allCases) { Text($0.title).tag($0) }
+            }
+            .pickerStyle(.menu)
+
+            Picker("Type", selection: $categoryFilter) {
+                Text("Any type").tag("")
+                ForEach(TripCategory.allCases) { Label($0.title, systemImage: $0.systemImage).tag($0.rawValue) }
+                Text("Not labeled").tag("none")
+            }
+            .pickerStyle(.menu)
+
+            if !places.isEmpty {
+                Picker("Place", selection: $placeFilter) {
+                    Text("Any place").tag(UUID?.none)
+                    ForEach(places) { Label($0.name, systemImage: $0.kind.systemImage).tag(Optional($0.id)) }
+                }
+                .pickerStyle(.menu)
+            }
+
+            if isFiltering {
+                Divider()
+                Button("Clear Filters", systemImage: "xmark.circle", role: .destructive) { clearFilters() }
+            }
+        } label: {
+            Image(systemName: hasMenuFilters ? "line.3.horizontal.decrease.circle.fill" : "line.3.horizontal.decrease.circle")
+        }
+        .accessibilityLabel("Filter trips")
+    }
+
+    private var hasMenuFilters: Bool { dateFilter != .all || !categoryFilter.isEmpty || placeFilter != nil }
+
+    private var activeFilters: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 8) {
+                if dateFilter != .all {
+                    chip(dateFilter == .custom ? customRangeTitle : dateFilter.title) { dateFilter = .all }
+                }
+                if !categoryFilter.isEmpty {
+                    chip(TripCategory(rawValue: categoryFilter)?.title ?? "Not labeled") { categoryFilter = "" }
+                }
+                if let placeFilter, let place = places.first(where: { $0.id == placeFilter }) {
+                    chip(place.name) { self.placeFilter = nil }
+                }
+            }
+        }
+    }
+
+    private var customRangeTitle: String {
+        let start = min(customRange.start, customRange.end), end = max(customRange.start, customRange.end)
+        return "\(start.formatted(.dateTime.month(.abbreviated).day())) – \(end.formatted(.dateTime.month(.abbreviated).day()))"
+    }
+
+    private func chip(_ title: String, remove: @escaping () -> Void) -> some View {
+        Button(action: { withAnimation { remove() } }) {
+            HStack(spacing: 4) {
+                Text(title)
+                Image(systemName: "xmark").font(.caption2.weight(.bold))
+            }
+            .font(.footnote.weight(.semibold))
+            .padding(.horizontal, 10)
+            .padding(.vertical, 6)
+            .background(Color.accentColor.opacity(0.15), in: Capsule())
+            .foregroundStyle(Color.accentColor)
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel("Remove filter \(title)")
+    }
+
+    private var customRangeSheet: some View {
+        NavigationStack {
+            Form {
+                DatePicker("From", selection: $customRange.start, in: ...Date.now, displayedComponents: .date)
+                DatePicker("To", selection: $customRange.end, in: ...Date.now, displayedComponents: .date)
+            }
+            .navigationTitle("Date Range")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Done") { showCustomRange = false }
+                }
+            }
+        }
+        .presentationDetents([.medium])
+    }
+
+    private func clearFilters() {
+        withAnimation {
+            searchText = ""
+            dateFilter = .all
+            categoryFilter = ""
+            placeFilter = nil
+        }
     }
 
     private func delete(_ trip: Trip) {
@@ -119,15 +360,24 @@ struct TripCard: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            ZStack {
+            ZStack(alignment: .topLeading) {
                 Rectangle().fill(.fill.tertiary)
                 if let image {
                     Image(uiImage: image)
                         .resizable()
                         .scaledToFill()
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
                         .transition(.opacity)
                 } else {
-                    ProgressView()
+                    ProgressView().frame(maxWidth: .infinity, maxHeight: .infinity)
+                }
+                if let category = trip.category {
+                    Label(category.title, systemImage: category.systemImage)
+                        .font(.caption.weight(.bold))
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 5)
+                        .background(.regularMaterial, in: Capsule())
+                        .padding(10)
                 }
             }
             .frame(maxWidth: .infinity)
@@ -146,6 +396,12 @@ struct TripCard: View {
                     Text(Format.timeRange(trip.startDate, trip.endDate))
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
+                    if !trip.notes.isEmpty {
+                        Text(trip.notes)
+                            .font(.footnote)
+                            .foregroundStyle(.secondary)
+                            .lineLimit(1)
+                    }
                 }
                 HStack(spacing: 18) {
                     MetricLabel(systemImage: "road.lanes", text: Format.distance(trip.distance, miles: useMiles))
@@ -173,7 +429,7 @@ struct TripCard: View {
             image = cached
             return
         }
-        let coordinates = trip.points.map(\.coordinate)
+        let coordinates = trip.displayPoints.map(\.coordinate)
         let rendered = await RouteSnapshotter.render(
             coordinates, key: key, size: size, dark: dark, routeColor: UIColor(named: "AccentColor") ?? .systemBlue
         )

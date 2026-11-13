@@ -1,7 +1,10 @@
+import SwiftData
 import SwiftUI
 
 struct RootView: View {
     @State private var tab = RootView.initialTab
+    @Environment(\.scenePhase) private var scenePhase
+    @Environment(\.modelContext) private var context
 
     /// Debug builds accept `-initialTab history|settings` as a launch argument (handy for screenshots).
     private static var initialTab: Tab {
@@ -27,6 +30,9 @@ struct RootView: View {
             SettingsView()
                 .tabItem { Label("Settings", systemImage: "gearshape.fill") }
                 .tag(Tab.settings)
+        }
+        .onChange(of: scenePhase, initial: true) { _, phase in
+            if phase == .active { TripMaintenance.run(context: context) }
         }
     }
 }

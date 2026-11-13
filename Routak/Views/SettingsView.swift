@@ -9,6 +9,10 @@ struct SettingsView: View {
     @AppStorage(Prefs.minTripDistanceKey) private var minTripDistance = Prefs.defaultMinTripDistance
     @AppStorage(Prefs.stopTimeoutKey) private var stopTimeout = Prefs.defaultStopTimeout
     @AppStorage(Prefs.useMilesKey) private var useMiles = false
+    @AppStorage(Prefs.snapToRoadsKey) private var snapToRoads = true
+    @AppStorage(Prefs.mergeTripsKey) private var mergeTrips = true
+    @AppStorage(Prefs.lowBatteryStopKey) private var lowBatteryStop = true
+    @Query private var places: [SavedPlace]
     @Query(filter: #Predicate<Trip> { $0.isActive == false }) private var trips: [Trip]
     @State private var confirmDeleteAll = false
 
@@ -47,7 +51,27 @@ struct SettingsView: View {
                 } header: {
                     Text("Trip detection")
                 } footer: {
-                    Text("When you start moving faster than about 23 km/h (15 mph), Routak begins recording. Shorter trips are discarded. Manual trips are always saved.")
+                    Text("When you start moving faster than about 23 km/h (15 mph), Routak begins recording. Shorter trips are discarded. Manual trips are always saved. While your phone still senses it's in a car, red lights and traffic jams don't end the trip.")
+                }
+
+                Section {
+                    Toggle("Join trips split by short stops", isOn: $mergeTrips)
+                    Toggle("Snap routes to roads", isOn: $snapToRoads)
+                    Toggle("Stop GPS when battery is below 10%", isOn: $lowBatteryStop)
+                } header: {
+                    Text("Recording")
+                } footer: {
+                    Text("Driving again within 5 minutes of where a trip ended, after a gas stop for example, continues the same trip. Snapping uses Apple Maps directions to line routes up with roads, which helps in tunnels and between tall buildings. GPS records less often on highways to save battery.")
+                }
+
+                Section {
+                    NavigationLink {
+                        PlacesView()
+                    } label: {
+                        LabeledContent("Saved Places", value: places.isEmpty ? "None" : "\(places.count)")
+                    }
+                } footer: {
+                    Text("Set Home and Work once, and trips are named “Home → Work” automatically.")
                 }
 
                 Section("Units") {
@@ -71,6 +95,10 @@ struct SettingsView: View {
             }
             .navigationTitle("Settings")
             .onChange(of: autoDetect) { tracker.settingsChanged() }
+            .onChange(of: lowBatteryStop) { tracker.settingsChanged() }
+            .onChange(of: snapToRoads) { _, on in
+                if on { TripMaintenance.snapPending(context: context) }
+            }
             .confirmationDialog("Delete all \(trips.count) trips?", isPresented: $confirmDeleteAll, titleVisibility: .visible) {
                 Button("Delete All Trips", role: .destructive) {
                     for trip in trips { context.delete(trip) }

@@ -142,7 +142,7 @@ private struct LiveControlPanel: View {
             HStack(spacing: 8) {
                 RecordingBadge()
                 Spacer()
-                Text(tracker.isManualTrip ? "Manual trip" : "Ends when you park")
+                Text(recordingNote)
                     .font(.footnote)
                     .foregroundStyle(.secondary)
             }
@@ -177,6 +177,13 @@ private struct LiveControlPanel: View {
         .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 26, style: .continuous))
     }
 
+    private var recordingNote: String {
+        if tracker.isManualTrip { return "Manual trip" }
+        if tracker.isHeldInTraffic { return "Stopped in traffic · still recording" }
+        if tracker.isContinuedTrip { return "Continuing last trip" }
+        return "Ends when you park"
+    }
+
     private var idlePanel: some View {
         VStack(alignment: .leading, spacing: 14) {
             DetectionStatusRow()
@@ -209,6 +216,7 @@ private struct LiveControlPanel: View {
                     .padding(.vertical, 6)
             }
             .buttonStyle(.borderedProminent)
+            .disabled(!tracker.canStartManualTrip)
         }
         .padding(18)
         .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 26, style: .continuous))
@@ -245,6 +253,7 @@ private struct DetectionStatusRow: View {
     private var symbol: String {
         switch tracker.mode {
         case .off: "pause.fill"
+        case .lowBattery: "battery.0percent"
         case .probing: "location.magnifyingglass"
         case .idle, .recording: "car.side.fill"
         }
@@ -253,6 +262,7 @@ private struct DetectionStatusRow: View {
     private var color: Color {
         switch tracker.mode {
         case .off: .gray
+        case .lowBattery: .red
         case .probing: .orange
         case .idle, .recording: .green
         }
@@ -261,6 +271,7 @@ private struct DetectionStatusRow: View {
     private var title: String {
         switch tracker.mode {
         case .off: "Auto-detect is off"
+        case .lowBattery: "Paused: battery low"
         case .probing: "Checking if you're driving…"
         case .idle, .recording: "Watching for drives"
         }
@@ -270,6 +281,8 @@ private struct DetectionStatusRow: View {
         switch tracker.mode {
         case .off:
             tracker.isAuthorized ? "Only manual trips are recorded" : "Location access needed"
+        case .lowBattery:
+            "GPS is off until you charge your phone"
         case .probing:
             tracker.statusDetail
         case .idle, .recording:
