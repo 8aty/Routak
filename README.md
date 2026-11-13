@@ -28,6 +28,10 @@ AltStore checks the source for new versions. When one is out, Routak shows an **
 
 - **Free Apple ID:** AltStore must refresh the app every 7 days, and a free account can have only 3 sideloaded apps at once. Routak's widgets live in an app extension, which uses one more App ID; if AltStore says you've run out, let it install Routak without the extension (you lose the widgets and Lock Screen trip, everything else works).
 - **iCloud sync** isn't available in AltStore builds: a personal Apple ID can't use iCloud. Trips stay on your iPhone. Use **Settings → Export & Import** to move them.
+
+## Building from Xcode
+
+The project builds with a free (personal) Apple developer team. iCloud sync is turned off because free teams can't use iCloud or push notifications. With a paid account, set the Routak target's entitlements to `Config/Routak.entitlements` and remove `SIDELOAD` from its Swift compilation conditions.
 - Requires iOS 17 or later.
 
 ## Features
