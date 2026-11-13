@@ -39,7 +39,7 @@
           "version": "1.1.0",
           "buildVersion": "2",
           "date": "2026-11-13T17:23:25Z",
-          "localizedDescription": "Routak 1.1: pause and continue, custom labels, trip cost\n\n- Pause a trip at a stop; it resumes when you drive off, and a forgotten\n  pause or manual trip ends itself (\"Still driving?\" notification)\n- Continue a trip you ended too soon while still nearby\n- Pause markers on the map and timeline; replay skips pauses\n- Your own labels with a name, color and icon, replacing the three fixed types\n- Fuel cost for each trip, with a note that it's an estimate\n- Speed chart shows the speed where you touch it\n- Trips start where you parked; trips you end yourself are always saved\n- Advanced settings for pause length, continue window and joining stops\n- What's New screen after updating\n- Fix route colors flickering during a replay\n- Czech app name Rauťák",
+          "localizedDescription": "Pause and continue, your own labels and trip costs.\n\n• Pause a trip at a stop and it resumes when you drive off. Ended a trip too soon? Continue it.\n• Create labels with your own name, color and icon.\n• See roughly what each drive cost in fuel.\n• Trips start where you parked, and trips you end yourself are always saved.\n• Touch the speed chart to see how fast you were going.\n• Fixed: route colors no longer flicker during a replay.",
           "downloadURL": "https://github.com/8aty/Routak/releases/download/v1.1.0/Routak.ipa",
           "size": 4276841,
           "minOSVersion": "17.0"
@@ -56,7 +56,7 @@
       ],
       "version": "1.1.0",
       "versionDate": "2026-11-13T17:23:25Z",
-      "versionDescription": "Routak 1.1: pause and continue, custom labels, trip cost\n\n- Pause a trip at a stop; it resumes when you drive off, and a forgotten\n  pause or manual trip ends itself (\"Still driving?\" notification)\n- Continue a trip you ended too soon while still nearby\n- Pause markers on the map and timeline; replay skips pauses\n- Your own labels with a name, color and icon, replacing the three fixed types\n- Fuel cost for each trip, with a note that it's an estimate\n- Speed chart shows the speed where you touch it\n- Trips start where you parked; trips you end yourself are always saved\n- Advanced settings for pause length, continue window and joining stops\n- What's New screen after updating\n- Fix route colors flickering during a replay\n- Czech app name Rauťák",
+      "versionDescription": "Pause and continue, your own labels and trip costs.\n\n• Pause a trip at a stop and it resumes when you drive off. Ended a trip too soon? Continue it.\n• Create labels with your own name, color and icon.\n• See roughly what each drive cost in fuel.\n• Trips start where you parked, and trips you end yourself are always saved.\n• Touch the speed chart to see how fast you were going.\n• Fixed: route colors no longer flicker during a replay.",
       "downloadURL": "https://github.com/8aty/Routak/releases/download/v1.1.0/Routak.ipa",
       "size": 4276841
     }
