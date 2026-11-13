@@ -742,19 +742,14 @@ final class TripTracker: NSObject {
             if let keepStartName {
                 trip.startName = keepStartName
             } else {
-                trip.startName = await Self.placeName(for: first, places: places)
+                trip.startName = await TripNamer.name(for: first, places: places)
             }
-            trip.endName = await Self.placeName(for: last, places: places)
+            trip.endName = await TripNamer.name(for: last, places: places)
             try? context.save()
             postSavedNotification(for: trip, reason: reason)
             UIApplication.shared.endBackgroundTask(task)
             await TripMaintenance.snap(trip, context: context)
         }
-    }
-
-    private static func placeName(for point: TrackPoint, places: [SavedPlace]) async -> String? {
-        if let place = PlaceBook.place(at: point.coordinate, in: places) { return place.name }
-        return await PlaceNamer.name(for: point.location)
     }
 
     private func postSavedNotification(for trip: Trip, reason: String?) {

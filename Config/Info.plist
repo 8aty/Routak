@@ -12,5 +12,29 @@
 	<string>Choose "Always" so Routak can notice when you start driving and record the trip in the background, even when the app is closed.</string>
 	<key>NSMotionUsageDescription</key>
 	<string>Routak uses motion activity to tell when you are in a car, so it can start recording drives sooner and save battery.</string>
+	<key>UTImportedTypeDeclarations</key>
+	<array>
+		<dict>
+			<key>UTTypeIdentifier</key>
+			<string>com.topografix.gpx</string>
+			<key>UTTypeDescription</key>
+			<string>GPS Exchange Format</string>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.xml</string>
+			</array>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>gpx</string>
+				</array>
+				<key>public.mime-type</key>
+				<array>
+					<string>application/gpx+xml</string>
+				</array>
+			</dict>
+		</dict>
+	</array>
 </dict>
 </plist>

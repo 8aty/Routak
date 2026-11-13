@@ -8,6 +8,8 @@ struct TripDetailView: View {
     @Environment(\.dismiss) private var dismiss
     @AppStorage(Prefs.useMilesKey) private var useMiles = false
     @AppStorage("colorRouteBySpeed") private var colorBySpeed = true
+    @AppStorage(Prefs.fuelEconomyKey) private var fuelEconomy = 8.0
+    @AppStorage(Prefs.fuelPriceKey) private var fuelPrice = 0.0
 
     /// Raw GPS points (real speeds, for the chart).
     @State private var points: [TrackPoint] = []
@@ -19,6 +21,9 @@ struct TripDetailView: View {
     @State private var showFullMap = false
     @State private var confirmDelete = false
     @State private var showEditor = false
+    @State private var showFix = false
+    /// Set by the fix sheet; the trip is deleted once that sheet has closed.
+    @State private var deleteAfterFix = false
 
     // Replay
     /// Seconds since the start of the route; nil when not replaying.
@@ -57,6 +62,11 @@ struct TripDetailView: View {
             }
             ToolbarItem(placement: .topBarTrailing) {
                 Menu {
+                    Button {
+                        showFix = true
+                    } label: {
+                        Label("Trim or Split…", systemImage: "scissors")
+                    }
                     if let gpxURL {
                         ShareLink(item: gpxURL) {
                             Label("Export GPX", systemImage: "square.and.arrow.up")
@@ -81,6 +91,14 @@ struct TripDetailView: View {
         }
         .sheet(isPresented: $showEditor) {
             TripEditView(trip: trip)
+        }
+        .sheet(isPresented: $showFix, onDismiss: {
+            guard deleteAfterFix else { return }
+            context.delete(trip)
+            try? context.save()
+            dismiss()
+        }) {
+            TripFixView(trip: trip) { deleteAfterFix = true }
         }
         .fullScreenCover(isPresented: $showFullMap) {
             ZStack(alignment: .topTrailing) {
@@ -264,6 +282,19 @@ struct TripDetailView: View {
             card { StatView(title: "Duration", value: Format.duration(trip.duration), valueFont: .title) }
             card { StatView(title: "Avg speed", value: avg.value, unit: avg.unit, valueFont: .title) }
             card { StatView(title: "Max speed", value: max.value, unit: max.unit, valueFont: .title) }
+            if let fuel = Costs.fuelCost(for: trip.distance, economy: fuelEconomy, price: fuelPrice) {
+                let liters = Costs.liters(for: trip.distance, economy: fuelEconomy)
+                let volume = useMiles ? liters / Costs.litersPerGallon : liters
+                card { StatView(title: "Fuel (est.)", value: Costs.money(fuel), valueFont: .title) }
+                card {
+                    StatView(
+                        title: "Fuel used",
+                        value: volume.formatted(.number.precision(.fractionLength(1))),
+                        unit: Costs.volumeUnit(miles: useMiles),
+                        valueFont: .title
+                    )
+                }
+            }
         }
     }
 

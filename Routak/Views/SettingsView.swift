@@ -12,6 +12,7 @@ struct SettingsView: View {
     @AppStorage(Prefs.snapToRoadsKey) private var snapToRoads = true
     @AppStorage(Prefs.mergeTripsKey) private var mergeTrips = true
     @AppStorage(Prefs.lowBatteryStopKey) private var lowBatteryStop = true
+    @AppStorage(Prefs.fuelPriceKey) private var fuelPrice = 0.0
     @Query private var places: [SavedPlace]
     @Query(filter: #Predicate<Trip> { $0.isActive == false }) private var trips: [Trip]
     @State private var confirmDeleteAll = false
@@ -74,6 +75,16 @@ struct SettingsView: View {
                     Text("Set Home and Work once, and trips are named “Home → Work” automatically.")
                 }
 
+                Section {
+                    NavigationLink {
+                        CostSettingsView()
+                    } label: {
+                        LabeledContent("Fuel & Mileage", value: fuelPrice > 0 ? "\(Costs.money(Costs.displayPrice(fuelPrice, miles: useMiles))) / \(useMiles ? "gal" : "L")" : "Not set")
+                    }
+                } footer: {
+                    Text("Fuel price and economy for cost estimates, and the rate for the mileage log.")
+                }
+
                 Section("Units") {
                     Picker("Distance", selection: $useMiles) {
                         Text("Kilometers").tag(false)
@@ -85,6 +96,7 @@ struct SettingsView: View {
                 Section {
                     LabeledContent("Saved trips", value: "\(trips.count)")
                     LabeledContent("Total distance", value: Format.distance(trips.reduce(0) { $0 + $1.distance }, miles: useMiles))
+                    NavigationLink("Export & Import") { ExportView() }
                     Button("Delete All Trips", role: .destructive) { confirmDeleteAll = true }
                         .disabled(trips.isEmpty)
                 } header: {
@@ -94,6 +106,7 @@ struct SettingsView: View {
                 }
             }
             .navigationTitle("Settings")
+            .scrollDismissesKeyboard(.interactively)
             .onChange(of: autoDetect) { tracker.settingsChanged() }
             .onChange(of: lowBatteryStop) { tracker.settingsChanged() }
             .onChange(of: snapToRoads) { _, on in

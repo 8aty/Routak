@@ -10,6 +10,11 @@ enum Prefs {
     static let snapToRoadsKey = "snapToRoads"
     static let lowBatteryStopKey = "lowBatteryStop"
     static let mergeTripsKey = "mergeTrips"
+    static let hasOnboardedKey = "hasOnboarded"
+    /// Stored in metric; the UI converts to mpg, per gallon and per mile when miles are on.
+    static let fuelEconomyKey = "fuelLitersPer100km"
+    static let fuelPriceKey = "fuelPricePerLiter"
+    static let mileageRateKey = "mileageRatePerKm"
 
     static let defaultMinTripDistance: Double = 2_000   // meters
     static let defaultStopTimeout: Double = 240         // seconds parked before a trip ends
@@ -32,6 +37,10 @@ enum Prefs {
             snapToRoadsKey: true,
             lowBatteryStopKey: true,
             mergeTripsKey: true,
+            fuelEconomyKey: 8.0,
+            fuelPriceKey: 0.0,
+            // US standard business rate (70¢ per mile); elsewhere the user sets their own.
+            mileageRateKey: Locale.current.region == .unitedStates ? 0.70 / 1.609344 : 0.0,
         ])
     }
 
@@ -42,4 +51,7 @@ enum Prefs {
     static var snapToRoads: Bool { UserDefaults.standard.bool(forKey: snapToRoadsKey) }
     static var lowBatteryStop: Bool { UserDefaults.standard.bool(forKey: lowBatteryStopKey) }
     static var mergeTrips: Bool { UserDefaults.standard.bool(forKey: mergeTripsKey) }
+    static var fuelEconomy: Double { UserDefaults.standard.double(forKey: fuelEconomyKey) }
+    static var fuelPrice: Double { UserDefaults.standard.double(forKey: fuelPriceKey) }
+    static var mileageRate: Double { UserDefaults.standard.double(forKey: mileageRateKey) }
 }
