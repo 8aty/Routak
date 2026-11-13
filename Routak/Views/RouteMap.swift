@@ -7,10 +7,14 @@ struct RouteMap: View {
     let overlay: RouteOverlay
     var colorBySpeed = true
     var replay: ReplayState?
+    /// The map's control scope. The caller places `MapCompass(scope:)` itself, so the compass
+    /// doesn't end up under its own buttons in the top corner.
+    let scope: Namespace.ID
     @State private var position: MapCameraPosition
     @State private var cameraHeading: Double = 0
 
-    init(overlay: RouteOverlay, colorBySpeed: Bool = true, replay: ReplayState? = nil) {
+    init(overlay: RouteOverlay, colorBySpeed: Bool = true, replay: ReplayState? = nil, scope: Namespace.ID) {
+        self.scope = scope
         self.overlay = overlay
         self.colorBySpeed = colorBySpeed
         self.replay = replay
@@ -23,7 +27,7 @@ struct RouteMap: View {
     }
 
     var body: some View {
-        Map(position: $position) {
+        Map(position: $position, scope: scope) {
             if overlay.full.pointCount > 1 {
                 MapPolyline(overlay.full)
                     .stroke(.white.opacity(0.85), style: StrokeStyle(lineWidth: 9, lineCap: .round, lineJoin: .round))
@@ -56,9 +60,20 @@ struct RouteMap: View {
         }
         .mapStyle(.standard(elevation: .realistic, pointsOfInterest: .excludingAll))
         .mapControls {
-            MapCompass()
             MapScaleView()
         }
+        #if DEBUG
+        // `-mapHeading 45` rotates the map shortly after it appears (to check the compass).
+        .task {
+            let heading = UserDefaults.standard.double(forKey: "mapHeading")
+            guard heading != 0, overlay.full.pointCount > 1 else { return }
+            try? await Task.sleep(for: .seconds(1.5))
+            let rect = RouteSnapshotter.fittedRect(for: overlay.full.coordinates, aspect: 0.8)
+            let center = MKMapPoint(x: rect.midX, y: rect.midY).coordinate
+            let meters = rect.size.width / MKMapPointsPerMeterAtLatitude(center.latitude)
+            withAnimation { position = .camera(MapCamera(centerCoordinate: center, distance: meters * 2, heading: heading)) }
+        }
+        #endif
         .onMapCameraChange(frequency: .continuous) { context in
             cameraHeading = context.camera.heading
         }

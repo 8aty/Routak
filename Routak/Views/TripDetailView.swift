@@ -1,4 +1,5 @@
 import Charts
+import MapKit
 import SwiftData
 import SwiftUI
 
@@ -22,6 +23,8 @@ struct TripDetailView: View {
     @State private var confirmDelete = false
     @State private var showEditor = false
     @State private var showFix = false
+    @Namespace private var cardMapScope
+    @Namespace private var fullMapScope
     /// Set by the fix sheet; the trip is deleted once that sheet has closed.
     @State private var deleteAfterFix = false
 
@@ -103,19 +106,23 @@ struct TripDetailView: View {
         .fullScreenCover(isPresented: $showFullMap) {
             ZStack(alignment: .topTrailing) {
                 if let overlay {
-                    RouteMap(overlay: overlay, colorBySpeed: colorBySpeed, replay: replayState)
+                    RouteMap(overlay: overlay, colorBySpeed: colorBySpeed, replay: replayState, scope: fullMapScope)
                         .ignoresSafeArea()
                 }
-                Button {
-                    showFullMap = false
-                } label: {
-                    Image(systemName: "xmark")
-                        .font(.headline)
-                        .frame(width: 44, height: 44)
-                        .background(.regularMaterial, in: Circle())
+                VStack(spacing: 10) {
+                    Button {
+                        showFullMap = false
+                    } label: {
+                        Image(systemName: "xmark")
+                            .font(.headline)
+                            .frame(width: 44, height: 44)
+                            .background(.regularMaterial, in: Circle())
+                    }
+                    MapCompass(scope: fullMapScope)
                 }
                 .padding()
             }
+            .mapScope(fullMapScope)
         }
         .task(id: trip.snapshotKey) { load() }
         .task(id: isPlaying) { await play() }
@@ -237,7 +244,7 @@ struct TripDetailView: View {
     private var mapCard: some View {
         ZStack(alignment: .topTrailing) {
             if let overlay {
-                RouteMap(overlay: overlay, colorBySpeed: colorBySpeed, replay: replayState)
+                RouteMap(overlay: overlay, colorBySpeed: colorBySpeed, replay: replayState, scope: cardMapScope)
             } else {
                 Rectangle().fill(.fill.tertiary).overlay(ProgressView())
             }
@@ -247,10 +254,13 @@ struct TripDetailView: View {
                           label: colorBySpeed ? "Show plain route" : "Color route by speed") {
                     colorBySpeed.toggle()
                 }
+                // Appears below the buttons only while the map is rotated.
+                MapCompass(scope: cardMapScope)
             }
             .padding(12)
             .disabled(overlay == nil)
         }
+        .mapScope(cardMapScope)
         // Top corner: the bottom one holds the Apple Maps logo and legal link.
         .overlay(alignment: .topLeading) {
             if colorBySpeed, let overlay, overlay.speedSegments.count > 1 {
