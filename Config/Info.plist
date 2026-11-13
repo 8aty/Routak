@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>location</string>
+	</array>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Routak uses your location to draw the route of your drives on a map.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Choose "Always" so Routak can notice when you start driving and record the trip in the background, even when the app is closed.</string>
+	<key>NSMotionUsageDescription</key>
+	<string>Routak uses motion activity to tell when you are in a car, so it can start recording drives sooner and save battery.</string>
+</dict>
+</plist>
