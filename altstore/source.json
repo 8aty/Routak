@@ -1,0 +1,39 @@
+{
+  "name": "Routak",
+  "identifier": "cc.tomy.Routak.source",
+  "subtitle": "Automatic drive logbook",
+  "description": "Routak records your drives on its own and keeps a searchable history with maps, stats and mileage logs.",
+  "iconURL": "https://raw.githubusercontent.com/8aty/Routak/main/altstore/icon.png",
+  "website": "https://github.com/8aty/Routak",
+  "tintColor": "#286BF6",
+  "featuredApps": ["cc.tomy.Routak"],
+  "apps": [
+    {
+      "name": "Routak",
+      "bundleIdentifier": "cc.tomy.Routak",
+      "developerName": "8aty",
+      "subtitle": "Your drives, recorded automatically.",
+      "localizedDescription": "Routak notices when you start driving and records the trip by itself, then saves it when you park. No buttons to press.\n\n• Every route on a map, colored by speed, with replay\n• Search and filter by place, date and label (Commute, Work, Personal)\n• Home and Work places name your trips automatically\n• Weekly stats, a heatmap of where you drive and commute times\n• Mileage log as PDF or CSV, fuel cost estimates\n• Export GPX, KML or CSV; import GPX\n• Lock Screen Live Activity, widgets and Shortcuts actions (start a trip when CarPlay or your car's Bluetooth connects)\n• \"Eyes on the road\" reminder while the car is moving\n\nIn English and Czech. Trips stay on your iPhone; iCloud sync isn't available in AltStore builds.",
+      "iconURL": "https://raw.githubusercontent.com/8aty/Routak/main/altstore/icon.png",
+      "tintColor": "#286BF6",
+      "category": "utilities",
+      "screenshots": [
+        "https://raw.githubusercontent.com/8aty/Routak/main/altstore/screenshot-1.png",
+        "https://raw.githubusercontent.com/8aty/Routak/main/altstore/screenshot-2.png",
+        "https://raw.githubusercontent.com/8aty/Routak/main/altstore/screenshot-3.png"
+      ],
+      "appPermissions": {
+        "entitlements": [
+          "com.apple.security.application-groups"
+        ],
+        "privacy": {
+          "NSLocationAlwaysAndWhenInUseUsageDescription": "Choose \"Always\" so Routak can notice when you start driving and record the trip in the background, even when the app is closed.",
+          "NSLocationWhenInUseUsageDescription": "Routak uses your location to draw the route of your drives on a map.",
+          "NSMotionUsageDescription": "Routak uses motion activity to tell when you are in a car, so it can start recording drives sooner and save battery."
+        }
+      },
+      "versions": []
+    }
+  ],
+  "news": []
+}
