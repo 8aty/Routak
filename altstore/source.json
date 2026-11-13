@@ -6,7 +6,9 @@
   "iconURL": "https://raw.githubusercontent.com/8aty/Routak/main/altstore/icon.png",
   "website": "https://github.com/8aty/Routak",
   "tintColor": "#286BF6",
-  "featuredApps": ["cc.tomy.Routak"],
+  "featuredApps": [
+    "cc.tomy.Routak"
+  ],
   "apps": [
     {
       "name": "Routak",
@@ -32,7 +34,22 @@
           "NSMotionUsageDescription": "Routak uses motion activity to tell when you are in a car, so it can start recording drives sooner and save battery."
         }
       },
-      "versions": []
+      "versions": [
+        {
+          "version": "1.0.0",
+          "buildVersion": "1",
+          "date": "2026-11-13T13:44:07Z",
+          "localizedDescription": "First release.",
+          "downloadURL": "https://github.com/8aty/Routak/releases/download/v1.0.0/Routak.ipa",
+          "size": 3745840,
+          "minOSVersion": "17.0"
+        }
+      ],
+      "version": "1.0.0",
+      "versionDate": "2026-11-13T13:44:07Z",
+      "versionDescription": "First release.",
+      "downloadURL": "https://github.com/8aty/Routak/releases/download/v1.0.0/Routak.ipa",
+      "size": 3745840
     }
   ],
   "news": []
