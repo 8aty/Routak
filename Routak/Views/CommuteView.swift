@@ -24,9 +24,8 @@ struct CommuteView: View {
                     ContentUnavailableView {
                         Label("No commutes yet", systemImage: "arrow.triangle.swap")
                     } description: {
-                        Text(direction == .toWork
-                             ? "Drives that start at \(home.name) and end at \(work.name) show up here."
-                             : "Drives that start at \(work.name) and end at \(home.name) show up here.")
+                        let (from, to) = direction == .toWork ? (home.name, work.name) : (work.name, home.name)
+                        Text("Drives that start at \(from) and end at \(to) show up here.", comment: "Both arguments are saved place names")
                     }
                     .padding(.top, 40)
                 } else {
@@ -173,7 +172,7 @@ struct CommuteView: View {
                 .foregroundStyle(day.weekday == best ? Color.green.gradient : Color.accentColor.gradient)
                 .cornerRadius(4)
                 .annotation(position: .top) {
-                    Text("\(Int((day.average / 60).rounded()))")
+                    Text(verbatim: "\(Int((day.average / 60).rounded()))")
                         .font(.caption2.weight(.semibold))
                         .foregroundStyle(.secondary)
                 }
@@ -204,7 +203,7 @@ struct CommuteView: View {
                         Spacer()
                         let delta = trip.duration - average
                         if abs(delta) >= 60 {
-                            Text("\(delta > 0 ? "+" : "−")\(Format.duration(abs(delta)))")
+                            Text(verbatim: "\(delta > 0 ? "+" : "−")\(Format.duration(abs(delta)))")
                                 .font(.caption.weight(.semibold))
                                 .foregroundStyle(delta > 0 ? .orange : .green)
                                 .monospacedDigit()

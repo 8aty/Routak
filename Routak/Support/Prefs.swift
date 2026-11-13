@@ -11,6 +11,10 @@ enum Prefs {
     static let lowBatteryStopKey = "lowBatteryStop"
     static let mergeTripsKey = "mergeTrips"
     static let hasOnboardedKey = "hasOnboarded"
+    static let drivingReminderKey = "drivingReminder"
+    static let iCloudSyncKey = "iCloudSync"
+    static let liveActivityKey = "liveActivity"
+    private static let deviceIDKey = "deviceID"
     /// Stored in metric; the UI converts to mpg, per gallon and per mile when miles are on.
     static let fuelEconomyKey = "fuelLitersPer100km"
     static let fuelPriceKey = "fuelPricePerLiter"
@@ -37,6 +41,9 @@ enum Prefs {
             snapToRoadsKey: true,
             lowBatteryStopKey: true,
             mergeTripsKey: true,
+            drivingReminderKey: true,
+            iCloudSyncKey: true,
+            liveActivityKey: true,
             fuelEconomyKey: 8.0,
             fuelPriceKey: 0.0,
             // US standard business rate (70¢ per mile); elsewhere the user sets their own.
@@ -51,6 +58,15 @@ enum Prefs {
     static var snapToRoads: Bool { UserDefaults.standard.bool(forKey: snapToRoadsKey) }
     static var lowBatteryStop: Bool { UserDefaults.standard.bool(forKey: lowBatteryStopKey) }
     static var mergeTrips: Bool { UserDefaults.standard.bool(forKey: mergeTripsKey) }
+    static var showsLiveActivity: Bool { UserDefaults.standard.bool(forKey: liveActivityKey) }
+
+    /// A random ID for this install, stored on first use.
+    static var deviceID: String {
+        if let id = UserDefaults.standard.string(forKey: deviceIDKey) { return id }
+        let id = UUID().uuidString
+        UserDefaults.standard.set(id, forKey: deviceIDKey)
+        return id
+    }
     static var fuelEconomy: Double { UserDefaults.standard.double(forKey: fuelEconomyKey) }
     static var fuelPrice: Double { UserDefaults.standard.double(forKey: fuelPriceKey) }
     static var mileageRate: Double { UserDefaults.standard.double(forKey: mileageRateKey) }

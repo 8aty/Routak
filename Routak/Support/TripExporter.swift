@@ -47,9 +47,9 @@ enum TripExporter {
 
         var detail: String {
             switch self {
-            case .gpx: "Full routes for other GPS and fitness apps"
-            case .kml: "Routes for Google Earth and Google My Maps"
-            case .csv: "One row per trip, for spreadsheets"
+            case .gpx: String(localized: "Full routes for other GPS and fitness apps")
+            case .kml: String(localized: "Routes for Google Earth and Google My Maps")
+            case .csv: String(localized: "One row per trip, for spreadsheets")
             }
         }
     }
@@ -92,7 +92,7 @@ enum TripExporter {
         w.write("""
         <?xml version="1.0" encoding="UTF-8"?>
         <gpx version="1.1" creator="Routak" xmlns="http://www.topografix.com/GPX/1/1">
-          <metadata><name>Routak trips</name><time>\(iso.string(from: .now))</time></metadata>
+          <metadata><name>\(xml(String(localized: "Routak trips")))</name><time>\(iso.string(from: .now))</time></metadata>
 
         """)
         for trip in trips {
@@ -119,7 +119,7 @@ enum TripExporter {
         <?xml version="1.0" encoding="UTF-8"?>
         <kml xmlns="http://www.opengis.net/kml/2.2">
         <Document>
-          <name>Routak trips</name>
+          <name>\(xml(String(localized: "Routak trips")))</name>
           <Style id="route"><LineStyle><color>ffe0781e</color><width>4</width></LineStyle></Style>
 
         """)
@@ -150,10 +150,15 @@ enum TripExporter {
         let perUnit = options.useMiles ? Costs.metersPerMile : 1_000
         let speedFactor = options.useMiles ? 2.236936 : 3.6
         let hasFuel = options.fuelPrice > 0 && options.fuelEconomy > 0
-        var header = ["Date", "Start time", "End time", "From", "To", "Type", "Distance (\(unit))",
-                      "Duration (min)", "Average speed (\(speedUnit))", "Max speed (\(speedUnit))"]
-        if hasFuel { header.append("Fuel cost (\(Costs.currencyCode))") }
-        header.append("Notes")
+        var header = [
+            String(localized: "Date"), String(localized: "Start time"), String(localized: "End time"),
+            String(localized: "column.from", defaultValue: "From", comment: "Column header: start place"), String(localized: "column.to", defaultValue: "To", comment: "Column header: destination"),
+            String(localized: "Type", comment: "Column header: trip label such as Work"), String(localized: "Distance (\(unit))"),
+            String(localized: "Duration (min)"), String(localized: "Average speed (\(speedUnit))"),
+            String(localized: "Max speed (\(speedUnit))"),
+        ]
+        if hasFuel { header.append(String(localized: "Fuel cost (\(Costs.currencyCode))")) }
+        header.append(String(localized: "Notes"))
         w.write(csvRow(header))
 
         let day = TripExporter.fixedFormatter("yyyy-MM-dd")

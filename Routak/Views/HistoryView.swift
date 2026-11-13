@@ -24,12 +24,12 @@ struct HistoryView: View {
         var id: String { rawValue }
         var title: String {
             switch self {
-            case .all: "Any time"
-            case .week: "This week"
-            case .month: "This month"
-            case .last30: "Last 30 days"
-            case .year: "This year"
-            case .custom: "Custom range…"
+            case .all: String(localized: "Any time")
+            case .week: String(localized: "This week")
+            case .month: String(localized: "This month")
+            case .last30: String(localized: "Last 30 days")
+            case .year: String(localized: "This year")
+            case .custom: String(localized: "Custom range…")
             }
         }
     }
@@ -213,7 +213,7 @@ struct HistoryView: View {
 
     private func summary(for visible: [Trip]) -> some View {
         let shown: [Trip]
-        let title: String
+        let title: LocalizedStringKey
         if isFiltering {
             shown = visible
             title = "Matching trips"
@@ -284,7 +284,7 @@ struct HistoryView: View {
                     chip(dateFilter == .custom ? customRangeTitle : dateFilter.title) { dateFilter = .all }
                 }
                 if !categoryFilter.isEmpty {
-                    chip(TripCategory(rawValue: categoryFilter)?.title ?? "Not labeled") { categoryFilter = "" }
+                    chip(TripCategory(rawValue: categoryFilter)?.title ?? String(localized: "Not labeled")) { categoryFilter = "" }
                 }
                 if let placeFilter, let place = places.first(where: { $0.id == placeFilter }) {
                     chip(place.name) { self.placeFilter = nil }

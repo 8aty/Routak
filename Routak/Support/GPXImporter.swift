@@ -20,10 +20,10 @@ enum GPXImporter {
 
         var summary: String {
             var parts: [String] = []
-            parts.append(imported == 1 ? "Imported 1 trip." : "Imported \(imported) trips.")
-            if duplicates > 0 { parts.append(duplicates == 1 ? "1 was already saved." : "\(duplicates) were already saved.") }
-            if skipped > 0 { parts.append(skipped == 1 ? "1 track had no times and was skipped." : "\(skipped) tracks had no times and were skipped.") }
-            if failedFiles > 0 { parts.append(failedFiles == 1 ? "1 file couldn't be read." : "\(failedFiles) files couldn't be read.") }
+            parts.append(String(localized: "Imported \(imported) trips."))
+            if duplicates > 0 { parts.append(String(localized: "\(duplicates) were already saved.", comment: "Import summary: trips that were already saved")) }
+            if skipped > 0 { parts.append(String(localized: "\(skipped) tracks had no times and were skipped.")) }
+            if failedFiles > 0 { parts.append(String(localized: "\(failedFiles) files couldn't be read.")) }
             return parts.joined(separator: " ")
         }
     }

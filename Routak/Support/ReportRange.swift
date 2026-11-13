@@ -8,12 +8,12 @@ enum ReportRange: String, CaseIterable, Identifiable {
 
     var title: String {
         switch self {
-        case .thisMonth: "This month"
-        case .lastMonth: "Last month"
-        case .thisYear: "This year"
-        case .lastYear: "Last year"
-        case .all: "All trips"
-        case .custom: "Custom"
+        case .thisMonth: String(localized: "This month")
+        case .lastMonth: String(localized: "Last month")
+        case .thisYear: String(localized: "This year")
+        case .lastYear: String(localized: "Last year")
+        case .all: String(localized: "All trips")
+        case .custom: String(localized: "Custom")
         }
     }
 
@@ -43,10 +43,10 @@ enum ReportRange: String, CaseIterable, Identifiable {
 
     /// Short text for file names and report headers, e.g. "March 2026".
     func label(customStart: Date, customEnd: Date) -> String {
-        guard let interval = interval(customStart: customStart, customEnd: customEnd) else { return "All trips" }
+        guard let interval = interval(customStart: customStart, customEnd: customEnd) else { return String(localized: "All trips") }
         switch self {
         case .thisMonth, .lastMonth:
-            return interval.start.formatted(.dateTime.month(.wide).year())
+            return interval.start.formatted(.dateTime.month(.wide).year()).capitalizedFirst
         case .thisYear, .lastYear:
             return interval.start.formatted(.dateTime.year())
         default:

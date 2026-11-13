@@ -47,7 +47,7 @@ struct CostSettingsView: View {
                         TextField("0.00", value: priceBinding, format: .currency(code: Costs.currencyCode))
                             .keyboardType(.decimalPad)
                             .multilineTextAlignment(.trailing)
-                        Text("/ \(useMiles ? "gal" : "L")").foregroundStyle(.secondary)
+                        Text(verbatim: "/ \(Costs.volumeUnit(miles: useMiles))").foregroundStyle(.secondary)
                     }
                 }
             } header: {

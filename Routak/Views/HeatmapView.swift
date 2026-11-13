@@ -16,10 +16,10 @@ struct HeatmapView: View {
         var id: String { rawValue }
         var title: String {
             switch self {
-            case .days30: "30 days"
-            case .days90: "90 days"
-            case .year: "Year"
-            case .all: "All"
+            case .days30: String(localized: "30 days")
+            case .days90: String(localized: "90 days")
+            case .year: String(localized: "Year")
+            case .all: String(localized: "All", comment: "Stats period: all time")
             }
         }
         var start: Date? {
@@ -55,7 +55,7 @@ struct HeatmapView: View {
                                 Text("Drawing routes…")
                             }
                         } else {
-                            Text(routes.lines.count == 1 ? "1 trip" : "\(routes.lines.count) trips")
+                            Text("\(routes.lines.count) trips")
                         }
                     }
                     .font(.caption.weight(.semibold))

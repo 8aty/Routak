@@ -2,7 +2,7 @@ import SwiftUI
 
 /// A big number with a small unit and caption, used across the app.
 struct StatView: View {
-    let title: String
+    let title: LocalizedStringKey
     let value: String
     var unit: String = ""
     var alignment: HorizontalAlignment = .leading

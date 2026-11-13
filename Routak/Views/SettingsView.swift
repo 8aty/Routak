@@ -1,3 +1,5 @@
+import AppIntents
+import CloudKit
 import CoreLocation
 import SwiftData
 import SwiftUI
@@ -13,6 +15,10 @@ struct SettingsView: View {
     @AppStorage(Prefs.mergeTripsKey) private var mergeTrips = true
     @AppStorage(Prefs.lowBatteryStopKey) private var lowBatteryStop = true
     @AppStorage(Prefs.fuelPriceKey) private var fuelPrice = 0.0
+    @AppStorage(Prefs.drivingReminderKey) private var drivingReminder = true
+    @AppStorage(Prefs.liveActivityKey) private var liveActivity = true
+    @AppStorage(Prefs.iCloudSyncKey) private var iCloudSync = true
+    @State private var iCloudAccount: CKAccountStatus?
     @Query private var places: [SavedPlace]
     @Query(filter: #Predicate<Trip> { $0.isActive == false }) private var trips: [Trip]
     @State private var confirmDeleteAll = false
@@ -22,17 +28,18 @@ struct SettingsView: View {
 
     var body: some View {
         NavigationStack {
+            ScrollViewReader { proxy in
             Form {
                 Section {
                     LabeledContent("Location access", value: permissionText)
-                    LabeledContent("Precise location", value: tracker.hasPreciseLocation ? "On" : "Off")
+                    LabeledContent("Precise location", value: tracker.hasPreciseLocation ? String(localized: "On") : String(localized: "Off"))
                     if !tracker.hasAlwaysPermission || !tracker.hasPreciseLocation {
                         Button("Change in Settings") { tracker.requestPermission() }
                     }
                 } header: {
                     Text("Permissions")
                 } footer: {
-                    Text("\"Always\" and Precise Location let Routak notice drives and record them while the app is closed.")
+                    Text("“Always” and Precise Location let Routak notice drives and record them while the app is closed.")
                 }
 
                 Section {
@@ -66,10 +73,29 @@ struct SettingsView: View {
                 }
 
                 Section {
+                    Toggle("Cover the screen while driving", isOn: $drivingReminder)
+                } header: {
+                    Text("Safety")
+                } footer: {
+                    Text("In a moving car, Routak shows “Eyes on the road”. Passengers can close it with one tap.")
+                }
+
+                Section {
+                    Toggle("Show trip on Lock Screen", isOn: $liveActivity)
+                        .id("settingsShortcuts")
+                    ShortcutsLink()
+                        .frame(maxWidth: .infinity)
+                } header: {
+                    Text("Lock Screen & Shortcuts")
+                } footer: {
+                    Text("To start trips when your phone connects to CarPlay or your car's Bluetooth, make an automation in the Shortcuts app with Routak's Start Trip action.")
+                }
+
+                Section {
                     NavigationLink {
                         PlacesView()
                     } label: {
-                        LabeledContent("Saved Places", value: places.isEmpty ? "None" : "\(places.count)")
+                        LabeledContent("Saved Places", value: places.isEmpty ? String(localized: "None") : "\(places.count)")
                     }
                 } footer: {
                     Text("Set Home and Work once, and trips are named “Home → Work” automatically.")
@@ -79,7 +105,7 @@ struct SettingsView: View {
                     NavigationLink {
                         CostSettingsView()
                     } label: {
-                        LabeledContent("Fuel & Mileage", value: fuelPrice > 0 ? "\(Costs.money(Costs.displayPrice(fuelPrice, miles: useMiles))) / \(useMiles ? "gal" : "L")" : "Not set")
+                        LabeledContent("Fuel & Mileage", value: fuelPrice > 0 ? "\(Costs.money(Costs.displayPrice(fuelPrice, miles: useMiles))) / \(Costs.volumeUnit(miles: useMiles))" : String(localized: "Not set"))
                     }
                 } footer: {
                     Text("Fuel price and economy for cost estimates, and the rate for the mileage log.")
@@ -96,19 +122,36 @@ struct SettingsView: View {
                 Section {
                     LabeledContent("Saved trips", value: "\(trips.count)")
                     LabeledContent("Total distance", value: Format.distance(trips.reduce(0) { $0 + $1.distance }, miles: useMiles))
+                    if Persistence.supportsSync {
+                        Toggle("Sync with iCloud", isOn: $iCloudSync)
+                        LabeledContent("iCloud", value: iCloudStatusText)
+                    }
                     NavigationLink("Export & Import") { ExportView() }
                     Button("Delete All Trips", role: .destructive) { confirmDeleteAll = true }
+                        .id("settingsBottom")
                         .disabled(trips.isEmpty)
                 } header: {
                     Text("Data")
                 } footer: {
-                    Text("Trips are stored only on this iPhone.")
+                    Text(Persistence.supportsSync && iCloudSync
+                         ? "Trips and saved places sync to your other devices through your iCloud account."
+                         : "Trips are stored only on this iPhone.")
                 }
             }
             .navigationTitle("Settings")
             .scrollDismissesKeyboard(.interactively)
             .onChange(of: autoDetect) { tracker.settingsChanged() }
             .onChange(of: lowBatteryStop) { tracker.settingsChanged() }
+            .onChange(of: useMiles) { WidgetSync.schedule() }
+            .onChange(of: liveActivity) {
+                LiveActivityController.shared.settingChanged(
+                    isRecording: tracker.mode == .recording, startDate: tracker.activeStartDate, distance: tracker.activeDistance
+                )
+            }
+            .task {
+                guard Persistence.isSyncing else { return }
+                iCloudAccount = try? await CKContainer(identifier: Persistence.cloudContainerID).accountStatus()
+            }
             .onChange(of: snapToRoads) { _, on in
                 if on { TripMaintenance.snapPending(context: context) }
             }
@@ -119,17 +162,40 @@ struct SettingsView: View {
                     RouteSnapshotter.clearDiskCache()
                 }
             }
+            #if DEBUG
+            // `-settingsScroll bottom|shortcuts` opens Settings scrolled down (for screenshots).
+            .task {
+                guard let target = UserDefaults.standard.string(forKey: "settingsScroll") else { return }
+                try? await Task.sleep(for: .milliseconds(400))
+                proxy.scrollTo(target == "bottom" ? "settingsBottom" : "settingsShortcuts", anchor: target == "bottom" ? .bottom : .center)
+            }
+            #endif
+            }
+        }
+    }
+
+    private var iCloudStatusText: String {
+        if iCloudSync != Persistence.syncSettingAtLaunch {
+            return String(localized: "Applies after restart", comment: "iCloud sync setting changed; takes effect when the app is reopened")
+        }
+        guard iCloudSync else { return String(localized: "Off") }
+        guard Persistence.isSyncing else { return String(localized: "Unavailable", comment: "iCloud account status") }
+        switch iCloudAccount {
+        case .available: return String(localized: "On")
+        case .noAccount: return String(localized: "Not signed in", comment: "iCloud account status")
+        case .restricted, .temporarilyUnavailable: return String(localized: "Unavailable", comment: "iCloud account status")
+        default: return String(localized: "Checking…", comment: "iCloud account status")
         }
     }
 
     private var permissionText: String {
         switch tracker.authorization {
-        case .authorizedAlways: "Always"
-        case .authorizedWhenInUse: "While Using"
-        case .denied: "Denied"
-        case .restricted: "Restricted"
-        case .notDetermined: "Not set"
-        @unknown default: "Unknown"
+        case .authorizedAlways: String(localized: "Always", comment: "Location permission state")
+        case .authorizedWhenInUse: String(localized: "While Using", comment: "Location permission state")
+        case .denied: String(localized: "Denied", comment: "Location permission state")
+        case .restricted: String(localized: "Restricted", comment: "Location permission state")
+        case .notDetermined: String(localized: "Not set")
+        @unknown default: String(localized: "Unknown", comment: "Location permission state")
         }
     }
 }

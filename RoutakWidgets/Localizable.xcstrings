@@ -1,0 +1,214 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "%@ this week" : {
+      "comment" : "Lock Screen widget: distance driven this week",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ tento týden"
+          }
+        }
+      }
+    },
+    "%lld trips" : {
+      "localizations" : {
+        "cs" : {
+          "variations" : {
+            "plural" : {
+              "few" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld jízdy"
+                }
+              },
+              "many" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld jízdy"
+                }
+              },
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld jízda"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld jízd"
+                }
+              }
+            }
+          }
+        },
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld trip"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld trips"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "Distance driven this week and your last trip." : {
+      "comment" : "Widget description in the widget gallery",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ujetá vzdálenost tento týden a vaše poslední jízda."
+          }
+        }
+      }
+    },
+    "Drives show up here automatically." : {
+      "comment" : "Widget, before the first trip",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jízdy se tu objeví automaticky."
+          }
+        }
+      }
+    },
+    "End Trip" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ukončit jízdu"
+          }
+        }
+      }
+    },
+    "Ends and saves the trip being recorded." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ukončí a uloží právě nahrávanou jízdu."
+          }
+        }
+      }
+    },
+    "Last trip" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Poslední jízda"
+          }
+        }
+      }
+    },
+    "No trip is being recorded." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Žádná jízda se nenahrává."
+          }
+        }
+      }
+    },
+    "No trips yet" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zatím žádné jízdy"
+          }
+        }
+      }
+    },
+    "Recording" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nahrávání"
+          }
+        }
+      }
+    },
+    "Recording drive" : {
+      "comment" : "Live Activity status",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nahrávání jízdy"
+          }
+        }
+      }
+    },
+    "Stopped · still recording" : {
+      "comment" : "Live Activity status while stopped in traffic",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stojíte · nahrává se"
+          }
+        }
+      }
+    },
+    "This week" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tento týden"
+          }
+        }
+      }
+    },
+    "This Week" : {
+      "comment" : "Widget name in the widget gallery",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tento týden"
+          }
+        }
+      }
+    },
+    "Trip saved" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jízda uložena"
+          }
+        }
+      }
+    },
+    "Trip saved." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jízda uložena."
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

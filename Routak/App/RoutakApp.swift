@@ -25,6 +25,12 @@ final class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCent
         // Must be set up on every launch: iOS relaunches the app in the background
         // for location events (significant changes, visits, geofence exits).
         TripTracker.shared.configure(container: Persistence.container)
+        // The End Trip button on the Lock Screen and the Siri/Shortcuts action run here, in the app.
+        TripIntentHandlers.endTrip = {
+            guard TripTracker.shared.mode == .recording else { return false }
+            TripTracker.shared.stopTrip()
+            return true
+        }
         return true
     }
 

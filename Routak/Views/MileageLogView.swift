@@ -20,9 +20,9 @@ struct MileageLogView: View {
         var id: String { rawValue }
         var title: String {
             switch self {
-            case .work: "Work trips"
-            case .workAndCommute: "Work and commute"
-            case .all: "All trips"
+            case .work: String(localized: "Work trips")
+            case .workAndCommute: String(localized: "Work and commute")
+            case .all: String(localized: "All trips")
             }
         }
 
@@ -178,9 +178,9 @@ struct MileageLogView: View {
     private func route(_ entry: MileageLog.Entry) -> String {
         switch (entry.from.isEmpty, entry.to.isEmpty) {
         case (false, false): "\(entry.from) → \(entry.to)"
-        case (false, true): "From \(entry.from)"
-        case (true, false): "To \(entry.to)"
-        default: "Drive"
+        case (false, true): String(localized: "From \(entry.from)", comment: "Trip title when only the start place is known")
+        case (true, false): String(localized: "To \(entry.to)", comment: "Trip title when only the end place is known")
+        default: String(localized: "Drive", comment: "Title of a trip with no known places")
         }
     }
 

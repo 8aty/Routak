@@ -42,17 +42,17 @@ struct RouteMap: View {
                 }
             }
             if let start = overlay.start {
-                Annotation("Start", coordinate: start, anchor: .center) {
+                Annotation(String(localized: "Start"), coordinate: start, anchor: .center) {
                     RouteEndpoint(color: .green, systemImage: "car.fill")
                 }
             }
             if let end = overlay.end {
-                Annotation("End", coordinate: end, anchor: .center) {
+                Annotation(String(localized: "End"), coordinate: end, anchor: .center) {
                     RouteEndpoint(color: .red, systemImage: "flag.checkered")
                 }
             }
             if let replay {
-                Annotation("Car", coordinate: replay.coordinate, anchor: .center) {
+                Annotation(String(localized: "Car"), coordinate: replay.coordinate, anchor: .center) {
                     ReplayCar(rotation: replay.heading - cameraHeading)
                 }
                 .annotationTitles(.hidden)

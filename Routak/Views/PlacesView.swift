@@ -20,7 +20,7 @@ struct PlacesView: View {
                         Button {
                             editing = PlaceDraft(kind: kind)
                         } label: {
-                            Label("Set \(kind.title)", systemImage: kind.systemImage)
+                            Label(kind == .home ? "Set Home" : "Set Work", systemImage: kind.systemImage)
                         }
                     }
                 }
@@ -58,9 +58,15 @@ struct PlacesView: View {
                     .background(Color.accentColor.gradient, in: Circle())
                 VStack(alignment: .leading, spacing: 2) {
                     Text(place.name).foregroundStyle(.primary)
-                    Text(place.kind == .other ? "Within \(Int(place.radius)) m" : "\(place.kind.title) · within \(Int(place.radius)) m")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+                    Group {
+                        if place.kind == .other {
+                            Text("Within \(Int(place.radius)) m")
+                        } else {
+                            Text("\(place.kind.title) · within \(Int(place.radius)) m", comment: "Saved place kind (Home or Work), then its radius")
+                        }
+                    }
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
                 }
             }
         }
@@ -126,7 +132,7 @@ struct PlaceEditorView: View {
                             select(item)
                         } label: {
                             VStack(alignment: .leading, spacing: 2) {
-                                Text(item.name ?? "Result").foregroundStyle(.primary)
+                                Text(item.name ?? String(localized: "Result")).foregroundStyle(.primary)
                                 if let subtitle = Self.subtitle(for: item) {
                                     Text(subtitle).font(.caption).foregroundStyle(.secondary)
                                 }
@@ -142,12 +148,12 @@ struct PlaceEditorView: View {
                         .textInputAutocapitalization(.words)
                     Picker("Type", selection: $kind) {
                         ForEach(SavedPlace.Kind.allCases) { kind in
-                            Text(kind == .other ? "Other" : kind.title).tag(kind)
+                            Text(kind == .other ? String(localized: "Other") : kind.title).tag(kind)
                         }
                     }
                     .pickerStyle(.segmented)
                     Picker("Size", selection: $radius) {
-                        ForEach(radiusOptions, id: \.self) { Text("\(Int($0)) m").tag($0) }
+                        ForEach(radiusOptions, id: \.self) { Text(verbatim: "\(Int($0)) m").tag($0) }
                     }
                 }
 

@@ -1,0 +1,4525 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "%@ in %lld trips this week." : {
+      "comment" : "Distance, then number of trips",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tento týden: %1$@, počet jízd: %2$lld."
+          }
+        }
+      }
+    },
+    "%@ this week" : {
+      "comment" : "Lock Screen widget: distance driven this week",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ tento týden"
+          }
+        }
+      }
+    },
+    "A trip is already recording." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jízda se už nahrává."
+          }
+        }
+      }
+    },
+    "Applies after restart" : {
+      "comment" : "iCloud sync setting changed; takes effect when the app is reopened",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Projeví se po restartu aplikace"
+          }
+        }
+      }
+    },
+    "Battery too low to record." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Baterie je příliš slabá na nahrávání."
+          }
+        }
+      }
+    },
+    "Checking…" : {
+      "comment" : "iCloud account status",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zjišťuje se…"
+          }
+        }
+      }
+    },
+    "Cover the screen while driving" : {
+      "comment" : "Settings toggle for the driving reminder",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Za jízdy zakrýt obrazovku"
+          }
+        }
+      }
+    },
+    "Drives show up here automatically." : {
+      "comment" : "Widget, before the first trip",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jízdy se tu objeví automaticky."
+          }
+        }
+      }
+    },
+    "Driving This Week" : {
+      "comment" : "Shortcuts action: how far you drove this week",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jízdy tento týden"
+          }
+        }
+      }
+    },
+    "Ends and saves the trip being recorded." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ukončí a uloží právě nahrávanou jízdu."
+          }
+        }
+      }
+    },
+    "Eyes on the road" : {
+      "comment" : "Big title of the screen shown while the car is moving. Keep it very short.",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sledujte silnici"
+          }
+        }
+      }
+    },
+    "I'm a passenger" : {
+      "comment" : "Button that closes the driving reminder",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jsem spolujezdec"
+          }
+        }
+      }
+    },
+    "iCloud" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud"
+          }
+        }
+      }
+    },
+    "In a moving car, Routak shows “Eyes on the road”. Passengers can close it with one tap." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "V jedoucím autě Routak ukáže „Sledujte silnici“. Spolujezdec to může zavřít jedním klepnutím."
+          }
+        }
+      }
+    },
+    "Lock Screen & Shortcuts" : {
+      "comment" : "Settings section header",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zamčená obrazovka a zkratky"
+          }
+        }
+      }
+    },
+    "No trip is being recorded." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Žádná jízda se nenahrává."
+          }
+        }
+      }
+    },
+    "No trips yet this week." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tento týden zatím žádné jízdy."
+          }
+        }
+      }
+    },
+    "Not signed in" : {
+      "comment" : "iCloud account status",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nepřihlášeno"
+          }
+        }
+      }
+    },
+    "Open Routak and allow location access first." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nejdřív otevřete Routak a povolte přístup k poloze."
+          }
+        }
+      }
+    },
+    "Phone down while driving" : {
+      "comment" : "Welcome screen feature title",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Za jízdy telefon odložte"
+          }
+        }
+      }
+    },
+    "Private" : {
+      "comment" : "Welcome screen feature title",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Soukromé"
+          }
+        }
+      }
+    },
+    "Recording drive" : {
+      "comment" : "Live Activity status",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nahrávání jízdy"
+          }
+        }
+      }
+    },
+    "Recording your trip." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jízda se nahrává."
+          }
+        }
+      }
+    },
+    "Routak records this trip by itself." : {
+      "comment" : "Under “Eyes on the road”. Keep it very short.",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Routak tuto jízdu zaznamená sám."
+          }
+        }
+      }
+    },
+    "Routak works on its own. You never need to look at it while driving." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Routak pracuje sám. Za jízdy se na něj nemusíte dívat."
+          }
+        }
+      }
+    },
+    "Safety" : {
+      "comment" : "Settings section header",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bezpečnost"
+          }
+        }
+      }
+    },
+    "Show trip on Lock Screen" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zobrazit jízdu na zamčené obrazovce"
+          }
+        }
+      }
+    },
+    "Start Trip" : {
+      "comment" : "Shortcuts action",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spustit jízdu"
+          }
+        }
+      }
+    },
+    "Starts recording a trip now. It ends by itself when you park." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hned začne nahrávat jízdu. Skončí sama, až zaparkujete."
+          }
+        }
+      }
+    },
+    "Stopped · still recording" : {
+      "comment" : "Live Activity status while stopped in traffic",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stojíte · nahrává se"
+          }
+        }
+      }
+    },
+    "Sync with iCloud" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Synchronizovat přes iCloud"
+          }
+        }
+      }
+    },
+    "Tells you how far you've driven this week." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Řekne, kolik jste tento týden najezdili."
+          }
+        }
+      }
+    },
+    "To start trips when your phone connects to CarPlay or your car's Bluetooth, make an automation in the Shortcuts app with Routak's Start Trip action." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chcete-li jízdu spouštět po připojení k CarPlay nebo k Bluetooth auta, vytvořte v aplikaci Zkratky automatizaci s akcí Spustit jízdu z Routaku."
+          }
+        }
+      }
+    },
+    "Trip saved." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jízda uložena."
+          }
+        }
+      }
+    },
+    "Trips and saved places sync to your other devices through your iCloud account." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jízdy a uložená místa se přes váš účet iCloud synchronizují do dalších zařízení."
+          }
+        }
+      }
+    },
+    "Unavailable" : {
+      "comment" : "iCloud account status",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nedostupné"
+          }
+        }
+      }
+    },
+    "Your trips stay on your devices and in your own iCloud." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vaše jízdy zůstávají ve vašich zařízeních a ve vašem iCloudu."
+          }
+        }
+      }
+    },
+    "Your trips stay on your iPhone." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vaše jízdy zůstávají ve vašem iPhonu."
+          }
+        }
+      }
+    },
+    "“Always” and Precise Location let Routak notice drives and record them while the app is closed." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Díky volbě „Vždy“ a Přesné poloze Routak rozpozná a zaznamená jízdy i při zavřené aplikaci."
+          }
+        }
+      }
+    },
+    "%@ · within %lld m" : {
+      "comment" : "Saved place kind (Home or Work), then its radius",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ · v okruhu %2$lld m"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ · within %2$lld m"
+          }
+        }
+      }
+    },
+    "%@ on average" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "V průměru %@"
+          }
+        }
+      }
+    },
+    "%lld files couldn't be read." : {
+      "localizations" : {
+        "cs" : {
+          "variations" : {
+            "plural" : {
+              "few" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld soubory se nepodařilo přečíst."
+                }
+              },
+              "many" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld souboru se nepodařilo přečíst."
+                }
+              },
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld soubor se nepodařilo přečíst."
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld souborů se nepodařilo přečíst."
+                }
+              }
+            }
+          }
+        },
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld file couldn't be read."
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld files couldn't be read."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "%lld min" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld min"
+          }
+        }
+      }
+    },
+    "%lld tracks had no times and were skipped." : {
+      "localizations" : {
+        "cs" : {
+          "variations" : {
+            "plural" : {
+              "few" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld trasy neobsahovaly časové údaje a byly přeskočeny."
+                }
+              },
+              "many" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld trasy neobsahovalo časové údaje a bylo přeskočeno."
+                }
+              },
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld trasa neobsahovala časové údaje a byla přeskočena."
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld tras neobsahovalo časové údaje a bylo přeskočeno."
+                }
+              }
+            }
+          }
+        },
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld track had no times and was skipped."
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld tracks had no times and were skipped."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "%lld trips" : {
+      "localizations" : {
+        "cs" : {
+          "variations" : {
+            "plural" : {
+              "few" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld jízdy"
+                }
+              },
+              "many" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld jízdy"
+                }
+              },
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld jízda"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld jízd"
+                }
+              }
+            }
+          }
+        },
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld trip"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld trips"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "%lld visits" : {
+      "localizations" : {
+        "cs" : {
+          "variations" : {
+            "plural" : {
+              "few" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld návštěvy"
+                }
+              },
+              "many" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld návštěvy"
+                }
+              },
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld návštěva"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld návštěv"
+                }
+              }
+            }
+          }
+        },
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld visit"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld visits"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "%lld were already saved." : {
+      "comment" : "Import summary: trips that were already saved",
+      "localizations" : {
+        "cs" : {
+          "variations" : {
+            "plural" : {
+              "few" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld už byly uložené."
+                }
+              },
+              "many" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld už bylo uloženo."
+                }
+              },
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld už byla uložená."
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld už bylo uloženo."
+                }
+              }
+            }
+          }
+        },
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld was already saved."
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld were already saved."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "%lld work trips, %@" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%#@trips@, %2$@"
+          },
+          "substitutions" : {
+            "trips" : {
+              "argNum" : 1,
+              "formatSpecifier" : "lld",
+              "variations" : {
+                "plural" : {
+                  "few" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%arg služební jízdy"
+                    }
+                  },
+                  "many" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%arg služební jízdy"
+                    }
+                  },
+                  "one" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%arg služební jízda"
+                    }
+                  },
+                  "other" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%arg služebních jízd"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%#@trips@, %2$@"
+          },
+          "substitutions" : {
+            "trips" : {
+              "argNum" : 1,
+              "formatSpecifier" : "lld",
+              "variations" : {
+                "plural" : {
+                  "one" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%arg work trip"
+                    }
+                  },
+                  "other" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%arg work trips"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "%lldh %lldm" : {
+      "comment" : "Duration: hours and minutes",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld h %2$lld min"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lldh %2$lldm"
+          }
+        }
+      }
+    },
+    "0" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "0"
+          }
+        }
+      }
+    },
+    "0.00" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "0,00"
+          }
+        }
+      }
+    },
+    "30 days" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "30 dní"
+          }
+        }
+      }
+    },
+    "90 days" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "90 dní"
+          }
+        }
+      }
+    },
+    "A %@ drive uses about %@ of fuel. Estimates appear on each trip and in Stats." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jízda dlouhá %1$@ spotřebuje palivo zhruba za %2$@. Odhady uvidíte u každé jízdy a ve Statistikách."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "A %1$@ drive uses about %2$@ of fuel. Estimates appear on each trip and in Stats."
+          }
+        }
+      }
+    },
+    "Action" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Akce"
+          }
+        }
+      }
+    },
+    "Add a note" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Přidat poznámku"
+          }
+        }
+      }
+    },
+    "Add drives recorded by another app or device. Each track in a file becomes a trip. Trips that are already saved are skipped." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Přidejte jízdy zaznamenané jinou aplikací nebo zařízením. Každá trasa v souboru se uloží jako samostatná jízda. Jízdy, které už máte uložené, se přeskočí."
+          }
+        }
+      }
+    },
+    "Add Place" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Přidat místo"
+          }
+        }
+      }
+    },
+    "All" : {
+      "comment" : "Stats period: all time",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vše"
+          }
+        }
+      }
+    },
+    "All time" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Celé období"
+          }
+        }
+      }
+    },
+    "All trips" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Všechny jízdy"
+          }
+        }
+      }
+    },
+    "Allow" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Povolit"
+          }
+        }
+      }
+    },
+    "Allow location “Always”" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Povolte polohu „Vždy“"
+          }
+        }
+      }
+    },
+    "Allow Location Access" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Povolit přístup k poloze"
+          }
+        }
+      }
+    },
+    "Allow location access so Routak can record your drives." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Povolte přístup k poloze, aby Routak mohl zaznamenávat vaše jízdy."
+          }
+        }
+      }
+    },
+    "Always" : {
+      "comment" : "Location permission state",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vždy"
+          }
+        }
+      }
+    },
+    "Amount" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Částka"
+          }
+        }
+      }
+    },
+    "Amount (%@)" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Částka (%@)"
+          }
+        }
+      }
+    },
+    "Any place" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jakékoli místo"
+          }
+        }
+      }
+    },
+    "Any time" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kdykoli"
+          }
+        }
+      }
+    },
+    "Any type" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jakýkoli typ"
+          }
+        }
+      }
+    },
+    "Auto-detect is off" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automatické rozpoznávání je vypnuté"
+          }
+        }
+      }
+    },
+    "Automatic detection is off" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automatické rozpoznávání je vypnuté"
+          }
+        }
+      }
+    },
+    "Average" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Průměr"
+          }
+        }
+      }
+    },
+    "Average per 15 minutes of departure time" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Průměr podle času odjezdu (po 15 minutách)"
+          }
+        }
+      }
+    },
+    "Average speed (%@)" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Průměrná rychlost (%@)"
+          }
+        }
+      }
+    },
+    "Avg speed" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prům. rychlost"
+          }
+        }
+      }
+    },
+    "Busiest: %@ %@" : {
+      "comment" : "Weekday name, then a time of day",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nejvíc jízd: %1$@ %2$@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Busiest: %1$@ %2$@"
+          }
+        }
+      }
+    },
+    "By day of the week" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Podle dne v týdnu"
+          }
+        }
+      }
+    },
+    "By type" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Podle typu"
+          }
+        }
+      }
+    },
+    "Cancel" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zrušit"
+          }
+        }
+      }
+    },
+    "Car" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Auto"
+          }
+        }
+      }
+    },
+    "category.commute" : {
+      "comment" : "Trip label: driving between home and work",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dojíždění"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Commute"
+          }
+        }
+      }
+    },
+    "category.none" : {
+      "comment" : "Trip type picker: no label",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Žádný"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "None"
+          }
+        }
+      }
+    },
+    "category.personal" : {
+      "comment" : "Trip label: a private trip",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Soukromá"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Personal"
+          }
+        }
+      }
+    },
+    "category.work" : {
+      "comment" : "Trip label: a business trip",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Služební"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Work"
+          }
+        }
+      }
+    },
+    "Change in Settings" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Změnit v Nastavení"
+          }
+        }
+      }
+    },
+    "Change to Always" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Změnit na Vždy"
+          }
+        }
+      }
+    },
+    "Checking if you're driving…" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zjišťuji, jestli jedete…"
+          }
+        }
+      }
+    },
+    "Clear Filters" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zrušit filtry"
+          }
+        }
+      }
+    },
+    "Color route by speed" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Obarvit trasu podle rychlosti"
+          }
+        }
+      }
+    },
+    "column.from" : {
+      "comment" : "Column header: start place",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Odkud"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "From"
+          }
+        }
+      }
+    },
+    "column.to" : {
+      "comment" : "Column header: destination",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kam"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "To"
+          }
+        }
+      }
+    },
+    "Commute" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dojíždění"
+          }
+        }
+      }
+    },
+    "Commute times" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Doba dojíždění"
+          }
+        }
+      }
+    },
+    "Continue" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pokračovat"
+          }
+        }
+      }
+    },
+    "Continue Without" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pokračovat bez toho"
+          }
+        }
+      }
+    },
+    "Continuing last trip" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pokračuje poslední jízda"
+          }
+        }
+      }
+    },
+    "Continuing your last trip" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pokračuje vaše poslední jízda"
+          }
+        }
+      }
+    },
+    "Couldn't create the file" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Soubor se nepodařilo vytvořit"
+          }
+        }
+      }
+    },
+    "Couldn't open the files" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Soubory se nepodařilo otevřít"
+          }
+        }
+      }
+    },
+    "Custom" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vlastní"
+          }
+        }
+      }
+    },
+    "Custom range…" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vlastní období…"
+          }
+        }
+      }
+    },
+    "Data" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Data"
+          }
+        }
+      }
+    },
+    "Date" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Datum"
+          }
+        }
+      }
+    },
+    "Date Range" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Období"
+          }
+        }
+      }
+    },
+    "Day" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Den"
+          }
+        }
+      }
+    },
+    "Delete" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Smazat"
+          }
+        }
+      }
+    },
+    "Delete all %lld trips?" : {
+      "localizations" : {
+        "cs" : {
+          "variations" : {
+            "plural" : {
+              "few" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Smazat všechny %lld jízdy?"
+                }
+              },
+              "many" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Smazat všech %lld jízdy?"
+                }
+              },
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Smazat %lld jízdu?"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Smazat všech %lld jízd?"
+                }
+              }
+            }
+          }
+        },
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Delete %lld trip?"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Delete all %lld trips?"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "Delete All Trips" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Smazat všechny jízdy"
+          }
+        }
+      }
+    },
+    "Delete this trip?" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Smazat tuto jízdu?"
+          }
+        }
+      }
+    },
+    "Delete Trip" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Smazat jízdu"
+          }
+        }
+      }
+    },
+    "Denied" : {
+      "comment" : "Location permission state",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zakázáno"
+          }
+        }
+      }
+    },
+    "Departure time vs. drive time" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Čas odjezdu a doba jízdy"
+          }
+        }
+      }
+    },
+    "Detect drives automatically" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rozpoznávat jízdy automaticky"
+          }
+        }
+      }
+    },
+    "Direction" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Směr"
+          }
+        }
+      }
+    },
+    "Distance" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vzdálenost"
+          }
+        }
+      }
+    },
+    "Distance (%@)" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vzdálenost (%@)"
+          }
+        }
+      }
+    },
+    "Distance by day" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vzdálenost po dnech"
+          }
+        }
+      }
+    },
+    "Distance by month" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vzdálenost po měsících"
+          }
+        }
+      }
+    },
+    "Distance by year" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vzdálenost po letech"
+          }
+        }
+      }
+    },
+    "Don't save" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neukládat"
+          }
+        }
+      }
+    },
+    "Done" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hotovo"
+          }
+        }
+      }
+    },
+    "Drawing routes…" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vykresluji trasy…"
+          }
+        }
+      }
+    },
+    "Drive" : {
+      "comment" : "Title of a trip with no known places",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jízda"
+          }
+        }
+      }
+    },
+    "Drive detected" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rozpoznána jízda"
+          }
+        }
+      }
+    },
+    "Drives" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jízdy"
+          }
+        }
+      }
+    },
+    "Drives leaving then took %@ on average, %@ less than leaving around %@." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jízdy s odjezdem v tuto dobu trvaly v průměru %1$@, tedy o %2$@ méně než při odjezdu kolem %3$@."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Drives leaving then took %1$@ on average, %2$@ less than leaving around %3$@."
+          }
+        }
+      }
+    },
+    "Drives longer than %@ are saved here automatically. You can also start a trip from the Drive tab." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jízdy delší než %@ se sem ukládají automaticky. Jízdu můžete spustit i ručně na kartě Jízda."
+          }
+        }
+      }
+    },
+    "Drives over %@ save automatically" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jízdy nad %@ se ukládají automaticky"
+          }
+        }
+      }
+    },
+    "Drives that start at %@ and end at %@ show up here." : {
+      "comment" : "Both arguments are saved place names",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zobrazí se tu jízdy, které začínají v místě „%1$@“ a končí v místě „%2$@“."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Drives that start at %1$@ and end at %2$@ show up here."
+          }
+        }
+      }
+    },
+    "Driving" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Za volantem"
+          }
+        }
+      }
+    },
+    "Driving again within 5 minutes of where a trip ended, after a gas stop for example, continues the same trip. Snapping uses Apple Maps directions to line routes up with roads, which helps in tunnels and between tall buildings. GPS records less often on highways to save battery." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Když se do 5 minut znovu rozjedete z místa, kde jízda skončila (třeba po zastávce u benzinky), pokračuje stejná jízda. Přichycení k silnicím zarovná trasy podle navigace z aplikace Mapy, což pomáhá v tunelech a mezi vysokými budovami. Na dálnicích zaznamenává GPS polohu méně často, aby šetřila baterii."
+          }
+        }
+      }
+    },
+    "Driving motion detected" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rozpoznán pohyb v autě"
+          }
+        }
+      }
+    },
+    "Duration" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trvání"
+          }
+        }
+      }
+    },
+    "Duration (min)" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trvání (min)"
+          }
+        }
+      }
+    },
+    "e.g. Client visit, parking paid" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "např. návštěva klienta, placené parkování"
+          }
+        }
+      }
+    },
+    "Easy on battery" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Šetrné k baterii"
+          }
+        }
+      }
+    },
+    "Edit" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Upravit"
+          }
+        }
+      }
+    },
+    "Edit Place" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Upravit místo"
+          }
+        }
+      }
+    },
+    "Edit Trip" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Upravit jízdu"
+          }
+        }
+      }
+    },
+    "End" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Konec"
+          }
+        }
+      }
+    },
+    "End time" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Čas příjezdu"
+          }
+        }
+      }
+    },
+    "End Trip" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ukončit jízdu"
+          }
+        }
+      }
+    },
+    "End trip after parked for" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ukončit jízdu po stání"
+          }
+        }
+      }
+    },
+    "Ends" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Konec"
+          }
+        }
+      }
+    },
+    "Ends when you park" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skončí, až zaparkujete"
+          }
+        }
+      }
+    },
+    "Enter a fuel price to see estimated fuel costs on each trip and in Stats." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zadejte cenu paliva a u každé jízdy i ve Statistikách uvidíte odhad nákladů na palivo."
+          }
+        }
+      }
+    },
+    "Every route" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Každá trasa"
+          }
+        }
+      }
+    },
+    "Every route on one map" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Všechny trasy na jedné mapě"
+          }
+        }
+      }
+    },
+    "Every saved trip in the period is listed." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Obsahuje všechny uložené jízdy z vybraného období."
+          }
+        }
+      }
+    },
+    "Export" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Export"
+          }
+        }
+      }
+    },
+    "Export & Import" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Export a import"
+          }
+        }
+      }
+    },
+    "Export %lld Trips" : {
+      "localizations" : {
+        "cs" : {
+          "variations" : {
+            "plural" : {
+              "few" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Exportovat %lld jízdy"
+                }
+              },
+              "many" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Exportovat %lld jízdy"
+                }
+              },
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Exportovat %lld jízdu"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Exportovat %lld jízd"
+                }
+              }
+            }
+          }
+        },
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Export %lld Trip"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Export %lld Trips"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "Export CSV" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exportovat CSV"
+          }
+        }
+      }
+    },
+    "Export GPX" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exportovat GPX"
+          }
+        }
+      }
+    },
+    "Export PDF" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exportovat PDF"
+          }
+        }
+      }
+    },
+    "Fastest" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nejrychlejší"
+          }
+        }
+      }
+    },
+    "Filter trips" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Filtrovat jízdy"
+          }
+        }
+      }
+    },
+    "First trip" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "První jízda"
+          }
+        }
+      }
+    },
+    "Fix" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opravit"
+          }
+        }
+      }
+    },
+    "Fix Trip" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opravit jízdu"
+          }
+        }
+      }
+    },
+    "Format" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Formát"
+          }
+        }
+      }
+    },
+    "From" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Od"
+          }
+        }
+      }
+    },
+    "From %@" : {
+      "comment" : "Trip title when only the start place is known",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Odjezd: %@"
+          }
+        }
+      }
+    },
+    "Fuel" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Palivo"
+          }
+        }
+      }
+    },
+    "Fuel (est.)" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Palivo (odhad)"
+          }
+        }
+      }
+    },
+    "Fuel & Mileage" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Palivo a náhrady"
+          }
+        }
+      }
+    },
+    "Fuel cost (%@)" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Náklady na palivo (%@)"
+          }
+        }
+      }
+    },
+    "Fuel economy" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spotřeba"
+          }
+        }
+      }
+    },
+    "Fuel price" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cena paliva"
+          }
+        }
+      }
+    },
+    "Fuel price and economy for cost estimates, and the rate for the mileage log." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cena a spotřeba paliva pro odhad nákladů a sazba náhrady pro knihu jízd."
+          }
+        }
+      }
+    },
+    "Fuel used" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spotřebováno"
+          }
+        }
+      }
+    },
+    "Full routes for other GPS and fitness apps" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Celé trasy pro jiné GPS a sportovní aplikace"
+          }
+        }
+      }
+    },
+    "Full screen map" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mapa na celou obrazovku"
+          }
+        }
+      }
+    },
+    "Future trips starting or ending here will be called “%@”, and past trips here are renamed too." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jízdy, které tu začnou nebo skončí, ponesou název „%@“. Přejmenují se i dřívější jízdy z tohoto místa."
+          }
+        }
+      }
+    },
+    "Generated %@ with Routak" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vytvořeno %@ v aplikaci Routak"
+          }
+        }
+      }
+    },
+    "GPS is off until you charge your phone" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "GPS se zapne, až telefon nabijete"
+          }
+        }
+      }
+    },
+    "GPX and KML contain the recorded GPS points of every trip. CSV lists one trip per row with distance, time, speeds and notes." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "GPX a KML obsahují zaznamenané body GPS všech jízd. CSV uvádí každou jízdu na samostatném řádku se vzdáleností, časem, rychlostmi a poznámkami."
+          }
+        }
+      }
+    },
+    "GPX and KML contain the recorded GPS points of every trip. CSV lists one trip per row with distance, time, speeds, fuel cost and notes." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "GPX a KML obsahují zaznamenané body GPS všech jízd. CSV uvádí každou jízdu na samostatném řádku se vzdáleností, časem, rychlostmi, náklady na palivo a poznámkami."
+          }
+        }
+      }
+    },
+    "Hands-free" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Plně automaticky"
+          }
+        }
+      }
+    },
+    "Highlights" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rekordy"
+          }
+        }
+      }
+    },
+    "History" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Historie"
+          }
+        }
+      }
+    },
+    "Home %@ on average" : {
+      "comment" : "Average drive time from work to home",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Domů průměrně %@"
+          }
+        }
+      }
+    },
+    "Import" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Import"
+          }
+        }
+      }
+    },
+    "Import complete" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Import dokončen"
+          }
+        }
+      }
+    },
+    "Import GPX Files" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importovat soubory GPX"
+          }
+        }
+      }
+    },
+    "Imported %lld trips." : {
+      "localizations" : {
+        "cs" : {
+          "variations" : {
+            "plural" : {
+              "few" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Importovány %lld jízdy."
+                }
+              },
+              "many" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Importováno %lld jízdy."
+                }
+              },
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Importována %lld jízda."
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Importováno %lld jízd."
+                }
+              }
+            }
+          }
+        },
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Imported %lld trip."
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Imported %lld trips."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "Include" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zahrnout"
+          }
+        }
+      }
+    },
+    "iOS asks twice:" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iOS se zeptá dvakrát:"
+          }
+        }
+      }
+    },
+    "Join trips split by short stops" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spojovat jízdy přerušené krátkou zastávkou"
+          }
+        }
+      }
+    },
+    "Keeps %@ over %@. Gray parts are removed." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zůstane %1$@ za %2$@. Šedé úseky se odstraní."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Keeps %1$@ over %2$@. Gray parts are removed."
+          }
+        }
+      }
+    },
+    "Kilometers" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kilometry"
+          }
+        }
+      }
+    },
+    "km/h" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "km/h"
+          }
+        }
+      }
+    },
+    "L" : {
+      "comment" : "Unit symbol for liters",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "l"
+          }
+        }
+      }
+    },
+    "L/100 km" : {
+      "comment" : "Fuel economy unit: liters per 100 kilometers",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "l/100 km"
+          }
+        }
+      }
+    },
+    "Label" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Označení"
+          }
+        }
+      }
+    },
+    "Label as" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Označit jako"
+          }
+        }
+      }
+    },
+    "Label trips as Work in History or on a trip's page to include them. Commuting usually isn't deductible." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jízdy zahrnete tak, že je v Historii nebo na stránce jízdy označíte jako služební. Cesty do práce a z práce se za služební obvykle nepovažují."
+          }
+        }
+      }
+    },
+    "Label trips as Work to log business miles" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Označte jízdy jako služební pro knihu jízd"
+          }
+        }
+      }
+    },
+    "Last 30 days" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Posledních 30 dní"
+          }
+        }
+      }
+    },
+    "Last month" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Minulý měsíc"
+          }
+        }
+      }
+    },
+    "Last trip" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Poslední jízda"
+          }
+        }
+      }
+    },
+    "Last week" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Minulý týden"
+          }
+        }
+      }
+    },
+    "Last year" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Minulý rok"
+          }
+        }
+      }
+    },
+    "Leave around %@" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vyjeďte kolem %@"
+          }
+        }
+      }
+    },
+    "Left %@" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Odjezd v %@"
+          }
+        }
+      }
+    },
+    "Left a place" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Odjezd z místa"
+          }
+        }
+      }
+    },
+    "Left at" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Odjezd"
+          }
+        }
+      }
+    },
+    "Left parking spot" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Odjezd z místa parkování"
+          }
+        }
+      }
+    },
+    "Location access" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Přístup k poloze"
+          }
+        }
+      }
+    },
+    "Location access needed" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Je potřeba přístup k poloze"
+          }
+        }
+      }
+    },
+    "Longest drive" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nejdéle za volantem"
+          }
+        }
+      }
+    },
+    "Longest trip" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nejdelší jízda"
+          }
+        }
+      }
+    },
+    "Manual trip" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ruční nahrávání"
+          }
+        }
+      }
+    },
+    "Maps, speeds and replays for each trip, searchable by place, date and label." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mapa, rychlosti a přehrání každé jízdy. Hledat můžete podle místa, data i označení."
+          }
+        }
+      }
+    },
+    "Matching trips" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nalezené jízdy"
+          }
+        }
+      }
+    },
+    "Max speed" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Max. rychlost"
+          }
+        }
+      }
+    },
+    "Max speed (%@)" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Max. rychlost (%@)"
+          }
+        }
+      }
+    },
+    "Mileage log" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kniha jízd"
+          }
+        }
+      }
+    },
+    "Mileage Log" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kniha jízd"
+          }
+        }
+      }
+    },
+    "Mileage Log %@" : {
+      "comment" : "File name and PDF title; the argument is the period, e.g. March 2026",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kniha jízd %@"
+          }
+        }
+      }
+    },
+    "Miles" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Míle"
+          }
+        }
+      }
+    },
+    "min" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "min"
+          }
+        }
+      }
+    },
+    "Minutes" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Minuty"
+          }
+        }
+      }
+    },
+    "Month" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Měsíc"
+          }
+        }
+      }
+    },
+    "Most trips start on %@ around %@" : {
+      "comment" : "Weekday name, then a time of day",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nejvíc jízd začíná: %1$@ kolem %2$@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Most trips start on %1$@ around %2$@"
+          }
+        }
+      }
+    },
+    "Move the map so the pin sits on the place." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Posuňte mapu tak, aby špendlík ukazoval na místo."
+          }
+        }
+      }
+    },
+    "Movement detected" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zjištěn pohyb"
+          }
+        }
+      }
+    },
+    "Moving again" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Znovu v pohybu"
+          }
+        }
+      }
+    },
+    "mph" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "mph"
+          }
+        }
+      }
+    },
+    "Name" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Název"
+          }
+        }
+      }
+    },
+    "New Place" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nové místo"
+          }
+        }
+      }
+    },
+    "Next" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Další"
+          }
+        }
+      }
+    },
+    "No commutes yet" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zatím žádné dojíždění"
+          }
+        }
+      }
+    },
+    "No drives between Home and Work yet" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zatím žádné jízdy mezi domovem a prací"
+          }
+        }
+      }
+    },
+    "No matching trips" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Žádné odpovídající jízdy"
+          }
+        }
+      }
+    },
+    "No need to open the app before you drive." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Před jízdou nemusíte aplikaci otevírat."
+          }
+        }
+      }
+    },
+    "No stats yet" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zatím žádné statistiky"
+          }
+        }
+      }
+    },
+    "No trips" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Žádné jízdy"
+          }
+        }
+      }
+    },
+    "No trips yet" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zatím žádné jízdy"
+          }
+        }
+      }
+    },
+    "None" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Žádná"
+          }
+        }
+      }
+    },
+    "Not labeled" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bez označení"
+          }
+        }
+      }
+    },
+    "Not Now" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Teď ne"
+          }
+        }
+      }
+    },
+    "Not set" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nenastaveno"
+          }
+        }
+      }
+    },
+    "Notes" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Poznámky"
+          }
+        }
+      }
+    },
+    "Nothing imported" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nic se neimportovalo"
+          }
+        }
+      }
+    },
+    "Now" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Teď"
+          }
+        }
+      }
+    },
+    "Off" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vypnuto"
+          }
+        }
+      }
+    },
+    "OK" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        }
+      }
+    },
+    "On" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zapnuto"
+          }
+        }
+      }
+    },
+    "One row per trip, for spreadsheets" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jeden řádek na jízdu, pro tabulkové procesory"
+          }
+        }
+      }
+    },
+    "Only manual trips are recorded" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zaznamenávají se jen ručně spuštěné jízdy"
+          }
+        }
+      }
+    },
+    "Only while Routak is open" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jen když je Routak otevřený"
+          }
+        }
+      }
+    },
+    "Open Settings" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otevřít Nastavení"
+          }
+        }
+      }
+    },
+    "Open the app to detect drives" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pro rozpoznání jízd otevřete aplikaci"
+          }
+        }
+      }
+    },
+    "Other" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jiné"
+          }
+        }
+      }
+    },
+    "Other places" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Další místa"
+          }
+        }
+      }
+    },
+    "Page %lld of %lld" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Strana %1$lld z %2$lld"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Page %1$lld of %2$lld"
+          }
+        }
+      }
+    },
+    "Pause replay" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pozastavit přehrávání"
+          }
+        }
+      }
+    },
+    "Paused to save battery" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pozastaveno kvůli úspoře baterie"
+          }
+        }
+      }
+    },
+    "Paused: battery low" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pozastaveno: slabá baterie"
+          }
+        }
+      }
+    },
+    "Period" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Období"
+          }
+        }
+      }
+    },
+    "Permissions" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oprávnění"
+          }
+        }
+      }
+    },
+    "Place" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Místo"
+          }
+        }
+      }
+    },
+    "place.home" : {
+      "comment" : "Saved place kind; also the default name for the user's home",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Domov"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Home"
+          }
+        }
+      }
+    },
+    "place.other" : {
+      "comment" : "Saved place kind for any other place",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Místo"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Place"
+          }
+        }
+      }
+    },
+    "place.work" : {
+      "comment" : "Saved place kind; also the default name for the user's workplace",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Práce"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Work"
+          }
+        }
+      }
+    },
+    "Places, notes, dates" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Místa, poznámky, data"
+          }
+        }
+      }
+    },
+    "Precise location" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Přesná poloha"
+          }
+        }
+      }
+    },
+    "Previous" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Předchozí"
+          }
+        }
+      }
+    },
+    "Purpose" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Účel"
+          }
+        }
+      }
+    },
+    "Range" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rozsah"
+          }
+        }
+      }
+    },
+    "Rate" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sazba"
+          }
+        }
+      }
+    },
+    "Rate (%@/%@)" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sazba (%1$@/%2$@)"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Rate (%1$@/%2$@)"
+          }
+        }
+      }
+    },
+    "Rate per %@" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sazba za %@"
+          }
+        }
+      }
+    },
+    "Recent" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nedávné"
+          }
+        }
+      }
+    },
+    "Recording" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nahrávání"
+          }
+        }
+      }
+    },
+    "Recording manual trip" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Probíhá ruční nahrávání"
+          }
+        }
+      }
+    },
+    "Recording starts when you drive and stops when you park. No buttons to press." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nahrávání se spustí, když vyjedete, a skončí, když zaparkujete. Nemusíte nic mačkat."
+          }
+        }
+      }
+    },
+    "Recording stopped because the battery is low." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nahrávání bylo zastaveno kvůli slabé baterii."
+          }
+        }
+      }
+    },
+    "Remember as" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uložit jako"
+          }
+        }
+      }
+    },
+    "Remove filter %@" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Odstranit filtr %@"
+          }
+        }
+      }
+    },
+    "Rename past trips here" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Přejmenovat dřívější jízdy z tohoto místa"
+          }
+        }
+      }
+    },
+    "Rename the start and end places" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Přejmenovat místo začátku a konce"
+          }
+        }
+      }
+    },
+    "Replay trip" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Přehrát jízdu"
+          }
+        }
+      }
+    },
+    "Restricted" : {
+      "comment" : "Location permission state",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Omezeno"
+          }
+        }
+      }
+    },
+    "Result" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Výsledek"
+          }
+        }
+      }
+    },
+    "Resumed trip" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jízda pokračuje"
+          }
+        }
+      }
+    },
+    "Routak can only notice a drive starting if it may use your location while it's closed." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Routak pozná, že vyjíždíte, jen když smí používat vaši polohu i při zavřené aplikaci."
+          }
+        }
+      }
+    },
+    "Routak trips" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jízdy z Routaku"
+          }
+        }
+      }
+    },
+    "Routes for Google Earth and Google My Maps" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trasy pro Google Earth a Moje mapy Google"
+          }
+        }
+      }
+    },
+    "Save" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uložit"
+          }
+        }
+      }
+    },
+    "Save trips longer than" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ukládat jízdy delší než"
+          }
+        }
+      }
+    },
+    "Saved place" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uložené místo"
+          }
+        }
+      }
+    },
+    "Saved Places" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uložená místa"
+          }
+        }
+      }
+    },
+    "Saved trips" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uložené jízdy"
+          }
+        }
+      }
+    },
+    "Search address or place" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hledat adresu nebo místo"
+          }
+        }
+      }
+    },
+    "Second trip" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Druhá jízda"
+          }
+        }
+      }
+    },
+    "Set Home" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nastavit domov"
+          }
+        }
+      }
+    },
+    "Set Home and Work first" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nejdřív nastavte domov a práci"
+          }
+        }
+      }
+    },
+    "Set Home and Work once, and trips are named “Home → Work” automatically." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stačí jednou nastavit domov a práci a jízdy se budou automaticky jmenovat „Domov → Práce“."
+          }
+        }
+      }
+    },
+    "Set Home and Work to compare commutes" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nastavte domov a práci a porovnejte dojíždění"
+          }
+        }
+      }
+    },
+    "Set location to “Always” so drives are detected in the background." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nastavte polohu na „Vždy“, aby se jízdy rozpoznávaly i na pozadí."
+          }
+        }
+      }
+    },
+    "Set Work" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nastavit práci"
+          }
+        }
+      }
+    },
+    "Settings" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nastavení"
+          }
+        }
+      }
+    },
+    "Show plain route" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zobrazit jednobarevnou trasu"
+          }
+        }
+      }
+    },
+    "Size" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Velikost"
+          }
+        }
+      }
+    },
+    "Slow" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pomalu"
+          }
+        }
+      }
+    },
+    "Slowest" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nejpomalejší"
+          }
+        }
+      }
+    },
+    "Snap routes to roads" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Přichytit trasy k silnicím"
+          }
+        }
+      }
+    },
+    "Speed" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rychlost"
+          }
+        }
+      }
+    },
+    "Split" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rozdělit"
+          }
+        }
+      }
+    },
+    "Split at" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rozdělit v"
+          }
+        }
+      }
+    },
+    "Start" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Začátek"
+          }
+        }
+      }
+    },
+    "Start Driving" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vyrazit"
+          }
+        }
+      }
+    },
+    "Start time" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Čas odjezdu"
+          }
+        }
+      }
+    },
+    "Start Trip Now" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spustit jízdu"
+          }
+        }
+      }
+    },
+    "Starts" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Začátek"
+          }
+        }
+      }
+    },
+    "Stats" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Statistiky"
+          }
+        }
+      }
+    },
+    "Stats and logs" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Statistiky a kniha jízd"
+          }
+        }
+      }
+    },
+    "Stop GPS when battery is below 10%" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vypnout GPS při baterii pod 10 %"
+          }
+        }
+      }
+    },
+    "Stop replay" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zastavit přehrávání"
+          }
+        }
+      }
+    },
+    "Stopped here for %@." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zde jste stáli %@."
+          }
+        }
+      }
+    },
+    "Stopped in traffic" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stojíte v provozu"
+          }
+        }
+      }
+    },
+    "Stopped in traffic · still recording" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stojíte v provozu · nahrávání pokračuje"
+          }
+        }
+      }
+    },
+    "Summary" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Souhrn"
+          }
+        }
+      }
+    },
+    "Tap **Allow While Using App**" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Klepněte na **Povolit při používání aplikace**"
+          }
+        }
+      }
+    },
+    "The route and its details are removed for good." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trasa i všechny podrobnosti budou nenávratně odstraněny."
+          }
+        }
+      }
+    },
+    "Then tap **Change to Always Allow**" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pak klepněte na **Změnit na Vždy povolit**"
+          }
+        }
+      }
+    },
+    "This is your saved place “%@”. Edit it in Settings › Saved Places to rename it everywhere." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toto je vaše uložené místo „%@“. Pokud ho chcete přejmenovat všude, upravte ho v Nastavení › Uložená místa."
+          }
+        }
+      }
+    },
+    "This month" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tento měsíc"
+          }
+        }
+      }
+    },
+    "This trip has too few points to trim or split." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jízda má příliš málo bodů na zkrácení nebo rozdělení."
+          }
+        }
+      }
+    },
+    "This week" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tento týden"
+          }
+        }
+      }
+    },
+    "This year" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tento rok"
+          }
+        }
+      }
+    },
+    "Time" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Čas"
+          }
+        }
+      }
+    },
+    "To" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Do"
+          }
+        }
+      }
+    },
+    "To %@" : {
+      "comment" : "Trip title when only the end place is known",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Příjezd: %@"
+          }
+        }
+      }
+    },
+    "To Home" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Domů"
+          }
+        }
+      }
+    },
+    "To Work" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Do práce"
+          }
+        }
+      }
+    },
+    "To work %@ · home %@ on average" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Do práce průměrně %1$@ · domů %2$@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "To work %1$@ · home %2$@ on average"
+          }
+        }
+      }
+    },
+    "To work %@ on average" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Do práce průměrně %@"
+          }
+        }
+      }
+    },
+    "Today" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dnes"
+          }
+        }
+      }
+    },
+    "Top destinations" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nejčastější cíle"
+          }
+        }
+      }
+    },
+    "Top speed" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nejvyšší rychlost"
+          }
+        }
+      }
+    },
+    "Total" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Celkem"
+          }
+        }
+      }
+    },
+    "Total · %lld trips" : {
+      "localizations" : {
+        "cs" : {
+          "variations" : {
+            "plural" : {
+              "few" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Celkem · %lld jízdy"
+                }
+              },
+              "many" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Celkem · %lld jízdy"
+                }
+              },
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Celkem · %lld jízda"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Celkem · %lld jízd"
+                }
+              }
+            }
+          }
+        },
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Total · %lld trip"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Total · %lld trips"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "Total distance" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Celková vzdálenost"
+          }
+        }
+      }
+    },
+    "Totals, charts and commute times appear here after your first saved drive." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Po první uložené jízdě tu najdete souhrny, grafy a doby dojíždění."
+          }
+        }
+      }
+    },
+    "Touch to scrub" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Posouvejte prstem"
+          }
+        }
+      }
+    },
+    "Trim" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zkrátit"
+          }
+        }
+      }
+    },
+    "Trim or Split…" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zkrátit nebo rozdělit…"
+          }
+        }
+      }
+    },
+    "Trip detection" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rozpoznávání jízd"
+          }
+        }
+      }
+    },
+    "Trip saved" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jízda uložena"
+          }
+        }
+      }
+    },
+    "Trip type" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Typ jízdy"
+          }
+        }
+      }
+    },
+    "Trips" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jízdy"
+          }
+        }
+      }
+    },
+    "Trips are stored only on this iPhone." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jízdy jsou uložené jen v tomto iPhonu."
+          }
+        }
+      }
+    },
+    "Trips that start or end at a saved place are named after it, like “Home → Work”." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jízdy, které začínají nebo končí na uloženém místě, ponesou jeho název, například „Domov → Práce“."
+          }
+        }
+      }
+    },
+    "Trips this month" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jízdy tento měsíc"
+          }
+        }
+      }
+    },
+    "Try a different search or clear the filters." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zkuste hledat jinak nebo zrušte filtry."
+          }
+        }
+      }
+    },
+    "Turn On" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zapnout"
+          }
+        }
+      }
+    },
+    "Turn on Precise Location for accurate routes." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pro přesné trasy zapněte Přesnou polohu."
+          }
+        }
+      }
+    },
+    "Type" : {
+      "comment" : "Column header: trip label such as Work",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Typ"
+          }
+        }
+      }
+    },
+    "Typical" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Obvykle"
+          }
+        }
+      }
+    },
+    "Units" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jednotky"
+          }
+        }
+      }
+    },
+    "Unknown" : {
+      "comment" : "Location permission state",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neznámé"
+          }
+        }
+      }
+    },
+    "Unlabeled" : {
+      "comment" : "Trips without a label such as Work",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bez označení"
+          }
+        }
+      }
+    },
+    "Until you drive, only low-power signals are used. GPS runs only during a drive." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dokud nejedete, používají se jen úsporné signály. GPS běží jen během jízdy."
+          }
+        }
+      }
+    },
+    "Used" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spotřebováno"
+          }
+        }
+      }
+    },
+    "Used for the mileage log's amounts, e.g. your employer's reimbursement rate or the tax authority's standard rate." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Používá se pro částky v knize jízd, např. sazba náhrady od zaměstnavatele nebo zákonná sazba základní náhrady."
+          }
+        }
+      }
+    },
+    "vs the month before" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "oproti předchozímu měsíci"
+          }
+        }
+      }
+    },
+    "vs the week before" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "oproti předchozímu týdnu"
+          }
+        }
+      }
+    },
+    "vs the year before" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "oproti předchozímu roku"
+          }
+        }
+      }
+    },
+    "Watch the drive play back on the map" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sledujte průběh jízdy na mapě"
+          }
+        }
+      }
+    },
+    "Watching for drives" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Čekám na jízdu"
+          }
+        }
+      }
+    },
+    "Week" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Týden"
+          }
+        }
+      }
+    },
+    "Weekly totals, commute times, fuel costs and mileage logs for expenses." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Týdenní souhrny, doby dojíždění, náklady na palivo a kniha jízd pro vyúčtování."
+          }
+        }
+      }
+    },
+    "Welcome to Routak" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vítejte v Routaku"
+          }
+        }
+      }
+    },
+    "When you drive" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kdy jezdíte"
+          }
+        }
+      }
+    },
+    "When you start moving faster than about 23 km/h (15 mph), Routak begins recording. Shorter trips are discarded. Manual trips are always saved. While your phone still senses it's in a car, red lights and traffic jams don't end the trip." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jakmile se rozjedete rychleji než zhruba 23 km/h, Routak začne zaznamenávat. Kratší jízdy se zahodí, ručně spuštěné se uloží vždy. Dokud telefon poznává, že je v autě, červená na semaforu ani kolona jízdu neukončí."
+          }
+        }
+      }
+    },
+    "Where you drive" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kde jezdíte"
+          }
+        }
+      }
+    },
+    "Where You Drive" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kde jezdíte"
+          }
+        }
+      }
+    },
+    "While Using" : {
+      "comment" : "Location permission state",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Při používání"
+          }
+        }
+      }
+    },
+    "Within %lld m" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "V okruhu %lld m"
+          }
+        }
+      }
+    },
+    "Work and commute" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Služební a dojíždění"
+          }
+        }
+      }
+    },
+    "Work trips" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Služební jízdy"
+          }
+        }
+      }
+    },
+    "Works in the background" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Funguje na pozadí"
+          }
+        }
+      }
+    },
+    "Year" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rok"
+          }
+        }
+      }
+    },
+    "Yesterday" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Včera"
+          }
+        }
+      }
+    },
+    "Your drives, recorded automatically." : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vaše jízdy, zaznamenané automaticky."
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

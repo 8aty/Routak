@@ -25,7 +25,7 @@ enum Format {
     static func duration(_ seconds: TimeInterval) -> String {
         let total = Int(max(0, seconds))
         let h = total / 3600, m = (total % 3600) / 60, s = total % 60
-        if h > 0 { return "\(h)h \(m)m" }
+        if h > 0 { return String(localized: "\(h)h \(m)m", comment: "Duration: hours and minutes") }
         if m > 0 { return "\(m) min" }
         return "\(s) s"
     }
@@ -42,11 +42,20 @@ enum Format {
 
     static func dayTitle(_ date: Date) -> String {
         let calendar = Calendar.current
-        if calendar.isDateInToday(date) { return "Today" }
-        if calendar.isDateInYesterday(date) { return "Yesterday" }
+        if calendar.isDateInToday(date) { return String(localized: "Today") }
+        if calendar.isDateInYesterday(date) { return String(localized: "Yesterday") }
         if calendar.isDate(date, equalTo: .now, toGranularity: .year) {
-            return date.formatted(.dateTime.weekday(.wide).month(.wide).day())
+            return date.formatted(.dateTime.weekday(.wide).month(.wide).day()).capitalizedFirst
         }
-        return date.formatted(.dateTime.weekday(.abbreviated).month(.abbreviated).day().year())
+        return date.formatted(.dateTime.weekday(.abbreviated).month(.abbreviated).day().year()).capitalizedFirst
+    }
+}
+
+extension String {
+    /// Uppercases only the first letter. Some languages (Czech, for one) write weekday
+    /// and month names in lowercase, which looks wrong at the start of a title.
+    var capitalizedFirst: String {
+        guard let first else { return self }
+        return first.uppercased() + dropFirst()
     }
 }

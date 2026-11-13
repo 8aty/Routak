@@ -53,7 +53,7 @@ struct ExportView: View {
                     Task { await export() }
                 } label: {
                     HStack {
-                        Label(count == 1 ? "Export 1 Trip" : "Export \(count) Trips", systemImage: "square.and.arrow.up")
+                        Label("Export \(count) Trips", systemImage: "square.and.arrow.up")
                         Spacer()
                         if isExporting { ProgressView() }
                     }
@@ -62,7 +62,11 @@ struct ExportView: View {
             } header: {
                 Text("Export")
             } footer: {
-                Text("GPX and KML contain the recorded GPS points of every trip. CSV lists one trip per row with distance, time, speeds\(fuelPrice > 0 ? ", fuel cost" : "") and notes.")
+                if fuelPrice > 0 {
+                    Text("GPX and KML contain the recorded GPS points of every trip. CSV lists one trip per row with distance, time, speeds, fuel cost and notes.")
+                } else {
+                    Text("GPX and KML contain the recorded GPS points of every trip. CSV lists one trip per row with distance, time, speeds and notes.")
+                }
             }
 
             Section {
@@ -116,7 +120,7 @@ struct ExportView: View {
             case .success(let urls):
                 Task { await importFiles(urls) }
             case .failure(let error):
-                message = ("Couldn't open the files", error.localizedDescription)
+                message = (String(localized: "Couldn't open the files"), error.localizedDescription)
             }
         }
         .alert(message?.title ?? "", isPresented: Binding(
@@ -143,7 +147,7 @@ struct ExportView: View {
             let url = try await TripExporter.export(snapshot, format: format, options: options)
             sharedFile = SharedFile(url: url)
         } catch {
-            message = ("Couldn't create the file", error.localizedDescription)
+            message = (String(localized: "Couldn't create the file"), error.localizedDescription)
         }
     }
 
@@ -152,6 +156,6 @@ struct ExportView: View {
         defer { isImporting = false }
         let result = await GPXImporter.importFiles(urls, context: context)
         GPXImporter.nameInBackground(result.trips, context: context)
-        message = (result.imported > 0 ? "Import complete" : "Nothing imported", result.summary)
+        message = (result.imported > 0 ? String(localized: "Import complete") : String(localized: "Nothing imported"), result.summary)
     }
 }

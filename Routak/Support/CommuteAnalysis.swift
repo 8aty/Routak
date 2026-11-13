@@ -7,7 +7,7 @@ struct CommuteAnalysis {
     enum Direction: String, CaseIterable, Identifiable {
         case toWork, toHome
         var id: String { rawValue }
-        var title: String { self == .toWork ? "To Work" : "To Home" }
+        var title: String { self == .toWork ? String(localized: "To Work") : String(localized: "To Home") }
         var systemImage: String { self == .toWork ? "briefcase.fill" : "house.fill" }
     }
 

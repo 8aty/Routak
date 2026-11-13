@@ -45,17 +45,28 @@ struct TripDetailView: View {
     }
 
     var body: some View {
+        ScrollViewReader { proxy in
         ScrollView {
             VStack(spacing: 16) {
                 mapCard
                 if displayPoints.count > 1 { replayCard }
                 statsGrid
                 labelsCard
+                    .id("labels")
                 timeline
                 if speedSamples.count > 2 { speedChart }
             }
             .padding(.horizontal, 16)
             .padding(.bottom, 24)
+        }
+        #if DEBUG
+        // `-detailScroll labels` scrolls to the trip type buttons (for screenshots).
+        .task {
+            guard UserDefaults.standard.string(forKey: "detailScroll") == "labels" else { return }
+            try? await Task.sleep(for: .milliseconds(600))
+            proxy.scrollTo("labels", anchor: .center)
+        }
+        #endif
         }
         .navigationTitle(trip.title)
         .navigationBarTitleDisplayMode(.inline)
@@ -199,10 +210,10 @@ struct TripDetailView: View {
                 Spacer()
                 Menu {
                     Picker("Speed", selection: $playbackRate) {
-                        ForEach(Self.rates, id: \.self) { Text("\(Int($0))×").tag($0) }
+                        ForEach(Self.rates, id: \.self) { Text(verbatim: "\(Int($0))×").tag($0) }
                     }
                 } label: {
-                    Text("\(Int(playbackRate))×")
+                    Text(verbatim: "\(Int(playbackRate))×")
                         .font(.subheadline.weight(.semibold))
                         .monospacedDigit()
                         .padding(.horizontal, 10)
@@ -273,7 +284,7 @@ struct TripDetailView: View {
         .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
     }
 
-    private func mapButton(_ systemImage: String, label: String, action: @escaping () -> Void) -> some View {
+    private func mapButton(_ systemImage: String, label: LocalizedStringKey, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             Image(systemName: systemImage)
                 .font(.subheadline.weight(.semibold))
@@ -311,33 +322,18 @@ struct TripDetailView: View {
     /// Quick category buttons and the trip's notes.
     private var labelsCard: some View {
         VStack(alignment: .leading, spacing: 12) {
-            HStack(spacing: 8) {
-                ForEach(TripCategory.allCases) { category in
-                    let selected = trip.category == category
-                    Button {
-                        withAnimation(.snappy) {
-                            trip.category = selected ? nil : category
-                            try? context.save()
-                        }
-                    } label: {
-                        Label(category.title, systemImage: category.systemImage)
-                            .font(.subheadline.weight(.semibold))
-                            .padding(.horizontal, 12)
-                            .padding(.vertical, 8)
-                            .frame(maxWidth: .infinity)
-                            .foregroundStyle(selected ? Color.white : Color.primary)
-                            .background(selected ? AnyShapeStyle(Color.accentColor) : AnyShapeStyle(.fill.tertiary), in: Capsule())
-                    }
-                    .buttonStyle(.plain)
-                    .accessibilityAddTraits(selected ? .isSelected : [])
-                }
+            // Icon beside the name when all three fit on one line, otherwise icon above it.
+            // Names never wrap mid-word.
+            ViewThatFits(in: .horizontal) {
+                categoryButtons(stacked: false)
+                categoryButtons(stacked: true)
             }
             Button {
                 showEditor = true
             } label: {
                 HStack(alignment: .top, spacing: 10) {
                     Image(systemName: "note.text").foregroundStyle(.secondary)
-                    Text(trip.notes.isEmpty ? "Add a note" : trip.notes)
+                    Text(trip.notes.isEmpty ? String(localized: "Add a note") : trip.notes)
                         .foregroundStyle(trip.notes.isEmpty ? .secondary : .primary)
                         .multilineTextAlignment(.leading)
                         .frame(maxWidth: .infinity, alignment: .leading)
@@ -350,14 +346,52 @@ struct TripDetailView: View {
         .background(.fill.quaternary, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
     }
 
+    private func categoryButtons(stacked: Bool) -> some View {
+        HStack(spacing: 8) {
+            ForEach(TripCategory.allCases) { category in
+                let selected = trip.category == category
+                Button {
+                    withAnimation(.snappy) {
+                        trip.category = selected ? nil : category
+                        try? context.save()
+                    }
+                } label: {
+                    Group {
+                        if stacked {
+                            VStack(spacing: 4) {
+                                Image(systemName: category.systemImage)
+                                Text(category.title).lineLimit(1).minimumScaleFactor(0.8)
+                            }
+                            .padding(.horizontal, 6)
+                            .padding(.vertical, 10)
+                        } else {
+                            Label(category.title, systemImage: category.systemImage)
+                                .lineLimit(1)
+                                .fixedSize()
+                                .padding(.horizontal, 12)
+                                .padding(.vertical, 8)
+                        }
+                    }
+                    .font(.subheadline.weight(.semibold))
+                    .frame(maxWidth: .infinity)
+                    .foregroundStyle(selected ? Color.white : Color.primary)
+                    .background(selected ? AnyShapeStyle(Color.accentColor) : AnyShapeStyle(.fill.tertiary),
+                                in: RoundedRectangle(cornerRadius: stacked ? 14 : 20, style: .continuous))
+                }
+                .buttonStyle(.plain)
+                .accessibilityAddTraits(selected ? .isSelected : [])
+            }
+        }
+    }
+
     private var timeline: some View {
         Button {
             showEditor = true
         } label: {
             HStack {
                 VStack(alignment: .leading, spacing: 0) {
-                    timelineRow(color: .green, time: trip.startDate, place: trip.startName ?? "Start", isFirst: true)
-                    timelineRow(color: .red, time: trip.endDate, place: trip.endName ?? "End", isFirst: false)
+                    timelineRow(color: .green, time: trip.startDate, place: trip.startName ?? String(localized: "Start"), isFirst: true)
+                    timelineRow(color: .red, time: trip.endDate, place: trip.endName ?? String(localized: "End"), isFirst: false)
                 }
                 Spacer()
                 Image(systemName: "pencil")

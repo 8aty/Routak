@@ -10,9 +10,9 @@ enum TripCategory: String, CaseIterable, Identifiable, Codable {
 
     var title: String {
         switch self {
-        case .commute: "Commute"
-        case .work: "Work"
-        case .personal: "Personal"
+        case .commute: String(localized: "category.commute", defaultValue: "Commute", comment: "Trip label: driving between home and work")
+        case .work: String(localized: "category.work", defaultValue: "Work", comment: "Trip label: a business trip")
+        case .personal: String(localized: "category.personal", defaultValue: "Personal", comment: "Trip label: a private trip")
         }
     }
 
@@ -57,8 +57,14 @@ final class Trip {
     /// See `RoadSnapper.State`.
     var snapStateRaw: Int = 0
 
+    // Added in 1.2
+    /// Which device recorded the trip (see `Prefs.deviceID`). With iCloud sync, a trip still being
+    /// recorded on one device shows up on the others, and only its own device may resume or finish it.
+    var deviceID: String = ""
+
     init(startDate: Date, isManual: Bool) {
         self.id = UUID()
+        self.deviceID = Prefs.deviceID
         self.startDate = startDate
         self.endDate = startDate
         self.isManual = isManual
@@ -99,9 +105,9 @@ final class Trip {
         switch (startName, endName) {
         case let (start?, end?) where start == end: return start
         case let (start?, end?): return "\(start) → \(end)"
-        case let (start?, nil): return "From \(start)"
-        case let (nil, end?): return "To \(end)"
-        default: return isManual ? "Manual trip" : "Drive"
+        case let (start?, nil): return String(localized: "From \(start)", comment: "Trip title when only the start place is known")
+        case let (nil, end?): return String(localized: "To \(end)", comment: "Trip title when only the end place is known")
+        default: return isManual ? String(localized: "Manual trip") : String(localized: "Drive", comment: "Title of a trip with no known places")
         }
     }
 
@@ -144,9 +150,39 @@ final class Trip {
 }
 
 enum Persistence {
+    static let cloudContainerID = "iCloud.cc.tomy.Routak"
+
+    /// True when this launch opened the store with iCloud sync.
+    @MainActor private(set) static var isSyncing = false
+    /// The sync setting when the store was opened (changing it applies on the next launch).
+    @MainActor private(set) static var syncSettingAtLaunch = false
+
+    /// Builds for sideloading (AltStore) are signed with a personal Apple ID, which can't use iCloud.
+    #if SIDELOAD
+    static let supportsSync = false
+    #else
+    static let supportsSync = true
+    #endif
+
     @MainActor static let container: ModelContainer = {
+        let schema = Schema([Trip.self, SavedPlace.self])
+        // Read directly: this can run before `Prefs.register()`.
+        let wantsSync = supportsSync && (UserDefaults.standard.object(forKey: Prefs.iCloudSyncKey) as? Bool ?? true)
+        syncSettingAtLaunch = wantsSync
+        // `groupContainer: .none` keeps the store in the app's own folder, where it has always been.
+        // Otherwise SwiftData would move it into the App Group the widgets use (they don't need it).
+        if wantsSync {
+            // Same store file as without sync, so turning sync on uploads the trips already saved.
+            let configuration = ModelConfiguration(schema: schema, groupContainer: .none, cloudKitDatabase: .private(cloudContainerID))
+            if let container = try? ModelContainer(for: schema, configurations: configuration) {
+                isSyncing = true
+                return container
+            }
+            // No iCloud entitlement or the container can't be set up: keep working locally.
+        }
         do {
-            return try ModelContainer(for: Trip.self, SavedPlace.self)
+            let configuration = ModelConfiguration(schema: schema, groupContainer: .none, cloudKitDatabase: .none)
+            return try ModelContainer(for: schema, configurations: configuration)
         } catch {
             fatalError("Could not open trip database: \(error)")
         }

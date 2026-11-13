@@ -96,7 +96,7 @@ private struct LiveMap: View {
                     .stroke(Color.accentColor, style: StrokeStyle(lineWidth: 5.5, lineCap: .round, lineJoin: .round))
             }
             if let first = route.first {
-                Annotation("Start", coordinate: first, anchor: .center) {
+                Annotation(String(localized: "Start"), coordinate: first, anchor: .center) {
                     RouteEndpoint(color: .green, systemImage: "car.fill")
                 }
             }
@@ -177,7 +177,7 @@ private struct LiveControlPanel: View {
         .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 26, style: .continuous))
     }
 
-    private var recordingNote: String {
+    private var recordingNote: LocalizedStringKey {
         if tracker.isManualTrip { return "Manual trip" }
         if tracker.isHeldInTraffic { return "Stopped in traffic · still recording" }
         if tracker.isContinuedTrip { return "Continuing last trip" }
@@ -268,7 +268,7 @@ private struct DetectionStatusRow: View {
         }
     }
 
-    private var title: String {
+    private var title: LocalizedStringKey {
         switch tracker.mode {
         case .off: "Auto-detect is off"
         case .lowBattery: "Paused: battery low"
@@ -280,15 +280,15 @@ private struct DetectionStatusRow: View {
     private var subtitle: String {
         switch tracker.mode {
         case .off:
-            tracker.isAuthorized ? "Only manual trips are recorded" : "Location access needed"
+            tracker.isAuthorized ? String(localized: "Only manual trips are recorded") : String(localized: "Location access needed")
         case .lowBattery:
-            "GPS is off until you charge your phone"
+            String(localized: "GPS is off until you charge your phone")
         case .probing:
             tracker.statusDetail
         case .idle, .recording:
             tracker.hasAlwaysPermission
-                ? "Drives over \(Format.distance(minTripDistance, miles: useMiles)) save automatically"
-                : "Only while Routak is open"
+                ? String(localized: "Drives over \(Format.distance(minTripDistance, miles: useMiles)) save automatically")
+                : String(localized: "Only while Routak is open")
         }
     }
 
@@ -324,12 +324,12 @@ private struct DetectionStatusRow: View {
 struct PermissionCard: View {
     @Environment(TripTracker.self) private var tracker
 
-    private var message: String {
+    private var message: LocalizedStringKey {
         if !tracker.isAuthorized {
             return "Allow location access so Routak can record your drives."
         }
         if !tracker.hasAlwaysPermission {
-            return "Set location to \"Always\" so drives are detected in the background."
+            return "Set location to “Always” so drives are detected in the background."
         }
         return "Turn on Precise Location for accurate routes."
     }

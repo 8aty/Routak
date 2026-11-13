@@ -24,7 +24,7 @@ struct TripFixView: View {
     enum Mode: String, CaseIterable, Identifiable {
         case trim, split
         var id: String { rawValue }
-        var title: String { self == .trim ? "Trim" : "Split" }
+        var title: String { self == .trim ? String(localized: "Trim") : String(localized: "Split") }
     }
 
     private var lastIndex: Int { max(points.count - 1, 0) }
@@ -106,17 +106,17 @@ struct TripFixView: View {
                     if s > 0 { line(0...s, color: .gray.opacity(0.7)) }
                     if e < lastIndex { line(e...lastIndex, color: .gray.opacity(0.7)) }
                     if e > s { line(s...e, color: .accentColor) }
-                    Annotation("Start", coordinate: coordinates[s], anchor: .center) {
+                    Annotation(String(localized: "Start"), coordinate: coordinates[s], anchor: .center) {
                         RouteEndpoint(color: .green, systemImage: "car.fill")
                     }
-                    Annotation("End", coordinate: coordinates[e], anchor: .center) {
+                    Annotation(String(localized: "End"), coordinate: coordinates[e], anchor: .center) {
                         RouteEndpoint(color: .red, systemImage: "flag.checkered")
                     }
                 case .split:
                     let i = Int(splitAt)
                     line(0...i, color: .accentColor)
                     line((i + 1)...lastIndex, color: .orange)
-                    Annotation("Split", coordinate: coordinates[i], anchor: .center) {
+                    Annotation(String(localized: "Split"), coordinate: coordinates[i], anchor: .center) {
                         RouteEndpoint(color: .purple, systemImage: "scissors")
                     }
                 }
@@ -202,7 +202,7 @@ struct TripFixView: View {
         }
     }
 
-    private func sliderRow(_ title: String, value: Binding<Double>, range: ClosedRange<Double>, time: Date, color: Color) -> some View {
+    private func sliderRow(_ title: LocalizedStringKey, value: Binding<Double>, range: ClosedRange<Double>, time: Date, color: Color) -> some View {
         VStack(alignment: .leading, spacing: 2) {
             HStack {
                 Text(title).font(.subheadline.weight(.semibold))
@@ -217,13 +217,13 @@ struct TripFixView: View {
         }
     }
 
-    private func partSummary(_ title: String, stats: RouteStats, color: Color) -> some View {
+    private func partSummary(_ title: LocalizedStringKey, stats: RouteStats, color: Color) -> some View {
         VStack(alignment: .leading, spacing: 2) {
             HStack(spacing: 6) {
                 Circle().fill(color).frame(width: 8, height: 8)
                 Text(title).font(.caption).foregroundStyle(.secondary)
             }
-            Text("\(Format.distance(stats.distance, miles: useMiles)) · \(Format.duration(stats.duration))")
+            Text(verbatim: "\(Format.distance(stats.distance, miles: useMiles)) · \(Format.duration(stats.duration))")
                 .font(.subheadline.weight(.semibold))
                 .monospacedDigit()
         }

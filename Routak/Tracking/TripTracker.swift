@@ -210,6 +210,20 @@ final class TripTracker: NSObject {
         finishTrip()
     }
 
+    enum ShortcutStart {
+        case started, alreadyRecording, needsLocation, batteryLow
+    }
+
+    /// Starts recording from Siri, Shortcuts or an automation (e.g. CarPlay connected).
+    /// Unlike a manual trip, it still ends by itself when you park.
+    func startTripFromShortcut() -> ShortcutStart {
+        if mode == .recording { return .alreadyRecording }
+        guard isAuthorized else { return .needsLocation }
+        if isBatteryLow { return .batteryLow }
+        startTrip(manual: false, seed: [])
+        return .started
+    }
+
     // MARK: - Modes
 
     private func applyIdleMode(near location: CLLocation?) {
@@ -226,10 +240,10 @@ final class TripTracker: NSObject {
                 // No GPS at all. The cheap cell/Wi-Fi based signals stay on so the app still
                 // wakes up now and then and can resume once the phone is charged.
                 mode = .lowBattery
-                statusDetail = "Paused to save battery"
+                statusDetail = String(localized: "Paused to save battery")
             } else {
                 mode = .idle
-                statusDetail = hasAlwaysPermission ? "Watching for drives" : "Open the app to detect drives"
+                statusDetail = hasAlwaysPermission ? String(localized: "Watching for drives") : String(localized: "Open the app to detect drives")
             }
             manager.startMonitoringSignificantLocationChanges()
             manager.startMonitoringVisits()
@@ -238,7 +252,7 @@ final class TripTracker: NSObject {
             }
         } else {
             mode = .off
-            statusDetail = isAuthorized ? "Automatic detection is off" : "Location access needed"
+            statusDetail = isAuthorized ? String(localized: "Automatic detection is off") : String(localized: "Location access needed")
             manager.stopMonitoringSignificantLocationChanges()
             manager.stopMonitoringVisits()
             disarmDeparture()
@@ -302,13 +316,13 @@ final class TripTracker: NSObject {
             activeStartDate = previous.startDate
             lastAcceptedLocation = activePoints.last?.location
             isContinuedTrip = true
-            statusDetail = "Continuing your last trip"
+            statusDetail = String(localized: "Continuing your last trip")
         } else {
             let trip = Trip(startDate: start, isManual: manual)
             context.insert(trip)
             activeTrip = trip
             activeStartDate = start
-            statusDetail = manual ? "Recording manual trip" : "Drive detected"
+            statusDetail = manual ? String(localized: "Recording manual trip") : String(localized: "Drive detected")
             if !manual, Prefs.mergeTrips, let startLocation, let discard = recentDiscard,
                start.timeIntervalSince(discard.end) <= Prefs.mergeGap,
                let last = discard.points.last, last.location.distance(from: startLocation) <= Prefs.mergeRadius {
@@ -331,6 +345,8 @@ final class TripTracker: NSObject {
         startRecordingUpdates()
         for location in seed { record(location) }
         flush(force: true)
+        LiveActivityController.shared.tripStarted(startDate: activeStartDate ?? start, distance: activeDistance)
+        WidgetSync.schedule()
     }
 
     /// The last saved automatic trip, if it ended within a few minutes and near `location`.
@@ -342,6 +358,7 @@ final class TripTracker: NSObject {
         )
         descriptor.fetchLimit = 1
         guard let trip = try? context.fetch(descriptor).first, !trip.isManual,
+              trip.deviceID.isEmpty || trip.deviceID == Prefs.deviceID,
               location.timestamp.timeIntervalSince(trip.endDate) <= Prefs.mergeGap,
               location.timestamp >= trip.endDate.addingTimeInterval(-60),
               let end = trip.endCoordinate,
@@ -377,7 +394,7 @@ final class TripTracker: NSObject {
                 lastMovingDate = max(lastMovingDate ?? location.timestamp, location.timestamp)
                 if isHeldInTraffic {
                     isHeldInTraffic = false
-                    statusDetail = "Moving again"
+                    statusDetail = String(localized: "Moving again")
                 }
             }
         } else {
@@ -396,6 +413,7 @@ final class TripTracker: NSObject {
         activePoints.append(TrackPoint(location))
         unflushedCount += 1
         flush(force: false)
+        LiveActivityController.shared.tripUpdated(distance: activeDistance, isStopped: isHeldInTraffic)
     }
 
     private func checkForStop(now: Date = Date()) {
@@ -414,7 +432,8 @@ final class TripTracker: NSObject {
         if isAutomotive, stoppedFor < Prefs.maxTrafficHold {
             if !isHeldInTraffic {
                 isHeldInTraffic = true
-                statusDetail = "Stopped in traffic"
+                statusDetail = String(localized: "Stopped in traffic")
+                LiveActivityController.shared.tripUpdated(distance: activeDistance, isStopped: true)
             }
             return
         }
@@ -454,6 +473,8 @@ final class TripTracker: NSObject {
             try? context.save()
         }
 
+        LiveActivityController.shared.tripEnded(savedDistance: keep ? stats.distance : nil)
+        WidgetSync.schedule()
         resetActiveState()
         applyIdleMode(near: endLocation)
     }
@@ -495,6 +516,10 @@ final class TripTracker: NSObject {
         for trip in trips {
             let points = trip.points
             let lastTime = points.last?.timestamp ?? trip.startDate
+            // Being recorded on another device and synced here through iCloud: that device finishes it.
+            // Only take over a trip that device clearly abandoned.
+            if !trip.deviceID.isEmpty, trip.deviceID != Prefs.deviceID,
+               Date().timeIntervalSince(lastTime) < 6 * 3_600 { continue }
             let canResume = mode != .recording
                 && Date().timeIntervalSince(lastTime) < Prefs.stopTimeout
                 && (trip.isManual || Prefs.autoDetect)
@@ -510,8 +535,9 @@ final class TripTracker: NSObject {
             mode = .recording
 
             if canResume {
-                statusDetail = "Resumed trip"
+                statusDetail = String(localized: "Resumed trip")
                 startRecordingUpdates()
+                LiveActivityController.shared.tripStarted(startDate: trip.startDate, distance: activeDistance)
             } else {
                 finishTrip()
             }
@@ -597,7 +623,7 @@ final class TripTracker: NSObject {
 
         if isBatteryLow {
             if mode == .recording {
-                finishTrip(reason: "Recording stopped because the battery is low.")
+                finishTrip(reason: String(localized: "Recording stopped because the battery is low."))
             } else {
                 applyIdleMode(near: nil)
             }
@@ -650,7 +676,7 @@ final class TripTracker: NSObject {
         if !walking { walkingSince = nil }
 
         if isAutomotive, mode == .idle {
-            beginProbe(reason: "Driving motion detected")
+            beginProbe(reason: String(localized: "Driving motion detected"))
         }
         if mode == .recording, isWalking { checkForStop() }
     }
@@ -695,7 +721,7 @@ final class TripTracker: NSObject {
 
     private func handleDeparture() {
         updateBatteryState()
-        if mode == .idle { beginProbe(reason: "Left parking spot") }
+        if mode == .idle { beginProbe(reason: String(localized: "Left parking spot")) }
     }
 
     // MARK: - Location events
@@ -712,7 +738,7 @@ final class TripTracker: NSObject {
             case .idle:
                 // Significant-change or initial fix: something moved, check whether we're driving.
                 if Date().timeIntervalSince(location.timestamp) < 120 {
-                    beginProbe(reason: "Movement detected")
+                    beginProbe(reason: String(localized: "Movement detected"))
                     handleProbe(location)
                 }
             case .probing:
@@ -746,6 +772,7 @@ final class TripTracker: NSObject {
             }
             trip.endName = await TripNamer.name(for: last, places: places)
             try? context.save()
+            WidgetSync.schedule()
             postSavedNotification(for: trip, reason: reason)
             UIApplication.shared.endBackgroundTask(task)
             await TripMaintenance.snap(trip, context: context)
@@ -754,7 +781,9 @@ final class TripTracker: NSObject {
 
     private func postSavedNotification(for trip: Trip, reason: String?) {
         let content = UNMutableNotificationContent()
-        content.title = "Trip saved"
+        content.title = String(localized: "Trip saved")
+        // No sound or vibration: it may arrive while still in the car (e.g. low battery ends the trip).
+        content.interruptionLevel = .passive
         content.body = "\(trip.title) · \(Format.distance(trip.distance, miles: Prefs.useMiles)) · \(Format.duration(trip.duration))"
         if let reason { content.body += "\n\(reason)" }
         // Same identifier for a continued trip, so the notification is updated rather than duplicated.
@@ -778,7 +807,7 @@ extension TripTracker: CLLocationManagerDelegate {
         MainActor.assumeIsolated {
             self.updateBatteryState()
             if visit.departureDate != .distantFuture {
-                self.beginProbe(reason: "Left a place")
+                self.beginProbe(reason: String(localized: "Left a place"))
             } else if self.mode == .idle {
                 self.armDeparture(at: visit.coordinate)
             }

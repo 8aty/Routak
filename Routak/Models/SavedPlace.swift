@@ -12,9 +12,9 @@ final class SavedPlace {
 
         var title: String {
             switch self {
-            case .home: "Home"
-            case .work: "Work"
-            case .other: "Place"
+            case .home: String(localized: "place.home", defaultValue: "Home", comment: "Saved place kind; also the default name for the user's home")
+            case .work: String(localized: "place.work", defaultValue: "Work", comment: "Saved place kind; also the default name for the user's workplace")
+            case .other: String(localized: "place.other", defaultValue: "Place", comment: "Saved place kind for any other place")
             }
         }
 

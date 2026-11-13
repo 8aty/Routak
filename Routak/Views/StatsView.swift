@@ -21,10 +21,10 @@ struct StatsView: View {
         var id: String { rawValue }
         var title: String {
             switch self {
-            case .week: "Week"
-            case .month: "Month"
-            case .year: "Year"
-            case .all: "All"
+            case .week: String(localized: "Week")
+            case .month: String(localized: "Month")
+            case .year: String(localized: "Year")
+            case .all: String(localized: "All", comment: "Stats period: all time")
             }
         }
         var component: Calendar.Component? {
@@ -52,28 +52,28 @@ struct StatsView: View {
     }
 
     private var periodTitle: String {
-        guard let interval = interval(offset: offset) else { return "All time" }
+        guard let interval = interval(offset: offset) else { return String(localized: "All time") }
         switch period {
         case .week:
-            if offset == 0 { return "This week" }
-            if offset == -1 { return "Last week" }
+            if offset == 0 { return String(localized: "This week") }
+            if offset == -1 { return String(localized: "Last week") }
             let end = interval.end.addingTimeInterval(-1)
             return "\(interval.start.formatted(.dateTime.month(.abbreviated).day())) – \(end.formatted(.dateTime.month(.abbreviated).day()))"
         case .month:
-            return interval.start.formatted(.dateTime.month(.wide).year())
+            return interval.start.formatted(.dateTime.month(.wide).year()).capitalizedFirst
         case .year:
             return interval.start.formatted(.dateTime.year())
         case .all:
-            return "All time"
+            return String(localized: "All time")
         }
     }
 
-    private var previousTitle: String {
+    /// Caption under the change in distance.
+    private var comparisonTitle: LocalizedStringKey {
         switch period {
-        case .week: "the week before"
-        case .month: "the month before"
-        case .year: "the year before"
-        case .all: ""
+        case .week: "vs the week before"
+        case .month: "vs the month before"
+        case .year, .all: "vs the year before"
         }
     }
 
@@ -233,11 +233,11 @@ struct StatsView: View {
             let percent = (value - previous) / previous * 100
             let up = percent >= 0
             VStack(alignment: .trailing, spacing: 2) {
-                Label("\(Int(abs(percent).rounded()))%", systemImage: up ? "arrow.up.right" : "arrow.down.right")
+                Label(abs(percent / 100).formatted(.percent.precision(.fractionLength(0))), systemImage: up ? "arrow.up.right" : "arrow.down.right")
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(up ? .orange : .green)
                     .monospacedDigit()
-                Text("vs \(previousTitle)")
+                Text(comparisonTitle)
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
@@ -270,7 +270,7 @@ struct StatsView: View {
         var sums: [String: Bar] = [:]
         for trip in trips {
             let bucket = calendar.dateInterval(of: unit, for: trip.startDate)?.start ?? trip.startDate
-            let category = trip.category?.title ?? "Unlabeled"
+            let category = trip.category?.title ?? Self.unlabeledTitle
             let key = "\(bucket.timeIntervalSinceReferenceDate)-\(category)"
             let value = (sums[key]?.value ?? 0) + trip.distance / perUnit
             sums[key] = Bar(date: bucket, category: category, value: value)
@@ -278,10 +278,10 @@ struct StatsView: View {
         let bars = sums.values.sorted { $0.date < $1.date }
         let present = Set(bars.map(\.category))
         // Only the types that appear, in a fixed order.
-        let legend = Self.categoryScale.filter { present.contains($0.key) }.map { ($0.key, $0.value) }
+        let legend = Self.categoryScale.filter { present.contains($0.title) }
 
         return VStack(alignment: .leading, spacing: 10) {
-            Text("Distance by \(unit == .day ? "day" : unit == .month ? "month" : "year")")
+            Text(unit == .day ? "Distance by day" : unit == .month ? "Distance by month" : "Distance by year")
                 .font(.headline)
             Chart(bars) { bar in
                 BarMark(
@@ -291,7 +291,7 @@ struct StatsView: View {
                 .foregroundStyle(by: .value("Type", bar.category))
                 .cornerRadius(3)
             }
-            .chartForegroundStyleScale(domain: legend.map(\.0), range: legend.map(\.1))
+            .chartForegroundStyleScale(domain: legend.map(\.title), range: legend.map(\.color))
             .chartXScale(domain: chartDomain(interval: interval, unit: unit, bars: bars))
             .chartXAxis {
                 switch unit {
@@ -330,12 +330,12 @@ struct StatsView: View {
         return first...end.addingTimeInterval(-1)
     }
 
-    static let categoryScale: KeyValuePairs<String, Color> = [
-        "Commute": .teal,
-        "Work": .indigo,
-        "Personal": .orange,
-        "Unlabeled": Color.accentColor.opacity(0.55),
-    ]
+    static var unlabeledTitle: String { String(localized: "Unlabeled", comment: "Trips without a label such as Work") }
+
+    /// Chart colors for each label, in a fixed order.
+    static var categoryScale: [(title: String, color: Color)] {
+        TripCategory.allCases.map { ($0.title, color(for: $0)) } + [(unlabeledTitle, color(for: nil))]
+    }
 
     static func color(for category: TripCategory?) -> Color {
         switch category {
@@ -368,7 +368,7 @@ struct StatsView: View {
         .background(.fill.quaternary, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
     }
 
-    private func highlightRow(_ title: String, systemImage: String, value: String, trip: Trip) -> some View {
+    private func highlightRow(_ title: LocalizedStringKey, systemImage: String, value: String, trip: Trip) -> some View {
         NavigationLink(value: trip) {
             HStack(spacing: 12) {
                 Image(systemName: systemImage)
@@ -403,7 +403,7 @@ struct StatsView: View {
             } label: {
                 linkRow(
                     "Where you drive", systemImage: "flame.fill", tint: .orange,
-                    detail: "Every route on one map"
+                    detail: String(localized: "Every route on one map")
                 )
             }
             Divider().padding(.leading, 56)
@@ -434,24 +434,29 @@ struct StatsView: View {
     }
 
     private func commuteDetail(home: SavedPlace?, work: SavedPlace?) -> String {
-        guard let home, let work else { return "Set Home and Work to compare commutes" }
+        guard let home, let work else { return String(localized: "Set Home and Work to compare commutes") }
         let toWork = CommuteAnalysis(direction: .toWork, trips: allTrips, home: home, work: work)
         let toHome = CommuteAnalysis(direction: .toHome, trips: allTrips, home: home, work: work)
-        if toWork.isEmpty && toHome.isEmpty { return "No drives between Home and Work yet" }
-        var parts: [String] = []
-        if !toWork.isEmpty { parts.append("To work \(Format.duration(toWork.average))") }
-        if !toHome.isEmpty { parts.append("home \(Format.duration(toHome.average))") }
-        return parts.joined(separator: " · ") + " on average"
+        switch (toWork.isEmpty, toHome.isEmpty) {
+        case (true, true):
+            return String(localized: "No drives between Home and Work yet")
+        case (false, false):
+            return String(localized: "To work \(Format.duration(toWork.average)) · home \(Format.duration(toHome.average)) on average")
+        case (false, true):
+            return String(localized: "To work \(Format.duration(toWork.average)) on average")
+        case (true, false):
+            return String(localized: "Home \(Format.duration(toHome.average)) on average", comment: "Average drive time from work to home")
+        }
     }
 
     private func mileageDetail(_ trips: [Trip]) -> String {
         let work = trips.filter { $0.category == .work }
-        guard !work.isEmpty else { return "Label trips as Work to log business miles" }
+        guard !work.isEmpty else { return String(localized: "Label trips as Work to log business miles") }
         let distance = work.reduce(0) { $0 + $1.distance }
-        return "\(work.count) work \(work.count == 1 ? "trip" : "trips"), \(Format.distance(distance, miles: useMiles))"
+        return String(localized: "\(work.count) work trips, \(Format.distance(distance, miles: useMiles))")
     }
 
-    private func linkRow(_ title: String, systemImage: String, tint: Color, detail: String) -> some View {
+    private func linkRow(_ title: LocalizedStringKey, systemImage: String, tint: Color, detail: String) -> some View {
         HStack(spacing: 14) {
             Image(systemName: systemImage)
                 .font(.body.weight(.semibold))
@@ -496,13 +501,13 @@ struct StatsView: View {
             ForEach(groups, id: \.category) { group in
                 HStack(spacing: 10) {
                     Circle().fill(Self.color(for: group.category)).frame(width: 10, height: 10)
-                    Text(group.category?.title ?? "Unlabeled").font(.subheadline)
-                    Text("\(group.count)").font(.caption).foregroundStyle(.secondary)
+                    Text(group.category?.title ?? Self.unlabeledTitle).font(.subheadline)
+                    Text(verbatim: "\(group.count)").font(.caption).foregroundStyle(.secondary)
                     Spacer()
                     Text(Format.distance(group.distance, miles: useMiles))
                         .font(.subheadline.weight(.semibold))
                         .monospacedDigit()
-                    Text("\(Int((group.distance / total * 100).rounded()))%")
+                    Text((group.distance / total).formatted(.percent.precision(.fractionLength(0))))
                         .font(.caption)
                         .foregroundStyle(.secondary)
                         .frame(width: 38, alignment: .trailing)
@@ -530,7 +535,7 @@ struct StatsView: View {
                             HStack {
                                 Text(name).font(.subheadline).lineLimit(1)
                                 Spacer()
-                                Text(count == 1 ? "1 visit" : "\(count) visits")
+                                Text("\(count) visits")
                                     .font(.caption)
                                     .foregroundStyle(.secondary)
                                     .monospacedDigit()
@@ -573,7 +578,7 @@ struct DrivingTimesGrid: View {
                 Text("When you drive").font(.headline)
                 Spacer()
                 if let busiest {
-                    Text("Busiest: \(calendar.standaloneWeekdaySymbols[Self.weekday(forRow: busiest.row) - 1]) \(CommuteAnalysis.clockText(busiest.hour * 60))")
+                    Text("Busiest: \(calendar.standaloneWeekdaySymbols[Self.weekday(forRow: busiest.row) - 1]) \(CommuteAnalysis.clockText(busiest.hour * 60))", comment: "Weekday name, then a time of day")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
@@ -604,7 +609,7 @@ struct DrivingTimesGrid: View {
                 }
             }
             .accessibilityElement(children: .ignore)
-            .accessibilityLabel(busiest.map { "Most trips start on \(calendar.standaloneWeekdaySymbols[Self.weekday(forRow: $0.row) - 1]) around \(CommuteAnalysis.clockText($0.hour * 60))" } ?? "No trips")
+            .accessibilityLabel(busiest.map { String(localized: "Most trips start on \(calendar.standaloneWeekdaySymbols[Self.weekday(forRow: $0.row) - 1]) around \(CommuteAnalysis.clockText($0.hour * 60))", comment: "Weekday name, then a time of day") } ?? String(localized: "No trips"))
         }
         .padding(16)
         .background(.fill.quaternary, in: RoundedRectangle(cornerRadius: 20, style: .continuous))

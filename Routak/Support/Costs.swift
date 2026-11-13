@@ -57,7 +57,12 @@ enum Costs {
         miles ? value / (metersPerMile / 1_000) : value
     }
 
-    static func economyUnit(miles: Bool) -> String { miles ? "mpg" : "L/100 km" }
-    static func volumeUnit(miles: Bool) -> String { miles ? "gal" : "L" }
+    static func economyUnit(miles: Bool) -> String {
+        miles ? "mpg" : String(localized: "L/100 km", comment: "Fuel economy unit: liters per 100 kilometers")
+    }
+
+    static func volumeUnit(miles: Bool) -> String {
+        miles ? "gal" : String(localized: "L", comment: "Unit symbol for liters")
+    }
     static func distanceUnit(miles: Bool) -> String { miles ? "mi" : "km" }
 }

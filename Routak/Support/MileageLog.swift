@@ -43,7 +43,7 @@ struct MileageLog {
         Costs.reimbursement(for: meters, ratePerKm: ratePerKm)
     }
 
-    private var fileName: String { "Mileage Log \(periodLabel)" }
+    private var fileName: String { String(localized: "Mileage Log \(periodLabel)", comment: "File name and PDF title; the argument is the period, e.g. March 2026") }
 
     // MARK: CSV
 
@@ -52,8 +52,10 @@ struct MileageLog {
         let writer = try TextFileWriter(url: url)
         let currency = Costs.currencyCode
         writer.write(TripExporter.csvRow([
-            "Date", "Start time", "End time", "From", "To", "Purpose",
-            "Distance (\(unit))", "Rate (\(currency)/\(unit))", "Amount (\(currency))",
+            String(localized: "Date"), String(localized: "Start time"), String(localized: "End time"),
+            String(localized: "column.from", defaultValue: "From", comment: "Column header: start place"), String(localized: "column.to", defaultValue: "To", comment: "Column header: destination"),
+            String(localized: "Purpose"),
+            String(localized: "Distance (\(unit))"), String(localized: "Rate (\(currency)/\(unit))"), String(localized: "Amount (\(currency))"),
         ]))
         let day = TripExporter.fixedFormatter("yyyy-MM-dd")
         let time = TripExporter.fixedFormatter("HH:mm")
@@ -67,7 +69,7 @@ struct MileageLog {
             ]))
         }
         writer.write(TripExporter.csvRow([
-            "Total", "", "", "", "", "\(entries.count) trips",
+            String(localized: "Total"), "", "", "", "", String(localized: "\(entries.count) trips"),
             TripExporter.number(distance(totalMeters), digits: 2), "",
             TripExporter.number(totalAmount, digits: 2),
         ]))
@@ -83,7 +85,7 @@ struct MileageLog {
         static let rowHeight: CGFloat = 30
         static let headerHeight: CGFloat = 22
         /// Date, From, To, Purpose, Distance, Amount.
-        static let columns: [CGFloat] = [78, 116, 116, 98, 58, 66]
+        static let columns: [CGFloat] = [78, 116, 116, 88, 68, 66]
     }
 
     func pdf() throws -> URL {
@@ -141,10 +143,10 @@ struct MileageLog {
     private func drawTitleBlock() {
         let m = Layout.margin
         let width = Layout.page.width - m * 2
-        text("Mileage Log", font: .systemFont(ofSize: 24, weight: .bold)).draw(at: CGPoint(x: m, y: m))
+        text(String(localized: "Mileage Log"), font: .systemFont(ofSize: 24, weight: .bold)).draw(at: CGPoint(x: m, y: m))
         text(periodLabel, font: .systemFont(ofSize: 13, weight: .medium), color: .darkGray)
             .draw(at: CGPoint(x: m, y: m + 32))
-        text("Generated \(Date.now.formatted(date: .long, time: .shortened)) with Routak",
+        text(String(localized: "Generated \(Date.now.formatted(date: .long, time: .shortened)) with Routak"),
              font: .systemFont(ofSize: 10), color: .gray)
             .draw(at: CGPoint(x: m, y: m + 52))
 
@@ -152,10 +154,10 @@ struct MileageLog {
         let boxTop = m + 80
         let boxWidth = (width - 30) / 4
         let summary: [(String, String)] = [
-            ("Trips", "\(entries.count)"),
-            ("Distance", "\(Format.distance(totalMeters, miles: useMiles))"),
-            ("Rate", "\(Costs.money(displayRate)) / \(unit)"),
-            ("Amount", Costs.money(totalAmount)),
+            (String(localized: "Trips"), "\(entries.count)"),
+            (String(localized: "Distance"), "\(Format.distance(totalMeters, miles: useMiles))"),
+            (String(localized: "Rate"), "\(Costs.money(displayRate)) / \(unit)"),
+            (String(localized: "Amount"), Costs.money(totalAmount)),
         ]
         for (i, item) in summary.enumerated() {
             let rect = CGRect(x: m + CGFloat(i) * (boxWidth + 10), y: boxTop, width: boxWidth, height: 56)
@@ -170,7 +172,11 @@ struct MileageLog {
     }
 
     private func drawHeaderRow(at y: CGFloat) {
-        let titles = ["Date", "From", "To", "Purpose", "Distance", "Amount"]
+        let titles = [
+            String(localized: "Date"), String(localized: "column.from", defaultValue: "From", comment: "Column header: start place"),
+            String(localized: "column.to", defaultValue: "To", comment: "Column header: destination"), String(localized: "Purpose"),
+            String(localized: "Distance"), String(localized: "Amount"),
+        ]
         var x = Layout.margin
         for (i, title) in titles.enumerated() {
             let rightAligned = i >= 4
@@ -222,7 +228,7 @@ struct MileageLog {
         line.stroke()
         let bold = UIFont.systemFont(ofSize: 10, weight: .bold)
         let distanceX = Layout.margin + Layout.columns[0..<4].reduce(0, +)
-        text("Total · \(entries.count) trips", font: bold).draw(at: CGPoint(x: Layout.margin + 4, y: y + 9))
+        text(String(localized: "Total · \(entries.count) trips"), font: bold).draw(at: CGPoint(x: Layout.margin + 4, y: y + 9))
         text("\(distance(totalMeters).formatted(.number.precision(.fractionLength(1)))) \(unit)", font: bold, alignment: .right)
             .draw(in: CGRect(x: distanceX + 4, y: y + 9, width: Layout.columns[4] - 8, height: 14))
         text(Costs.money(totalAmount), font: bold, alignment: .right)
@@ -231,7 +237,7 @@ struct MileageLog {
 
     private func drawFooter(page: Int, of count: Int) {
         let y = Layout.page.height - Layout.margin
-        text("Page \(page) of \(count)", font: .systemFont(ofSize: 8), color: .gray, alignment: .right)
+        text(String(localized: "Page \(page) of \(count)"), font: .systemFont(ofSize: 8), color: .gray, alignment: .right)
             .draw(in: CGRect(x: Layout.margin, y: y - 10, width: Layout.page.width - Layout.margin * 2, height: 12))
     }
 

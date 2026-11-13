@@ -56,6 +56,8 @@ struct WelcomeView: View {
                             text: "Maps, speeds and replays for each trip, searchable by place, date and label.")
                     feature("chart.bar.fill", color: .orange, title: "Stats and logs",
                             text: "Weekly totals, commute times, fuel costs and mileage logs for expenses.")
+                    feature("hand.raised.fill", color: .red, title: "Phone down while driving",
+                            text: "Routak works on its own. You never need to look at it while driving.")
                 }
             }
             .padding(.horizontal, 24)
@@ -84,8 +86,10 @@ struct WelcomeView: View {
                             text: "No need to open the app before you drive.")
                     feature("battery.75percent", color: .green, title: "Easy on battery",
                             text: "Until you drive, only low-power signals are used. GPS runs only during a drive.")
-                    feature("lock.fill", color: .gray, title: "Stays on your iPhone",
-                            text: "Your trips aren't uploaded anywhere.")
+                    feature("lock.fill", color: .gray, title: "Private",
+                            text: Persistence.supportsSync
+                                ? "Your trips stay on your devices and in your own iCloud."
+                                : "Your trips stay on your iPhone.")
                 }
                 steps
             }
@@ -114,7 +118,7 @@ struct WelcomeView: View {
                 if done {
                     Image(systemName: "checkmark").font(.caption.weight(.bold)).foregroundStyle(.white)
                 } else {
-                    Text("\(number)").font(.caption.weight(.bold)).foregroundStyle(Color.accentColor)
+                    Text(verbatim: "\(number)").font(.caption.weight(.bold)).foregroundStyle(Color.accentColor)
                 }
             }
             .frame(width: 26, height: 26)
@@ -124,7 +128,7 @@ struct WelcomeView: View {
         .animation(.snappy, value: done)
     }
 
-    private func feature(_ systemImage: String, color: Color, title: String, text: String) -> some View {
+    private func feature(_ systemImage: String, color: Color, title: LocalizedStringKey, text: LocalizedStringKey) -> some View {
         HStack(alignment: .top, spacing: 16) {
             Image(systemName: systemImage)
                 .font(.title2)
@@ -171,7 +175,7 @@ struct WelcomeView: View {
         }
     }
 
-    private func primaryButton(_ title: String, action: @escaping () -> Void) -> some View {
+    private func primaryButton(_ title: LocalizedStringKey, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             Text(title)
                 .font(.headline)

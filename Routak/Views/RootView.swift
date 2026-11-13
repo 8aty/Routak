@@ -8,6 +8,10 @@ struct RootView: View {
     @Environment(TripTracker.self) private var tracker
     @AppStorage(Prefs.hasOnboardedKey) private var hasOnboarded = false
     @State private var showWelcome = false
+    @AppStorage(Prefs.drivingReminderKey) private var drivingReminder = true
+    /// The trip (by start date) the road reminder was triggered for, and the one a passenger dismissed it for.
+    @State private var remindedTrip: Date?
+    @State private var passengerTrip: Date?
     #if DEBUG
     @State private var debugScreen: DebugScreen?
     #endif
@@ -38,6 +42,34 @@ struct RootView: View {
         }
     }
 
+    /// Speed above which the car counts as moving for the reminder (~15 km/h).
+    private static let reminderSpeed = 4.2
+
+    /// Once the car moves, the reminder stays up for the rest of the trip (red lights included)
+    /// until a passenger dismisses it.
+    private var showsDrivingReminder: Bool {
+        guard drivingReminder, tracker.mode == .recording, let trip = tracker.activeStartDate else { return false }
+        return remindedTrip == trip && passengerTrip != trip
+    }
+
+    private func updateDrivingReminder() {
+        if tracker.mode == .recording, tracker.currentSpeed >= Self.reminderSpeed {
+            remindedTrip = tracker.activeStartDate
+        }
+        #if DEBUG
+        // `-drivingReminderPreview YES` shows the reminder without driving.
+        if UserDefaults.standard.bool(forKey: "drivingReminderPreview") {
+            DrivingReminderWindow.shared.show { DrivingReminderWindow.shared.hide() }
+            return
+        }
+        #endif
+        if showsDrivingReminder {
+            DrivingReminderWindow.shared.show { passengerTrip = tracker.activeStartDate }
+        } else {
+            DrivingReminderWindow.shared.hide()
+        }
+    }
+
     enum Tab: String, Hashable {
         case drive, history, stats, settings
     }
@@ -58,9 +90,20 @@ struct RootView: View {
                 .tag(Tab.settings)
         }
         .onChange(of: scenePhase, initial: true) { _, phase in
-            if phase == .active { TripMaintenance.run(context: context) }
+            if phase == .active {
+                TripMaintenance.run(context: context)
+                LiveActivityController.shared.appBecameActive(
+                    isRecording: tracker.mode == .recording, startDate: tracker.activeStartDate, distance: tracker.activeDistance
+                )
+                WidgetSync.schedule()
+            }
         }
         .onAppear(perform: decideWelcome)
+        .onChange(of: tracker.currentSpeed) { updateDrivingReminder() }
+        .onChange(of: tracker.mode) { updateDrivingReminder() }
+        .onChange(of: drivingReminder) { updateDrivingReminder() }
+        .onChange(of: passengerTrip) { updateDrivingReminder() }
+        .onChange(of: scenePhase) { _, phase in if phase == .active { updateDrivingReminder() } }
         #if DEBUG
         // `-debugScreen heatmap|commute|mileage|export|costs|fix` opens a screen directly (for screenshots).
         .sheet(item: $debugScreen) { screen in
@@ -85,7 +128,7 @@ struct RootView: View {
 
 #if DEBUG
 enum DebugScreen: String, Identifiable {
-    case heatmap, commute, mileage, export, costs, fix
+    case heatmap, commute, mileage, export, costs, fix, widgets
     var id: String { rawValue }
 }
 
@@ -107,11 +150,65 @@ private struct DebugScreenView: View {
         case .mileage: MileageLogView()
         case .export: ExportView()
         case .costs: CostSettingsView()
+        case .widgets: WidgetGallery()
         case .fix:
             if let trip = trips.first(where: { $0.title.localizedCaseInsensitiveContains(UserDefaults.standard.string(forKey: "openTrip") ?? "") }) ?? trips.first {
                 TripFixView(trip: trip) {}
             }
         }
+    }
+}
+#endif
+
+#if DEBUG
+import WidgetKit
+
+/// Every widget size and Live Activity state, drawn in the app for checking layouts.
+private struct WidgetGallery: View {
+    private let snapshot: WidgetSnapshot = {
+        var snapshot = WidgetSnapshot.load() ?? .preview
+        if UserDefaults.standard.bool(forKey: "galleryPreviewData") { snapshot = .preview }
+        return snapshot
+    }()
+
+    var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 18) {
+                HStack(alignment: .top, spacing: 16) {
+                    tile(.systemSmall, width: 170, height: 170)
+                    VStack(spacing: 12) {
+                        tile(.accessoryCircular, width: 76, height: 76, lockScreen: true)
+                        tile(.accessoryInline, width: 170, height: 24, lockScreen: true)
+                    }
+                }
+                tile(.systemMedium, width: 364, height: 170)
+                tile(.accessoryRectangular, width: 172, height: 76, lockScreen: true)
+                activity(.init(distance: 12_400))
+                activity(.init(distance: 12_400, isStopped: true))
+                activity(.init(distance: 18_300, endDate: .now))
+            }
+            .padding(16)
+        }
+        .background(Color(white: 0.35))
+        .navigationTitle(Text(verbatim: "Widgets"))
+    }
+
+    private func tile(_ family: WidgetFamily, width: CGFloat, height: CGFloat, lockScreen: Bool = false) -> some View {
+        SummaryWidgetView(snapshot: snapshot, date: .now, family: family)
+            .padding(lockScreen ? 0 : 16)
+            .frame(width: width, height: height)
+            .foregroundStyle(lockScreen ? Color.white : Color.primary)
+            .background(lockScreen ? AnyShapeStyle(Color.clear) : AnyShapeStyle(Color(.systemBackground)),
+                        in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+    }
+
+    private func activity(_ state: TripActivityAttributes.ContentState) -> some View {
+        TripActivityLockScreenView(content: TripActivityContent(
+            attributes: TripActivityAttributes(startDate: .now.addingTimeInterval(-1_520), useMiles: Prefs.useMiles),
+            state: state
+        ))
+        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+        .environment(\.colorScheme, .dark)
     }
 }
 #endif
